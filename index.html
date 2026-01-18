@@ -38,7 +38,6 @@
       <div class="lightbox-backdrop" data-lightbox-close></div>
       <figure class="lightbox-content">
         <img id="lightbox-image" alt="" />
-        <figcaption id="lightbox-caption"></figcaption>
         <button
           class="lightbox-close"
           type="button"
@@ -101,12 +100,10 @@
       function openLightbox(src, alt) {
         const lightbox = document.getElementById("lightbox");
         const img = document.getElementById("lightbox-image");
-        const caption = document.getElementById("lightbox-caption");
-        if (!lightbox || !img || !caption) return;
+        if (!lightbox || !img) return;
 
         img.src = src;
         img.alt = alt || "";
-        caption.textContent = alt || "";
 
         lightbox.classList.add("is-open");
         lightbox.setAttribute("aria-hidden", "false");
@@ -115,9 +112,7 @@
 
       function closeLightbox() {
         const lightbox = document.getElementById("lightbox");
-        const img = document.getElementById("lightbox-image");
-        const caption = document.getElementById("lightbox-caption");
-        if (!lightbox || !img || !caption) return;
+        if (!lightbox) return;
 
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");

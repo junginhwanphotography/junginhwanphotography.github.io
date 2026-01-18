@@ -157,17 +157,9 @@ main {
 .lightbox-content img {
   width: 100%;
   height: 100%;
-  max-height: calc(90vh - 56px);
+  max-height: 90vh;
   object-fit: contain;
   background-color: #000000;
-}
-
-.lightbox-caption {
-  margin: 0;
-  padding: 0.6rem 1rem 0.8rem;
-  font-size: 0.85rem;
-  color: #e5e7eb;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
 }
 
 .lightbox-close {
