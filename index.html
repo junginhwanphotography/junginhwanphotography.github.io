@@ -32,7 +32,23 @@
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <div class="lightbox-backdrop" data-lightbox-close></div>
       <figure class="lightbox-content">
+        <button
+          class="lightbox-nav lightbox-nav-prev"
+          type="button"
+          aria-label="이전 사진"
+          data-lightbox-nav="prev"
+        >
+          ‹
+        </button>
         <img id="lightbox-image" alt="" />
+        <button
+          class="lightbox-nav lightbox-nav-next"
+          type="button"
+          aria-label="다음 사진"
+          data-lightbox-nav="next"
+        >
+          ›
+        </button>
         <button
           class="lightbox-close"
           type="button"
@@ -52,6 +68,10 @@
       // 현재 연도로 자동 업데이트
       document.getElementById("year").textContent = new Date().getFullYear();
 
+      // 전역 변수: 이미지 배열과 현재 인덱스
+      let imageList = [];
+      let currentImageIndex = -1;
+
       // images.json을 불러와 갤러리를 채우는 스크립트
       async function loadGallery() {
         const galleryEl = document.getElementById("gallery");
@@ -70,8 +90,10 @@
             return;
           }
 
-          images.forEach((item) => {
-            if (!item || !item.src) return;
+          // 전역 변수에 이미지 배열 저장
+          imageList = images.filter((item) => item && item.src);
+
+          imageList.forEach((item, index) => {
             const figure = document.createElement("figure");
             figure.className = "gallery-item";
 
@@ -81,7 +103,7 @@
             img.loading = "lazy";
 
             img.addEventListener("click", () => {
-              openLightbox(item.src, item.alt || "");
+              openLightbox(index);
             });
 
             figure.appendChild(img);
@@ -92,13 +114,19 @@
         }
       }
 
-      function openLightbox(src, alt) {
+      function openLightbox(index) {
+        if (index < 0 || index >= imageList.length) return;
+
         const lightbox = document.getElementById("lightbox");
         const img = document.getElementById("lightbox-image");
         if (!lightbox || !img) return;
 
-        img.src = src;
-        img.alt = alt || "";
+        currentImageIndex = index;
+        const item = imageList[index];
+        img.src = item.src;
+        img.alt = item.alt || "";
+
+        updateNavButtons();
 
         lightbox.classList.add("is-open");
         lightbox.setAttribute("aria-hidden", "false");
@@ -112,6 +140,41 @@
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
+        currentImageIndex = -1;
+      }
+
+      function navigateImage(direction) {
+        if (currentImageIndex < 0 || imageList.length === 0) return;
+
+        let newIndex;
+        if (direction === "next") {
+          newIndex = (currentImageIndex + 1) % imageList.length;
+        } else if (direction === "prev") {
+          newIndex = (currentImageIndex - 1 + imageList.length) % imageList.length;
+        } else {
+          return;
+        }
+
+        const img = document.getElementById("lightbox-image");
+        if (!img) return;
+
+        const item = imageList[newIndex];
+        img.src = item.src;
+        img.alt = item.alt || "";
+        currentImageIndex = newIndex;
+
+        updateNavButtons();
+      }
+
+      function updateNavButtons() {
+        const prevBtn = document.querySelector(".lightbox-nav-prev");
+        const nextBtn = document.querySelector(".lightbox-nav-next");
+
+        if (prevBtn && nextBtn) {
+          // 항상 화살표를 보여주지만, 필요하면 숨길 수도 있음
+          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
+          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
+        }
       }
 
       // 라이트박스 이벤트 바인딩
@@ -126,12 +189,25 @@
             target.hasAttribute("data-lightbox-close")
           ) {
             closeLightbox();
+          } else if (
+            target instanceof HTMLElement &&
+            target.hasAttribute("data-lightbox-nav")
+          ) {
+            const direction = target.getAttribute("data-lightbox-nav");
+            navigateImage(direction);
           }
         });
 
         window.addEventListener("keydown", (event) => {
+          const lightbox = document.getElementById("lightbox");
+          if (!lightbox || !lightbox.classList.contains("is-open")) return;
+
           if (event.key === "Escape") {
             closeLightbox();
+          } else if (event.key === "ArrowLeft") {
+            navigateImage("prev");
+          } else if (event.key === "ArrowRight") {
+            navigateImage("next");
           }
         });
       })();
