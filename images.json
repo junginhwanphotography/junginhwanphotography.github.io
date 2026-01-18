@@ -1,54 +1,90 @@
 [
   {
-    "src": "images/0001_0.jpg",
-    "alt": "0001_0"
-  },
-  {
-    "src": "images/0001_00.jpg",
-    "alt": "0001_00"
-  },
-  {
-    "src": "images/0001_00A.jpg",
-    "alt": "0001_00A"
-  },
-  {
-    "src": "images/0001_A.jpg",
-    "alt": "0001_A"
-  },
-  {
-    "src": "images/0002_0.jpg",
-    "alt": "0002_0"
-  },
-  {
-    "src": "images/0002_00A.jpg",
-    "alt": "0002_00A"
-  },
-  {
-    "src": "images/0002_0A.jpg",
-    "alt": "0002_0A"
-  },
-  {
-    "src": "images/0002_1.jpg",
-    "alt": "0002_1"
-  },
-  {
-    "src": "images/0003_0A.jpg",
-    "alt": "0003_0A"
-  },
-  {
-    "src": "images/0003_1.jpg",
-    "alt": "0003_1"
-  },
-  {
     "src": "images/0003_1A.jpg",
     "alt": "0003_1A"
   },
   {
-    "src": "images/0003_2.jpg",
-    "alt": "0003_2"
+    "src": "images/0004_2.jpg",
+    "alt": "0004_2"
   },
   {
-    "src": "images/0004_1A.jpg",
-    "alt": "0004_1A"
+    "src": "images/0005_3A.jpg",
+    "alt": "0005_3A"
+  },
+  {
+    "src": "images/0005_4.jpg",
+    "alt": "0005_4"
+  },
+  {
+    "src": "images/0006_4.jpg",
+    "alt": "0006_4"
+  },
+  {
+    "src": "images/0008_6.jpg",
+    "alt": "0008_6"
+  },
+  {
+    "src": "images/0008_6A.jpg",
+    "alt": "0008_6A"
+  },
+  {
+    "src": "images/0009_6A.jpg",
+    "alt": "0009_6A"
+  },
+  {
+    "src": "images/0009_7.jpg",
+    "alt": "0009_7"
+  },
+  {
+    "src": "images/0011_9.jpg",
+    "alt": "0011_9"
+  },
+  {
+    "src": "images/0020_18A.jpg",
+    "alt": "0020_18A"
+  },
+  {
+    "src": "images/0024_22A.jpg",
+    "alt": "0024_22A"
+  },
+  {
+    "src": "images/0026_23A.jpg",
+    "alt": "0026_23A"
+  },
+  {
+    "src": "images/0028_26.jpg",
+    "alt": "0028_26"
+  },
+  {
+    "src": "images/0028_26A.jpg",
+    "alt": "0028_26A"
+  },
+  {
+    "src": "images/0029_26A.jpg",
+    "alt": "0029_26A"
+  },
+  {
+    "src": "images/0029_27A.jpg",
+    "alt": "0029_27A"
+  },
+  {
+    "src": "images/0030_28A.jpg",
+    "alt": "0030_28A"
+  },
+  {
+    "src": "images/0030_28B.jpg",
+    "alt": "0030_28B"
+  },
+  {
+    "src": "images/0032_30.jpg",
+    "alt": "0032_30"
+  },
+  {
+    "src": "images/0034_32A.jpg",
+    "alt": "0034_32A"
+  },
+  {
+    "src": "images/DSCN4249.JPG",
+    "alt": "DSCN4249"
   }
 ]
