@@ -92,12 +92,12 @@ body.main-page main {
 }
 
 .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
+  width: 100%;
+  margin: 0;
+  padding: 1.5rem 1rem 1.5rem calc(1rem + 30px);
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .site-title {
