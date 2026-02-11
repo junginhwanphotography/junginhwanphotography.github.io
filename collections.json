@@ -1,12 +1,5 @@
 [
-  {
-    "id": "통신보안",
-    "name": "통신보안",
-    "path": "collection.html?collection=통신보안"
-  },
-  {
-    "id": "컬렉션 테스트",
-    "name": "컬렉션 테스트",
-    "path": "collection.html?collection=컬렉션 테스트"
-  }
+  { "id": "wall", "name": "WALL", "path": "wall.html" },
+  { "id": "collection-1", "name": "COLLECTION#1", "path": "collection.html?collection=collection-1" },
+  { "id": "collection-2", "name": "COLLECTION#2", "path": "collection.html?collection=collection-2" }
 ]

@@ -19,9 +19,17 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  const urlPath = req.url === "/" ? "/index.html" : req.url.split("?")[0];
-  const safePath = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, "");
-  const filePath = path.join(ROOT, safePath);
+  let urlPath = req.url === "/" ? "/index.html" : req.url.split("?")[0];
+  // URL 인코딩된 한글 경로 디코딩
+  try {
+    urlPath = decodeURIComponent(urlPath);
+  } catch (e) {
+    // 디코딩 실패 시 원본 사용
+  }
+  // URL 경로를 파일 시스템 경로로 변환 (슬래시 유지)
+  const safePath = urlPath.replace(/^\/+/, "").replace(/^(\.\.[/\\])+/, "");
+  // Windows에서도 슬래시 경로로 처리
+  const filePath = path.join(ROOT, safePath.split("/").join(path.sep));
 
   fs.readFile(filePath, (err, data) => {
     if (err) {
@@ -38,8 +46,4 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`✅ 서버 실행 중: http://localhost:${PORT}`);
-});
-
-
+module.exports = server;

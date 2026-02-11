@@ -3,20 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jung In Hwan Photography Portfolio</title>
+    <title>Jung In Hwan Photography</title>
     <meta
       name="description"
       content="Jung In Hwan의 사진 포트폴리오. 다양한 작품을 한눈에 감상해 보세요."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <aside class="sidebar" id="sidebar">
-      <nav class="sidebar-nav">
-        <!-- collections.json을 통해 자동으로 메뉴가 렌더링됩니다. -->
-      </nav>
-    </aside>
-
+  <body class="collection-page">
     <header class="site-header">
       <div class="header-inner">
         <div>
@@ -28,10 +25,9 @@
       </div>
     </header>
 
-    <main>
-      <section class="gallery" aria-label="사진 갤러리" id="gallery">
-        <!-- images.json을 통해 자동으로 사진이 렌더링됩니다. -->
-      </section>
+    <main class="main-full">
+      <h2 class="collection-title" id="collection-title"></h2>
+      <section class="gallery" aria-label="사진 갤러리" id="gallery"></section>
     </main>
 
     <!-- 클릭 시 확대 보기용 라이트박스 -->
@@ -66,14 +62,7 @@
       </button>
     </div>
 
-    <footer class="site-footer">
-      <p>© <span id="year"></span> Jung In Hwan. All rights reserved.</p>
-    </footer>
-
     <script>
-      // 현재 연도로 자동 업데이트
-      document.getElementById("year").textContent = new Date().getFullYear();
-
       // URL에서 컬렉션 파라미터 가져오기
       const urlParams = new URLSearchParams(window.location.search);
       const collectionId = urlParams.get("collection") || "all";
@@ -95,6 +84,7 @@
         try {
           // 컬렉션 폴더의 images.json 경로
           const jsonPath = `collections/${collectionId}/images.json`;
+          console.log("컬렉션 ID:", collectionId, "JSON 경로:", jsonPath);
           const res = await fetch(jsonPath, { cache: "no-store" });
           if (!res.ok) {
             console.error(`${jsonPath} 로드 실패:`, res.status);
@@ -109,6 +99,10 @@
 
           // 전역 변수에 이미지 배열 저장
           imageList = images.filter((item) => item && item.src);
+          console.log("로드된 이미지 개수:", imageList.length);
+          if (imageList.length > 0) {
+            console.log("첫 번째 이미지 경로:", imageList[0].src);
+          }
 
           imageList.forEach((item, index) => {
             const figure = document.createElement("figure");
@@ -119,11 +113,8 @@
             img.alt = item.alt || "";
             img.loading = "lazy";
 
-            // 이미지 로드 후 비율 확인하여 가로 사진에 landscape 클래스 추가
             img.addEventListener("load", () => {
-              if (img.naturalWidth > img.naturalHeight) {
-                figure.classList.add("landscape");
-              }
+              if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
             });
 
             img.addEventListener("click", () => {
@@ -200,35 +191,18 @@
         }
       }
 
-      // 컬렉션 메뉴 로드
-      async function loadSidebar() {
-        const sidebarNav = document.querySelector(".sidebar-nav");
-        if (!sidebarNav) return;
-
+      // 컬렉션 제목 표시 (collections.json에서 이름 가져오기)
+      async function setCollectionTitle() {
+        const titleEl = document.getElementById("collection-title");
+        if (!titleEl) return;
         try {
           const res = await fetch("collections.json", { cache: "no-store" });
-          if (!res.ok) {
-            console.error("collections.json 로드 실패:", res.status);
-            return;
-          }
+          if (!res.ok) return;
           const collections = await res.json();
-          if (!Array.isArray(collections)) {
-            console.error("collections.json 형식이 올바르지 않습니다.");
-            return;
-          }
-
-          collections.forEach((collection) => {
-            const link = document.createElement("a");
-            link.href = collection.path;
-            link.textContent = collection.name;
-            link.className = "sidebar-link";
-            if (collection.id === collectionId) {
-              link.classList.add("active");
-            }
-            sidebarNav.appendChild(link);
-          });
-        } catch (error) {
-          console.error("사이드바 로드 중 오류:", error);
+          const c = Array.isArray(collections) && collections.find((x) => x.id === collectionId);
+          titleEl.textContent = c ? c.name : collectionId;
+        } catch (e) {
+          titleEl.textContent = collectionId;
         }
       }
 
@@ -268,7 +242,7 @@
       })();
 
       loadGallery();
-      loadSidebar();
+      setCollectionTitle();
     </script>
   </body>
 </html>

@@ -3,19 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jung In Hwan Photography Portfolio</title>
+    <title>Jung In Hwan Photography</title>
     <meta
       name="description"
       content="Jung In Hwan의 사진 포트폴리오. 다양한 작품을 한눈에 감상해 보세요."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <aside class="sidebar" id="sidebar">
-      <nav class="sidebar-nav">
-        <!-- collections.json을 통해 자동으로 메뉴가 렌더링됩니다. -->
-      </nav>
-    </aside>
+  <body class="main-page">
+    <nav class="collection-nav" id="collection-nav">
+      <!-- collections.json을 통해 자동으로 메뉴가 렌더링됩니다. -->
+    </nav>
 
     <header class="site-header">
       <div class="header-inner">
@@ -28,236 +29,38 @@
       </div>
     </header>
 
-    <main>
-      <section class="gallery" aria-label="사진 갤러리" id="gallery">
-        <!-- images.json을 통해 자동으로 사진이 렌더링됩니다. -->
-      </section>
+    <main class="main-blank">
+      <!-- 메인: 로고 아래 흰 공백 -->
     </main>
 
-    <!-- 클릭 시 확대 보기용 라이트박스 -->
-    <div class="lightbox" id="lightbox" aria-hidden="true">
-      <div class="lightbox-backdrop" data-lightbox-close></div>
-      <figure class="lightbox-content">
-        <img id="lightbox-image" alt="" />
-        <button
-          class="lightbox-close"
-          type="button"
-          aria-label="확대 이미지 닫기"
-          data-lightbox-close
-        >
-          ×
-        </button>
-      </figure>
-      <button
-        class="lightbox-nav lightbox-nav-prev"
-        type="button"
-        aria-label="이전 사진"
-        data-lightbox-nav="prev"
-      >
-        ‹
-      </button>
-      <button
-        class="lightbox-nav lightbox-nav-next"
-        type="button"
-        aria-label="다음 사진"
-        data-lightbox-nav="next"
-      >
-        ›
-      </button>
-    </div>
-
-    <footer class="site-footer">
-      <p>© <span id="year"></span> Jung In Hwan. All rights reserved.</p>
-    </footer>
-
     <script>
-      // 현재 연도로 자동 업데이트
-      document.getElementById("year").textContent = new Date().getFullYear();
-
-      // 전역 변수: 이미지 배열과 현재 인덱스
-      let imageList = [];
-      let currentImageIndex = -1;
-
-      // images.json을 불러와 갤러리를 채우는 스크립트
-      async function loadGallery() {
-        const galleryEl = document.getElementById("gallery");
-        if (!galleryEl) return;
-
-        try {
-          const res = await fetch("images.json", { cache: "no-store" });
-          if (!res.ok) {
-            console.error("images.json 로드 실패:", res.status);
-            return;
-          }
-          const data = await res.json();
-          const images = Array.isArray(data) ? data : data.images;
-          if (!Array.isArray(images)) {
-            console.error("images.json 형식이 올바르지 않습니다.");
-            return;
-          }
-
-          // 전역 변수에 이미지 배열 저장
-          imageList = images.filter((item) => item && item.src);
-
-          imageList.forEach((item, index) => {
-            const figure = document.createElement("figure");
-            figure.className = "gallery-item";
-
-            const img = document.createElement("img");
-            img.src = item.src;
-            img.alt = item.alt || "";
-            img.loading = "lazy";
-
-            // 이미지 로드 후 비율 확인하여 가로 사진에 landscape 클래스 추가
-            img.addEventListener("load", () => {
-              if (img.naturalWidth > img.naturalHeight) {
-                figure.classList.add("landscape");
-              }
-            });
-
-            img.addEventListener("click", () => {
-              openLightbox(index);
-            });
-
-            figure.appendChild(img);
-            galleryEl.appendChild(figure);
-          });
-        } catch (error) {
-          console.error("갤러리 로드 중 오류:", error);
-        }
-      }
-
-      function openLightbox(index) {
-        if (index < 0 || index >= imageList.length) return;
-
-        const lightbox = document.getElementById("lightbox");
-        const img = document.getElementById("lightbox-image");
-        if (!lightbox || !img) return;
-
-        currentImageIndex = index;
-        const item = imageList[index];
-        img.src = item.src;
-        img.alt = item.alt || "";
-
-        updateNavButtons();
-
-        lightbox.classList.add("is-open");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeLightbox() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox) return;
-
-        lightbox.classList.remove("is-open");
-        lightbox.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-        currentImageIndex = -1;
-      }
-
-      function navigateImage(direction) {
-        if (currentImageIndex < 0 || imageList.length === 0) return;
-
-        let newIndex;
-        if (direction === "next") {
-          newIndex = (currentImageIndex + 1) % imageList.length;
-        } else if (direction === "prev") {
-          newIndex = (currentImageIndex - 1 + imageList.length) % imageList.length;
-        } else {
-          return;
-        }
-
-        const img = document.getElementById("lightbox-image");
-        if (!img) return;
-
-        const item = imageList[newIndex];
-        img.src = item.src;
-        img.alt = item.alt || "";
-        currentImageIndex = newIndex;
-
-        updateNavButtons();
-      }
-
-      function updateNavButtons() {
-        const prevBtn = document.querySelector(".lightbox-nav-prev");
-        const nextBtn = document.querySelector(".lightbox-nav-next");
-
-        if (prevBtn && nextBtn) {
-          // 항상 화살표를 보여주지만, 필요하면 숨길 수도 있음
-          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
-          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
-        }
-      }
-
-      // 라이트박스 이벤트 바인딩
-      (function setupLightboxEvents() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox) return;
-
-        lightbox.addEventListener("click", (event) => {
-          const target = event.target;
-          if (
-            target instanceof HTMLElement &&
-            target.hasAttribute("data-lightbox-close")
-          ) {
-            closeLightbox();
-          } else if (
-            target instanceof HTMLElement &&
-            target.hasAttribute("data-lightbox-nav")
-          ) {
-            const direction = target.getAttribute("data-lightbox-nav");
-            navigateImage(direction);
-          }
-        });
-
-        window.addEventListener("keydown", (event) => {
-          const lightbox = document.getElementById("lightbox");
-          if (!lightbox || !lightbox.classList.contains("is-open")) return;
-
-          if (event.key === "Escape") {
-            closeLightbox();
-          } else if (event.key === "ArrowLeft") {
-            navigateImage("prev");
-          } else if (event.key === "ArrowRight") {
-            navigateImage("next");
-          }
-        });
-      })();
-
-      // 컬렉션 메뉴 로드
+      // 컬렉션 메뉴 로드 (WALL, COLLECTION#1, COLLECTION#2)
       async function loadSidebar() {
-        const sidebarNav = document.querySelector(".sidebar-nav");
-        if (!sidebarNav) return;
+        const nav = document.getElementById("collection-nav");
+        if (!nav) return;
+
+        let currentId = "index";
+        if (window.location.pathname.includes("wall.html")) currentId = "wall";
+        else if (window.location.pathname.includes("collection.html")) {
+          currentId = new URLSearchParams(window.location.search).get("collection") || "";
+        }
 
         try {
           const res = await fetch("collections.json", { cache: "no-store" });
-          if (!res.ok) {
-            console.error("collections.json 로드 실패:", res.status);
-            return;
-          }
+          if (!res.ok) return;
           const collections = await res.json();
-          if (!Array.isArray(collections)) {
-            console.error("collections.json 형식이 올바르지 않습니다.");
-            return;
-          }
+          if (!Array.isArray(collections)) return;
 
           collections.forEach((collection) => {
             const link = document.createElement("a");
             link.href = collection.path;
             link.textContent = collection.name;
             link.className = "sidebar-link";
-            if (collection.id === "all") {
-              link.classList.add("active");
-            }
-            sidebarNav.appendChild(link);
+            if (collection.id === currentId) link.classList.add("active");
+            nav.appendChild(link);
           });
-        } catch (error) {
-          console.error("사이드바 로드 중 오류:", error);
-        }
+        } catch (e) {}
       }
-
-      loadGallery();
       loadSidebar();
     </script>
   </body>
