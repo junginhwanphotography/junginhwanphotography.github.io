@@ -117,9 +117,45 @@
         }
       }
 
+      // 터치 스와이프 감지
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      function handleTouchStart(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }
+
+      function handleTouchEnd(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }
+
+      function handleSwipe() {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox || !lightbox.classList.contains("is-open")) return;
+
+        const swipeThreshold = 50; // 최소 스와이프 거리
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            // 왼쪽으로 스와이프 (다음 이미지)
+            navigateImage("next");
+          } else {
+            // 오른쪽으로 스와이프 (이전 이미지)
+            navigateImage("prev");
+          }
+        }
+      }
+
       (function setupLightbox() {
         const lightbox = document.getElementById("lightbox");
         if (!lightbox) return;
+
+        // 터치 이벤트 추가
+        lightbox.addEventListener("touchstart", handleTouchStart, { passive: true });
+        lightbox.addEventListener("touchend", handleTouchEnd, { passive: true });
+
         lightbox.addEventListener("click", (e) => {
           const t = e.target;
           if (t && t.hasAttribute && t.hasAttribute("data-lightbox-close")) closeLightbox();

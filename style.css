@@ -43,9 +43,13 @@ body.main-page .collection-nav {
   gap: 0.5rem;
 }
 
-/* 메인 페이지 로고: 컬렉션 페이지와 동일한 위치·폰트·크기 (헤더 전체 너비) */
+/* 메인 페이지 로고: 컬렉션 페이지와 동일한 위치·폰트·크기 */
 body.main-page .site-header {
   margin-left: 0;
+}
+
+body.main-page .site-header .header-inner {
+  padding: 1.5rem 1rem 1.5rem calc(1rem + 30px);
 }
 
 body.main-page .site-header .site-title,
@@ -300,18 +304,14 @@ main.main-blank {
 }
 
 @media (max-width: 640px) {
+  /* 모바일: 네비게이션 버튼 숨기기 */
   .lightbox-nav {
-    width: 44px;
-    height: 44px;
-    font-size: 1.6rem;
+    display: none !important;
   }
 
-  .lightbox-nav-prev {
-    left: 0.75rem;
-  }
-
-  .lightbox-nav-next {
-    right: 0.75rem;
+  /* 모바일: X 버튼 배경 투명도 0 */
+  .lightbox-close {
+    background: rgba(0, 0, 0, 0) !important;
   }
 }
 
@@ -402,12 +402,17 @@ main.main-blank {
     font-size: 1.8rem;
   }
 
-  body.main-page .site-header,
-  body.main-page main {
-    margin-left: 200px;
+  /* 모바일: 메인 페이지 헤더를 컬렉션 페이지와 동일하게 */
+  body.main-page .site-header {
+    margin-left: 0;
+  }
+
+  body.main-page .site-header .header-inner {
+    padding: 1.5rem 1rem;
   }
 
   body.main-page main {
+    margin-left: 200px;
     width: calc(100% - 200px);
   }
 
@@ -425,8 +430,31 @@ main.main-blank {
     letter-spacing: 0.16em;
   }
 
+  /* 모바일: 갤러리 한 열에 하나의 사진, 크게 표시 */
   .gallery {
-    --gallery-row-height: 220px;
+    --gallery-row-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 0 !important;
+    row-gap: 0 !important;
+    column-gap: 0 !important;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gallery-item {
+    flex: 0 0 auto;
+    width: 100%;
+    height: var(--gallery-row-height);
+    margin: 0 !important;
+    padding: 0 0 10px 0 !important;
+    display: flex;
+    box-sizing: border-box;
+  }
+
+  .gallery-item:last-child {
+    padding-bottom: 0 !important;
   }
 }
 
