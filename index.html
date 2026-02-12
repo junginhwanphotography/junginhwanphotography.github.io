@@ -51,12 +51,16 @@
           const collections = await res.json();
           if (!Array.isArray(collections)) return;
 
-          collections.forEach((collection) => {
+          collections.forEach((collection, index) => {
             const link = document.createElement("a");
             link.href = collection.path;
             link.textContent = collection.name;
             link.className = "sidebar-link";
             if (collection.id === currentId) link.classList.add("active");
+            // WALL 다음에 간격 추가
+            if (collection.id === "wall") {
+              link.classList.add("wall-link");
+            }
             nav.appendChild(link);
           });
         } catch (e) {}
