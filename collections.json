@@ -5,18 +5,13 @@
     "path": "wall.html"
   },
   {
-    "id": "collection-2",
-    "name": "COLLECTION#2",
-    "path": "collection.html?collection=collection-2"
+    "id": "collection#1",
+    "name": "collection#1",
+    "path": "collection.html?collection=collection#1"
   },
   {
-    "id": "collection-11",
-    "name": "collection-11",
-    "path": "collection.html?collection=collection-11"
-  },
-  {
-    "id": "테스트",
-    "name": "테스트",
-    "path": "collection.html?collection=테스트"
+    "id": "collection#2",
+    "name": "collection#2",
+    "path": "collection.html?collection=collection#2"
   }
 ]

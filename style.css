@@ -36,8 +36,8 @@ body.main-page .collection-nav {
   padding: 0 1.5rem 2rem 1.5rem;
   background: transparent;
   z-index: 5;
-  width: auto;
-  max-width: 320px;
+  width: max-content;
+  min-width: max-content;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -58,8 +58,8 @@ body.main-page .site-header .site-subtitle {
 }
 
 body.main-page main {
-  margin-left: 300px;
-  width: calc(100% - 300px);
+  margin-left: 380px;
+  width: calc(100% - 380px);
 }
 
 /* 컬렉션 링크 (메인 + 기타에서 재사용) */
@@ -75,6 +75,7 @@ body.main-page main {
   transition: color 0.2s ease;
   display: block;
   white-space: nowrap;
+  min-width: min-content;
 }
 
 /* WALL 링크 다음에 간격 추가 */
@@ -363,7 +364,6 @@ main.main-blank {
 
 @media (max-width: 900px) {
   body.main-page .collection-nav {
-    max-width: 280px;
     padding: 7rem 1rem 2rem 1rem;
   }
 
@@ -374,11 +374,11 @@ main.main-blank {
 
   body.main-page .site-header,
   body.main-page main {
-    margin-left: 260px;
+    margin-left: 320px;
   }
 
   body.main-page main {
-    width: calc(100% - 260px);
+    width: calc(100% - 320px);
   }
 
   main {
@@ -399,7 +399,6 @@ main.main-blank {
 
 @media (max-width: 640px) {
   body.main-page .collection-nav {
-    max-width: 220px;
     top: 10rem;
     padding: 0 0.75rem 2rem 0.75rem;
   }
