@@ -1,17 +1,17 @@
 [
   {
-    "id": "wall",
-    "name": "WALL",
-    "path": "wall.html"
+    "id": "_WALL",
+    "name": "_WALL",
+    "path": "collection.html?collection=_WALL"
   },
   {
-    "id": "collection#1",
-    "name": "collection#1",
-    "path": "collection.html?collection=collection#1"
+    "id": "COMSEC",
+    "name": "COMSEC",
+    "path": "collection.html?collection=COMSEC"
   },
   {
-    "id": "collection#2",
-    "name": "collection#2",
-    "path": "collection.html?collection=collection#2"
+    "id": "COLLECTION#2",
+    "name": "COLLECTION#2",
+    "path": "collection.html?collection=COLLECTION%232"
   }
 ]

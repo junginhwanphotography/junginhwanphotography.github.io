@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate images.json
-        run: node generate-images-json.js
+      - name: Sync collections (images.json, collections.json)
+        run: node -e "require('./sync-local.js').runSync()"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

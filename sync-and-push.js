@@ -23,7 +23,7 @@ runSync()
       }
       console.log("\n📤 Git 커밋 및 푸시...");
       run("git add -A");
-      run('git commit -m "chore: WALL/collections 동기화"');
+      run('git commit -m "chore: collections 동기화"');
       run("git push");
       console.log("\n✅ 동기화 및 푸시 완료.");
     } catch (e) {

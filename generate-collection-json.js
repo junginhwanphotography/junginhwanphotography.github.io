@@ -1,11 +1,12 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const ROOT = process.cwd();
-const COLLECTION_NAME = process.argv[2];
+const ROOT = path.resolve(__dirname);
+// 환경변수로 전달 시 # 등 특수문자가 Windows에서도 안전하게 전달됨
+const COLLECTION_NAME = process.env.COLLECTION_ID || process.argv[2];
 
 if (!COLLECTION_NAME) {
-  console.error("❌ 사용법: node generate-collection-json.js [컬렉션명]");
+  console.error("❌ 사용법: node generate-collection-json.js [컬렉션명] 또는 COLLECTION_ID 환경변수 설정");
   console.error('예: node generate-collection-json.js "통신보안"');
   process.exit(1);
 }
@@ -33,7 +34,7 @@ async function main() {
       .filter((name) =>
         IMAGE_EXTENSIONS.includes(path.extname(name).toLowerCase())
       )
-      .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+      .sort((a, b) => b.localeCompare(a, "en", { numeric: true }));
 
     const data = files.map((file) => ({
       src: `collections/${COLLECTION_NAME}/${file}`,

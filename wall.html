@@ -3,173 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jung In Hwan Photography — WALL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body class="collection-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <div>
-          <h1 class="site-title">
-            <a href="index.html" class="site-title-link">Jung In Hwan</a>
-          </h1>
-          <p class="site-subtitle">Photography</p>
-        </div>
-      </div>
-    </header>
-
-    <main class="main-full">
-      <h2 class="collection-title">WALL</h2>
-      <section class="gallery" aria-label="사진 갤러리" id="gallery"></section>
-    </main>
-
-    <div class="lightbox" id="lightbox" aria-hidden="true">
-      <div class="lightbox-backdrop" data-lightbox-close></div>
-      <figure class="lightbox-content">
-        <img id="lightbox-image" alt="" />
-        <button class="lightbox-close" type="button" aria-label="확대 이미지 닫기" data-lightbox-close>×</button>
-      </figure>
-      <button class="lightbox-nav lightbox-nav-prev" type="button" aria-label="이전 사진" data-lightbox-nav="prev">‹</button>
-      <button class="lightbox-nav lightbox-nav-next" type="button" aria-label="다음 사진" data-lightbox-nav="next">›</button>
-    </div>
-
+    <title>Jung In Hwan Photography</title>
     <script>
-      let imageList = [];
-      let currentImageIndex = -1;
-
-      async function loadGallery() {
-        const galleryEl = document.getElementById("gallery");
-        if (!galleryEl) return;
-
-        try {
-          const res = await fetch("images.json", { cache: "no-store" });
-          if (!res.ok) return;
-          const data = await res.json();
-          const images = Array.isArray(data) ? data : (data.images || []);
-          imageList = images.filter((item) => item && item.src);
-
-          imageList.forEach((item, index) => {
-            const figure = document.createElement("figure");
-            figure.className = "gallery-item";
-            const img = document.createElement("img");
-            img.src = item.src;
-            img.alt = item.alt || "";
-            img.loading = "lazy";
-            img.addEventListener("load", () => {
-              if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
-            });
-            img.addEventListener("click", () => openLightbox(index));
-            figure.appendChild(img);
-            galleryEl.appendChild(figure);
-          });
-        } catch (e) {
-          console.error("갤러리 로드 오류:", e);
-        }
-      }
-
-      function openLightbox(index) {
-        if (index < 0 || index >= imageList.length) return;
-        const lightbox = document.getElementById("lightbox");
-        const img = document.getElementById("lightbox-image");
-        if (!lightbox || !img) return;
-        currentImageIndex = index;
-        const item = imageList[index];
-        img.src = item.src;
-        img.alt = item.alt || "";
-        updateNavButtons();
-        lightbox.classList.add("is-open");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeLightbox() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox) return;
-        lightbox.classList.remove("is-open");
-        lightbox.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-        currentImageIndex = -1;
-      }
-
-      function navigateImage(direction) {
-        if (currentImageIndex < 0 || imageList.length === 0) return;
-        const newIndex = direction === "next"
-          ? (currentImageIndex + 1) % imageList.length
-          : (currentImageIndex - 1 + imageList.length) % imageList.length;
-        const img = document.getElementById("lightbox-image");
-        if (!img) return;
-        const item = imageList[newIndex];
-        img.src = item.src;
-        img.alt = item.alt || "";
-        currentImageIndex = newIndex;
-        updateNavButtons();
-      }
-
-      function updateNavButtons() {
-        const prevBtn = document.querySelector(".lightbox-nav-prev");
-        const nextBtn = document.querySelector(".lightbox-nav-next");
-        if (prevBtn && nextBtn) {
-          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
-          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
-        }
-      }
-
-      // 터치 스와이프 감지
-      let touchStartX = 0;
-      let touchEndX = 0;
-
-      function handleTouchStart(e) {
-        touchStartX = e.changedTouches[0].screenX;
-      }
-
-      function handleTouchEnd(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }
-
-      function handleSwipe() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox || !lightbox.classList.contains("is-open")) return;
-
-        const swipeThreshold = 50; // 최소 스와이프 거리
-        const diff = touchStartX - touchEndX;
-
-        if (Math.abs(diff) > swipeThreshold) {
-          if (diff > 0) {
-            // 왼쪽으로 스와이프 (다음 이미지)
-            navigateImage("next");
-          } else {
-            // 오른쪽으로 스와이프 (이전 이미지)
-            navigateImage("prev");
-          }
-        }
-      }
-
-      (function setupLightbox() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox) return;
-
-        // 터치 이벤트 추가
-        lightbox.addEventListener("touchstart", handleTouchStart, { passive: true });
-        lightbox.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-        lightbox.addEventListener("click", (e) => {
-          const t = e.target;
-          if (t && t.hasAttribute && t.hasAttribute("data-lightbox-close")) closeLightbox();
-          if (t && t.hasAttribute && t.hasAttribute("data-lightbox-nav")) navigateImage(t.getAttribute("data-lightbox-nav"));
-        });
-        window.addEventListener("keydown", (e) => {
-          if (!lightbox.classList.contains("is-open")) return;
-          if (e.key === "Escape") closeLightbox();
-          if (e.key === "ArrowLeft") navigateImage("prev");
-          if (e.key === "ArrowRight") navigateImage("next");
-        });
+      (function () {
+        fetch("collections.json", { cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (list) {
+            if (!Array.isArray(list)) return;
+            var first = list.find(function (c) { return c.id && c.id.startsWith("_"); });
+            if (first) {
+              window.location.replace("collection.html?collection=" + encodeURIComponent(first.id));
+              return;
+            }
+            window.location.replace("index.html");
+          })
+          .catch(function () { window.location.replace("index.html"); });
       })();
-
-      loadGallery();
     </script>
+  </head>
+  <body>
+    <p>이동 중…</p>
   </body>
 </html>

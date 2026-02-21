@@ -71,6 +71,14 @@
       let imageList = [];
       let currentImageIndex = -1;
 
+      // 현재 컬렉션 id + 파일명으로 이미지 URL 생성 (폴더명 변경 후에도 항상 올바른 경로)
+      function imageUrlForItem(colId, item) {
+        if (!item || !item.src) return "";
+        const filename = item.src.split("/").pop() || item.src;
+        const path = "collections/" + encodeURIComponent(colId) + "/" + encodeURIComponent(filename);
+        return window.location.origin + "/" + path;
+      }
+
       // 컬렉션 폴더의 images.json을 불러와 갤러리를 채우는 스크립트
       async function loadGallery() {
         const galleryEl = document.getElementById("gallery");
@@ -82,8 +90,8 @@
         }
 
         try {
-          // 컬렉션 폴더의 images.json 경로
-          const jsonPath = `collections/${collectionId}/images.json`;
+          // 컬렉션 폴더의 images.json 경로 (# 등 특수문자 인코딩)
+          const jsonPath = `collections/${encodeURIComponent(collectionId)}/images.json`;
           console.log("컬렉션 ID:", collectionId, "JSON 경로:", jsonPath);
           const res = await fetch(jsonPath, { cache: "no-store" });
           if (!res.ok) {
@@ -109,7 +117,7 @@
             figure.className = "gallery-item";
 
             const img = document.createElement("img");
-            img.src = item.src;
+            img.src = imageUrlForItem(collectionId, item);
             img.alt = item.alt || "";
             img.loading = "lazy";
 
@@ -138,7 +146,7 @@
 
         currentImageIndex = index;
         const item = imageList[index];
-        img.src = item.src;
+        img.src = imageUrlForItem(collectionId, item);
         img.alt = item.alt || "";
 
         updateNavButtons();
@@ -174,7 +182,7 @@
         if (!img) return;
 
         const item = imageList[newIndex];
-        img.src = item.src;
+        img.src = imageUrlForItem(collectionId, item);
         img.alt = item.alt || "";
         currentImageIndex = newIndex;
 
@@ -191,7 +199,10 @@
         }
       }
 
-      // 컬렉션 제목 표시 (collections.json에서 이름 가져오기)
+      // 컬렉션 제목 표시: 폴더명(id)과 동일, _ 로 시작하면 _ 만 제거
+      function displayName(id) {
+        return id && id.startsWith("_") ? id.slice(1) : (id || "");
+      }
       async function setCollectionTitle() {
         const titleEl = document.getElementById("collection-title");
         if (!titleEl) return;
@@ -200,9 +211,9 @@
           if (!res.ok) return;
           const collections = await res.json();
           const c = Array.isArray(collections) && collections.find((x) => x.id === collectionId);
-          titleEl.textContent = c ? c.name : collectionId;
+          titleEl.textContent = c ? displayName(c.id) : displayName(collectionId);
         } catch (e) {
-          titleEl.textContent = collectionId;
+          titleEl.textContent = displayName(collectionId);
         }
       }
 

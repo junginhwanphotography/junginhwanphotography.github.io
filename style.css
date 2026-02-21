@@ -70,7 +70,6 @@ body.main-page main {
   text-decoration: none;
   font-size: 2.85rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   padding: 0.5rem 0;
   transition: color 0.2s ease;
   display: block;
@@ -159,12 +158,12 @@ body.collection-page {
   font-family: "Crimson Text", Georgia, serif;
 }
 
-/* 컬렉션 제목: Crimson Text, 크기 축소 */
+/* 컬렉션 제목: 폴더명과 동일하게 표시(대소문자 그대로) */
 .collection-title {
   font-family: "Crimson Text", Georgia, serif;
   font-size: clamp(1.5rem, 6vw, 4rem);
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   margin: 0 0 1.5rem;
   color: #111111;
   white-space: nowrap;
