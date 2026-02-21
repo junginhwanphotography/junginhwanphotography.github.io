@@ -74,6 +74,7 @@ body.main-page main {
   padding: 0.5rem 0;
   transition: color 0.2s ease;
   display: block;
+  white-space: nowrap;
 }
 
 /* WALL 링크 다음에 간격 추가 */
@@ -165,6 +166,7 @@ body.collection-page {
   letter-spacing: 0.02em;
   margin: 0 0 1.5rem;
   color: #111111;
+  white-space: nowrap;
 }
 
 /* 메인 화면: 로고 아래 흰 공백 */
