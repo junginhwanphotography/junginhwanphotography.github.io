@@ -1,0 +1,466 @@
+/* 기본 리셋 & 타이포그래피 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: #ffffff; /* 흰색 배경 */
+  color: #111111;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 메인 페이지: 컬렉션 네비 (사이드바 없음, 통짜 배경, 버튼만 같은 위치) */
+body.main-page .collection-nav {
+  position: fixed;
+  left: 0;
+  top: 12rem;
+  padding: 0 1.5rem 2rem 1.5rem;
+  background: transparent;
+  z-index: 5;
+  width: max-content;
+  min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+/* 메인 페이지 로고: 컬렉션 페이지와 동일한 위치·폰트·크기 */
+body.main-page .site-header {
+  margin-left: 0;
+}
+
+body.main-page .site-header .header-inner {
+  padding: 1.5rem 1rem 1.5rem calc(1rem + 30px);
+}
+
+body.main-page .site-header .site-title,
+body.main-page .site-header .site-subtitle {
+  font-family: "Crimson Text", Georgia, serif;
+}
+
+body.main-page main {
+  margin-left: 380px;
+  width: calc(100% - 380px);
+}
+
+/* 컬렉션 링크 (메인 + 기타에서 재사용) */
+.sidebar-link,
+.collection-nav a {
+  font-family: "Crimson Text", Georgia, serif;
+  color: #666666;
+  text-decoration: none;
+  font-size: 2.85rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+  display: block;
+  white-space: nowrap;
+  min-width: min-content;
+}
+
+/* WALL 링크 다음에 간격 추가 */
+body.main-page .collection-nav .wall-link {
+  margin-bottom: 2.0rem;
+}
+
+.sidebar-link:hover,
+.collection-nav a:hover {
+  color: #111111;
+}
+
+.sidebar-link.active,
+.collection-nav a.active {
+  color: #111111;
+  font-weight: 500;
+}
+
+/* 레이아웃 */
+.site-header {
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  width: 100%;
+  margin: 0;
+  padding: 1.5rem 1rem 1.5rem calc(1rem + 30px);
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.site-title {
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.site-title-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.site-title-link:hover {
+  opacity: 0.7;
+}
+
+.site-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #666666;
+}
+
+main {
+  margin-left: 240px;
+  padding: 1.5rem 1.5rem 3rem;
+  box-sizing: border-box;
+  width: calc(100% - 240px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 컬렉션 페이지: 사이드바 없음, 전체 너비 */
+body.collection-page main.main-full {
+  margin-left: 0;
+  width: 100%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+body.collection-page {
+  font-family: "Crimson Text", Georgia, serif;
+}
+
+/* 컬렉션 제목: 폴더명과 동일하게 표시(대소문자 그대로) */
+.collection-title {
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: clamp(1.5rem, 6vw, 4rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.5rem;
+  color: #111111;
+  white-space: nowrap;
+}
+
+/* 메인 화면: 로고 아래 흰 공백 */
+main.main-blank {
+  flex: 1;
+  min-height: 50vh;
+}
+
+.intro {
+  margin-bottom: 1.5rem;
+  max-width: 720px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #444444;
+}
+
+.intro-sub {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: #888888;
+}
+
+/* 사진 갤러리: 행 높이 고정, 원본 비율 유지, 각 행의 사진이 위·아래 끝에 맞춤 */
+.gallery {
+  --gallery-row-height: 280px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 1400px;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: #ffffff;
+  height: var(--gallery-row-height);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.gallery-item img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.03);
+  filter: brightness(1.02);
+}
+
+/* 라이트박스(이미지 확대) */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 40;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: min(1400px, 95vw);
+  max-height: 95vh;
+  margin: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+  background-color: #000000;
+  display: block;
+}
+
+.lightbox-content img {
+  width: 100%;
+  height: auto;
+  max-height: 95vh;
+  object-fit: contain;
+  background-color: #000000;
+  display: block;
+}
+
+/* 이전/다음: 세로 중앙, 가로는 좌·우 끝 근처 */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  z-index: 15;
+  opacity: 0.85;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.lightbox-nav:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  opacity: 1;
+}
+
+.lightbox-nav-prev {
+  left: 1.5rem;
+}
+
+.lightbox-nav-next {
+  right: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  /* 모바일: 네비게이션 버튼 숨기기 */
+  .lightbox-nav {
+    display: none !important;
+  }
+
+  /* 모바일: X 버튼 배경 투명도 0 */
+  .lightbox-close {
+    background: rgba(0, 0, 0, 0) !important;
+  }
+}
+
+/* 닫기(X): 화면 우측 상단 고정 */
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 1.75rem;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  opacity: 0.9;
+}
+
+.lightbox-close:hover {
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+}
+
+/* 푸터 숨김 */
+.site-footer {
+  display: none;
+}
+
+/* 반응형: 작은 화면에서 행 높이만 조절 (열 수는 flex wrap으로 자동) */
+@media (max-width: 1200px) {
+  .gallery {
+    --gallery-row-height: 260px;
+  }
+}
+
+@media (max-width: 900px) {
+  body.main-page .collection-nav {
+    padding: 7rem 1rem 2rem 1rem;
+  }
+
+  body.main-page .collection-nav a,
+  .sidebar-link {
+    font-size: 2.2rem;
+  }
+
+  body.main-page .site-header,
+  body.main-page main {
+    margin-left: 320px;
+  }
+
+  body.main-page main {
+    width: calc(100% - 320px);
+  }
+
+  main {
+    padding-inline: 1rem;
+    margin-left: 200px;
+    margin-right: auto;
+    width: calc(100% - 200px);
+  }
+
+  .header-inner {
+    padding-inline: 1rem;
+  }
+
+  .gallery {
+    --gallery-row-height: 240px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.main-page .collection-nav {
+    top: 10rem;
+    padding: 0 0.75rem 2rem 0.75rem;
+  }
+
+  body.main-page .collection-nav a,
+  .sidebar-link {
+    font-size: 1.8rem;
+  }
+
+  /* 모바일: 메인 페이지 헤더를 컬렉션 페이지와 동일하게 */
+  body.main-page .site-header {
+    margin-left: 0;
+  }
+
+  body.main-page .site-header .header-inner {
+    padding: 1.5rem 1rem;
+  }
+
+  body.main-page main {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+
+  main {
+    margin-left: 160px;
+    margin-right: auto;
+    width: calc(100% - 160px);
+  }
+
+  .site-title {
+    font-size: 1.3rem;
+  }
+
+  .site-subtitle {
+    letter-spacing: 0.16em;
+  }
+
+  /* 모바일: 갤러리 한 열에 하나의 사진, 크게 표시 */
+  .gallery {
+    --gallery-row-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 0 !important;
+    row-gap: 0 !important;
+    column-gap: 0 !important;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gallery-item {
+    flex: 0 0 auto;
+    width: 100%;
+    height: var(--gallery-row-height);
+    margin: 0 !important;
+    padding: 0 0 10px 0 !important;
+    display: flex;
+    box-sizing: border-box;
+  }
+
+  .gallery-item:last-child {
+    padding-bottom: 0 !important;
+  }
+}
+
+

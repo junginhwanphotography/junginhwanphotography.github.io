@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jung In Hwan Photography</title>
+    <meta
+      name="description"
+      content="Jung In Hwan의 사진 포트폴리오. 다양한 작품을 한눈에 감상해 보세요."
+    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Jung In Hwan Photography" />
+    <meta property="og:description" content="Jung In Hwan의 사진 포트폴리오. 다양한 작품을 한눈에 감상해 보세요." />
+    <meta property="og:image" content="og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="collection-page">
+    <header class="site-header">
+      <div class="header-inner">
+        <div>
+          <h1 class="site-title">
+            <a href="index.html" class="site-title-link">Jung In Hwan</a>
+          </h1>
+          <p class="site-subtitle">Photography</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-full">
+      <h2 class="collection-title" id="collection-title"></h2>
+      <section class="gallery" aria-label="사진 갤러리" id="gallery"></section>
+    </main>
+
+    <!-- 클릭 시 확대 보기용 라이트박스 -->
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <div class="lightbox-backdrop" data-lightbox-close></div>
+      <figure class="lightbox-content">
+        <img id="lightbox-image" alt="" />
+        <button
+          class="lightbox-close"
+          type="button"
+          aria-label="확대 이미지 닫기"
+          data-lightbox-close
+        >
+          ×
+        </button>
+      </figure>
+      <button
+        class="lightbox-nav lightbox-nav-prev"
+        type="button"
+        aria-label="이전 사진"
+        data-lightbox-nav="prev"
+      >
+        ‹
+      </button>
+      <button
+        class="lightbox-nav lightbox-nav-next"
+        type="button"
+        aria-label="다음 사진"
+        data-lightbox-nav="next"
+      >
+        ›
+      </button>
+    </div>
+
+    <script>
+      // URL에서 컬렉션 파라미터 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const collectionId = urlParams.get("collection") || "all";
+
+      // 전역 변수: 이미지 배열과 현재 인덱스
+      let imageList = [];
+      let currentImageIndex = -1;
+
+      // 현재 컬렉션 id + 파일명으로 이미지 URL 생성 (폴더명 변경 후에도 항상 올바른 경로)
+      function imageUrlForItem(colId, item) {
+        if (!item || !item.src) return "";
+        const filename = item.src.split("/").pop() || item.src;
+        const path = "collections/" + encodeURIComponent(colId) + "/" + encodeURIComponent(filename);
+        return window.location.origin + "/" + path;
+      }
+
+      // 컬렉션 폴더의 images.json을 불러와 갤러리를 채우는 스크립트
+      async function loadGallery() {
+        const galleryEl = document.getElementById("gallery");
+        if (!galleryEl) return;
+
+        if (collectionId === "all") {
+          console.error("컬렉션 페이지는 'all'을 지원하지 않습니다.");
+          return;
+        }
+
+        try {
+          // 컬렉션 폴더의 images.json 경로 (# 등 특수문자 인코딩)
+          const jsonPath = `collections/${encodeURIComponent(collectionId)}/images.json`;
+          console.log("컬렉션 ID:", collectionId, "JSON 경로:", jsonPath);
+          const res = await fetch(jsonPath, { cache: "no-store" });
+          if (!res.ok) {
+            console.error(`${jsonPath} 로드 실패:`, res.status);
+            return;
+          }
+          const data = await res.json();
+          const images = Array.isArray(data) ? data : data.images;
+          if (!Array.isArray(images)) {
+            console.error("images.json 형식이 올바르지 않습니다.");
+            return;
+          }
+
+          // 전역 변수에 이미지 배열 저장
+          imageList = images.filter((item) => item && item.src);
+          console.log("로드된 이미지 개수:", imageList.length);
+          if (imageList.length > 0) {
+            console.log("첫 번째 이미지 경로:", imageList[0].src);
+          }
+
+          imageList.forEach((item, index) => {
+            const figure = document.createElement("figure");
+            figure.className = "gallery-item";
+
+            const img = document.createElement("img");
+            img.src = imageUrlForItem(collectionId, item);
+            img.alt = item.alt || "";
+            img.loading = "lazy";
+
+            img.addEventListener("load", () => {
+              if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
+            });
+
+            img.addEventListener("click", () => {
+              openLightbox(index);
+            });
+
+            figure.appendChild(img);
+            galleryEl.appendChild(figure);
+          });
+        } catch (error) {
+          console.error("갤러리 로드 중 오류:", error);
+        }
+      }
+
+      function openLightbox(index) {
+        if (index < 0 || index >= imageList.length) return;
+
+        const lightbox = document.getElementById("lightbox");
+        const img = document.getElementById("lightbox-image");
+        if (!lightbox || !img) return;
+
+        currentImageIndex = index;
+        const item = imageList[index];
+        img.src = imageUrlForItem(collectionId, item);
+        img.alt = item.alt || "";
+
+        updateNavButtons();
+
+        lightbox.classList.add("is-open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox) return;
+
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        currentImageIndex = -1;
+      }
+
+      function navigateImage(direction) {
+        if (currentImageIndex < 0 || imageList.length === 0) return;
+
+        let newIndex;
+        if (direction === "next") {
+          newIndex = (currentImageIndex + 1) % imageList.length;
+        } else if (direction === "prev") {
+          newIndex = (currentImageIndex - 1 + imageList.length) % imageList.length;
+        } else {
+          return;
+        }
+
+        const img = document.getElementById("lightbox-image");
+        if (!img) return;
+
+        const item = imageList[newIndex];
+        img.src = imageUrlForItem(collectionId, item);
+        img.alt = item.alt || "";
+        currentImageIndex = newIndex;
+
+        updateNavButtons();
+      }
+
+      function updateNavButtons() {
+        const prevBtn = document.querySelector(".lightbox-nav-prev");
+        const nextBtn = document.querySelector(".lightbox-nav-next");
+
+        if (prevBtn && nextBtn) {
+          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
+          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
+        }
+      }
+
+      // 컬렉션 제목 표시: 폴더명(id)과 동일, _ 로 시작하면 _ 만 제거
+      function displayName(id) {
+        return id && id.startsWith("_") ? id.slice(1) : (id || "");
+      }
+      async function setCollectionTitle() {
+        const titleEl = document.getElementById("collection-title");
+        if (!titleEl) return;
+        try {
+          const res = await fetch("collections.json", { cache: "no-store" });
+          if (!res.ok) return;
+          const collections = await res.json();
+          const c = Array.isArray(collections) && collections.find((x) => x.id === collectionId);
+          titleEl.textContent = c ? displayName(c.id) : displayName(collectionId);
+        } catch (e) {
+          titleEl.textContent = displayName(collectionId);
+        }
+      }
+
+      // 터치 스와이프 감지
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      function handleTouchStart(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }
+
+      function handleTouchEnd(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }
+
+      function handleSwipe() {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox || !lightbox.classList.contains("is-open")) return;
+
+        const swipeThreshold = 50; // 최소 스와이프 거리
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            // 왼쪽으로 스와이프 (다음 이미지)
+            navigateImage("next");
+          } else {
+            // 오른쪽으로 스와이프 (이전 이미지)
+            navigateImage("prev");
+          }
+        }
+      }
+
+      // 라이트박스 이벤트 바인딩
+      (function setupLightboxEvents() {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox) return;
+
+        // 터치 이벤트 추가
+        lightbox.addEventListener("touchstart", handleTouchStart, { passive: true });
+        lightbox.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+        lightbox.addEventListener("click", (event) => {
+          const target = event.target;
+          if (
+            target instanceof HTMLElement &&
+            target.hasAttribute("data-lightbox-close")
+          ) {
+            closeLightbox();
+          } else if (
+            target instanceof HTMLElement &&
+            target.hasAttribute("data-lightbox-nav")
+          ) {
+            const direction = target.getAttribute("data-lightbox-nav");
+            navigateImage(direction);
+          }
+        });
+
+        window.addEventListener("keydown", (event) => {
+          const lightbox = document.getElementById("lightbox");
+          if (!lightbox || !lightbox.classList.contains("is-open")) return;
+
+          if (event.key === "Escape") {
+            closeLightbox();
+          } else if (event.key === "ArrowLeft") {
+            navigateImage("prev");
+          } else if (event.key === "ArrowRight") {
+            navigateImage("next");
+          }
+        });
+      })();
+
+      loadGallery();
+      setCollectionTitle();
+    </script>
+  </body>
+</html>
