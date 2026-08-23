@@ -87,6 +87,10 @@
         const galleryEl = document.getElementById("gallery");
         if (!galleryEl) return;
 
+        if (collectionId === "COMSEC") {
+          galleryEl.classList.add("gallery-single-col");
+        }
+
         if (collectionId === "all") {
           console.error("컬렉션 페이지는 'all'을 지원하지 않습니다.");
           return;

@@ -226,6 +226,24 @@ main.main-blank {
   filter: brightness(1.02);
 }
 
+/* COMSEC: 한 줄에 한 장씩 */
+.gallery.gallery-single-col {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  max-width: 900px;
+}
+
+.gallery.gallery-single-col .gallery-item {
+  width: 100%;
+  height: auto;
+}
+
+.gallery.gallery-single-col .gallery-item img {
+  width: 100%;
+  height: auto;
+}
+
 /* 라이트박스(이미지 확대) */
 .lightbox {
   position: fixed;
