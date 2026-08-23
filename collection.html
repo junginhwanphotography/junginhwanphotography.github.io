@@ -85,6 +85,13 @@
       const urlParams = new URLSearchParams(window.location.search);
       const collectionId = urlParams.get("collection") || "all";
 
+      (function hideWallCollection() {
+        const n = (collectionId || "").replace(/^_/, "").toUpperCase();
+        if (n === "WALL") {
+          window.location.replace("index.html");
+        }
+      })();
+
       if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
         document.body.classList.add("collection-comsec");
         const galleryEarly = document.getElementById("gallery");

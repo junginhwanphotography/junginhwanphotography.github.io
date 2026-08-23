@@ -10,7 +10,12 @@
           .then(function (r) { return r.json(); })
           .then(function (list) {
             if (!Array.isArray(list)) return;
-            var first = list.find(function (c) { return c.id && c.id.startsWith("_"); });
+            var first = list.find(function (c) {
+              if (!c.id) return false;
+              var n = String(c.id).replace(/^_/, "").toUpperCase();
+              if (n === "WALL") return false;
+              return c.id.startsWith("_");
+            });
             if (first) {
               window.location.replace("collection.html?collection=" + encodeURIComponent(first.id));
               return;

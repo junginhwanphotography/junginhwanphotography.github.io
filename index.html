@@ -56,7 +56,12 @@
           function displayName(id) {
             return id && id.startsWith("_") ? id.slice(1) : (id || "");
           }
+          function isHiddenCollection(id) {
+            const n = (id || "").replace(/^_/, "").toUpperCase();
+            return n === "WALL";
+          }
           collections.forEach((collection, index) => {
+            if (isHiddenCollection(collection.id)) return;
             const link = document.createElement("a");
             link.href = "collection.html?collection=" + encodeURIComponent(collection.id);
             link.textContent = displayName(collection.id);
