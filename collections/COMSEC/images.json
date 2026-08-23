@@ -1,78 +1,81 @@
-[
-  {
-    "src": "collections/COMSEC/19.png",
-    "alt": "19"
-  },
-  {
-    "src": "collections/COMSEC/18.png",
-    "alt": "18"
-  },
-  {
-    "src": "collections/COMSEC/17.png",
-    "alt": "17"
-  },
-  {
-    "src": "collections/COMSEC/16.png",
-    "alt": "16"
-  },
-  {
-    "src": "collections/COMSEC/15.png",
-    "alt": "15"
-  },
-  {
-    "src": "collections/COMSEC/14.png",
-    "alt": "14"
-  },
-  {
-    "src": "collections/COMSEC/13.png",
-    "alt": "13"
-  },
-  {
-    "src": "collections/COMSEC/12.png",
-    "alt": "12"
-  },
-  {
-    "src": "collections/COMSEC/11.png",
-    "alt": "11"
-  },
-  {
-    "src": "collections/COMSEC/10.png",
-    "alt": "10"
-  },
-  {
-    "src": "collections/COMSEC/9.png",
-    "alt": "9"
-  },
-  {
-    "src": "collections/COMSEC/8.png",
-    "alt": "8"
-  },
-  {
-    "src": "collections/COMSEC/7.png",
-    "alt": "7"
-  },
-  {
-    "src": "collections/COMSEC/6.png",
-    "alt": "6"
-  },
-  {
-    "src": "collections/COMSEC/5.png",
-    "alt": "5"
-  },
-  {
-    "src": "collections/COMSEC/4.png",
-    "alt": "4"
-  },
-  {
-    "src": "collections/COMSEC/3.png",
-    "alt": "3"
-  },
-  {
-    "src": "collections/COMSEC/2.png",
-    "alt": "2"
-  },
-  {
-    "src": "collections/COMSEC/1.jpg",
-    "alt": "1"
-  }
-]
+{
+  "background": "collections/COMSEC/background.png",
+  "images": [
+    {
+      "src": "collections/COMSEC/19.png",
+      "alt": "19"
+    },
+    {
+      "src": "collections/COMSEC/18.png",
+      "alt": "18"
+    },
+    {
+      "src": "collections/COMSEC/17.png",
+      "alt": "17"
+    },
+    {
+      "src": "collections/COMSEC/16.png",
+      "alt": "16"
+    },
+    {
+      "src": "collections/COMSEC/15.png",
+      "alt": "15"
+    },
+    {
+      "src": "collections/COMSEC/14.png",
+      "alt": "14"
+    },
+    {
+      "src": "collections/COMSEC/13.png",
+      "alt": "13"
+    },
+    {
+      "src": "collections/COMSEC/12.png",
+      "alt": "12"
+    },
+    {
+      "src": "collections/COMSEC/11.png",
+      "alt": "11"
+    },
+    {
+      "src": "collections/COMSEC/10.png",
+      "alt": "10"
+    },
+    {
+      "src": "collections/COMSEC/9.png",
+      "alt": "9"
+    },
+    {
+      "src": "collections/COMSEC/8.png",
+      "alt": "8"
+    },
+    {
+      "src": "collections/COMSEC/7.png",
+      "alt": "7"
+    },
+    {
+      "src": "collections/COMSEC/6.png",
+      "alt": "6"
+    },
+    {
+      "src": "collections/COMSEC/5.png",
+      "alt": "5"
+    },
+    {
+      "src": "collections/COMSEC/4.png",
+      "alt": "4"
+    },
+    {
+      "src": "collections/COMSEC/3.png",
+      "alt": "3"
+    },
+    {
+      "src": "collections/COMSEC/2.png",
+      "alt": "2"
+    },
+    {
+      "src": "collections/COMSEC/1.jpg",
+      "alt": "1"
+    }
+  ]
+}

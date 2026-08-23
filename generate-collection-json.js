@@ -16,6 +16,11 @@ const OUTPUT_FILE = path.join(COLLECTION_DIR, "images.json");
 
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 
+function isBackgroundFile(name) {
+  const stem = path.parse(name).name.toLowerCase();
+  return stem === "background" || stem === "bsckground";
+}
+
 async function main() {
   try {
     // 컬렉션 폴더가 없으면 생성
@@ -34,17 +39,31 @@ async function main() {
       .filter((name) =>
         IMAGE_EXTENSIONS.includes(path.extname(name).toLowerCase())
       )
+      .filter((name) => !isBackgroundFile(name))
       .sort((a, b) => b.localeCompare(a, "en", { numeric: true }));
 
-    const data = files.map((file) => ({
+    const backgroundFile = entries
+      .filter((entry) => entry.isFile() && isBackgroundFile(entry.name))
+      .map((entry) => entry.name)[0];
+
+    const images = files.map((file) => ({
       src: `collections/${COLLECTION_NAME}/${file}`,
       alt: path.parse(file).name,
     }));
 
+    const data = {
+      background: backgroundFile
+        ? `collections/${COLLECTION_NAME}/${backgroundFile}`
+        : null,
+      images,
+    };
+
     await fs.writeFile(OUTPUT_FILE, JSON.stringify(data, null, 2), "utf8");
 
     console.log(
-      `✅ collections/${COLLECTION_NAME}/images.json 생성 완료 (${data.length}개 이미지)\n` +
+      `✅ collections/${COLLECTION_NAME}/images.json 생성 완료 (${images.length}개 이미지` +
+        (backgroundFile ? `, 배경 ${backgroundFile}` : "") +
+        `)\n` +
         ` - 폴더: ${COLLECTION_DIR}\n` +
         ` - 파일: ${OUTPUT_FILE}`
     );

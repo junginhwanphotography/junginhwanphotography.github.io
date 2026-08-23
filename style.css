@@ -158,6 +158,17 @@ body.collection-page {
   font-family: "Crimson Text", Georgia, serif;
 }
 
+body.collection-page.has-collection-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body.collection-page.has-collection-bg .site-header {
+  background-color: rgba(255, 255, 255, 0.82);
+}
+
 /* 컬렉션 제목: 폴더명과 동일하게 표시(대소문자 그대로) */
 .collection-title {
   font-family: "Crimson Text", Georgia, serif;

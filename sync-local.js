@@ -16,6 +16,38 @@ function isImage(name) {
   return IMAGE_EXT.includes(path.extname(name).toLowerCase());
 }
 
+/** 파일명 stem이 background(오타 bsckground 포함)면 페이지 배경용 */
+function isBackgroundFile(name) {
+  const stem = path.parse(name).name.toLowerCase();
+  return stem === "background" || stem === "bsckground";
+}
+
+/** bsckground.* → background.* 로 통일 (확장자 유지) */
+async function normalizeBackgroundFilename(dir) {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    const bgLike = entries.filter(
+      (e) => e.isFile() && isImage(e.name) && isBackgroundFile(e.name)
+    );
+    if (!bgLike.length) return null;
+    const canonical = bgLike.find(
+      (e) => path.parse(e.name).name.toLowerCase() === "background"
+    );
+    const typo = bgLike.find(
+      (e) => path.parse(e.name).name.toLowerCase() === "bsckground"
+    );
+    if (typo && !canonical) {
+      const ext = path.extname(typo.name);
+      const dest = path.join(dir, `background${ext}`);
+      await fs.rename(path.join(dir, typo.name), dest);
+      return `background${ext}`;
+    }
+    return canonical ? canonical.name : bgLike[0].name;
+  } catch {
+    return null;
+  }
+}
+
 async function getCollectionDirs() {
   const dir = path.join(ROOT, "collections");
   try {
@@ -50,7 +82,7 @@ async function getCollectionImageList(collectionId) {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     return entries
-      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name))
+      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
       .map((e) => e.name)
       .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
   } catch {
@@ -120,17 +152,24 @@ async function generateCollectionImagesJson(collectionId) {
   try {
     await fs.mkdir(dir, { recursive: true });
   } catch (e) {}
+  const backgroundFile = await normalizeBackgroundFilename(dir);
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const files = entries
-    .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name))
+    .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
     .map((e) => e.name)
     .sort((a, b) => b.localeCompare(a, "en", { numeric: true }));
-  const data = files.map((file) => ({
+  const images = files.map((file) => ({
     src: `collections/${collectionId}/${file}`,
     alt: path.parse(file).name,
   }));
+  const data = {
+    background: backgroundFile
+      ? `collections/${collectionId}/${backgroundFile}`
+      : null,
+    images,
+  };
   await fs.writeFile(outFile, JSON.stringify(data, null, 2), "utf8");
-  return data.length;
+  return { count: images.length, background: backgroundFile };
 }
 
 async function runSync() {
@@ -179,8 +218,9 @@ async function runSync() {
   // 모든 컬렉션의 images.json을 매번 재생성 (사진 추가/삭제/변경 반영)
   for (const id of collectionDirs) {
     try {
-      const count = await generateCollectionImagesJson(id);
-      console.log(`🖼 컬렉션 "${id}" → images.json 갱신 (${count}개 이미지)`);
+      const { count, background } = await generateCollectionImagesJson(id);
+      const bgNote = background ? `, 배경 ${background}` : "";
+      console.log(`🖼 컬렉션 "${id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
       changed = true;
     } catch (err) {
       console.error(`❌ 컬렉션 "${id}" images.json 생성 실패:`, err.message);

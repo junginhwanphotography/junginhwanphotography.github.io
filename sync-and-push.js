@@ -1,5 +1,5 @@
 /**
- * WALL / collections 변경 감지 → images.json 생성/갱신 → git commit & push
+ * WALL / collections 변경 감지 → images.json(갤러리+background) 생성/갱신 → git commit & push
  * 프로젝트 루트에서 실행: node sync-and-push.js
  */
 
