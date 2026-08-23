@@ -272,11 +272,10 @@ body.collection-comsec .gallery-item img,
   max-height: none !important;
 }
 
-body.collection-comsec .gallery-item img,
-.gallery.gallery-single-col .gallery-item img {
-  width: 100% !important;
-  height: auto !important;
-  max-height: none !important;
+/* okinawa: 배경보다 사진이 조금 더 크게 */
+body.collection-okinawa .gallery.gallery-single-col,
+body.collection-okinawa .gallery {
+  max-width: 820px;
 }
 
 /* 라이트박스(이미지 확대) */
@@ -513,6 +512,16 @@ body.collection-comsec .gallery-item img,
   body.collection-page .gallery-item img {
     width: 100%;
     height: auto;
+  }
+
+  body.collection-okinawa .gallery {
+    max-width: 100%;
+    gap: 0.95rem !important;
+  }
+
+  body.collection-okinawa main.main-full {
+    padding-left: 1.7rem;
+    padding-right: 1.7rem;
   }
 }
 
