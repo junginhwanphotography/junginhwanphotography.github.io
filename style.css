@@ -166,7 +166,7 @@ body.collection-page.has-collection-bg {
 }
 
 body.collection-page.has-collection-bg .site-header {
-  background-color: rgba(255, 255, 255, 0.82);
+  background-color: transparent;
 }
 
 /* 컬렉션 제목: 폴더명과 동일하게 표시(대소문자 그대로) */
