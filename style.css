@@ -492,25 +492,43 @@ body.collection-comsec .gallery-item img,
   }
 
   body.collection-page .gallery {
-    --gallery-row-height: 280px;
-    gap: 0.6rem !important;
-    max-width: 720px;
+    --gallery-row-height: 180px;
+    gap: 0.5rem !important;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   body.collection-page .gallery-item {
-    height: auto !important;
+    height: var(--gallery-row-height) !important;
     padding: 0 !important;
     margin: 0;
+    max-width: 100%;
   }
 
   body.collection-page .gallery-item img {
-    width: 100%;
-    height: auto;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   body.collection-comsec .gallery {
     max-width: 100%;
     gap: 0.95rem !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+  }
+
+  body.collection-comsec .gallery-item {
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  body.collection-comsec .gallery-item img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
   }
 
   body.collection-comsec main.main-full {
