@@ -152,6 +152,7 @@ body.collection-page main.main-full {
   width: 100%;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 body.collection-page {
@@ -194,7 +195,7 @@ body.collection-page.has-collection-bg::before {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 3.25rem 0 4.5rem;
+  margin: 3.25rem 0 1.5rem;
   position: relative;
   z-index: 2;
 }
