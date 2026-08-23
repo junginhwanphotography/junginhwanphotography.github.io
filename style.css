@@ -192,7 +192,9 @@ body.collection-page.has-collection-bg::before {
 .collection-back {
   align-self: stretch;
   width: 100%;
-  margin: 2.5rem 0 3rem;
+  display: flex;
+  justify-content: center;
+  margin: 3.25rem 0 4.5rem;
   position: relative;
   z-index: 2;
 }
@@ -204,23 +206,21 @@ body.collection-page.has-collection-bg::before {
   width: 48px;
   height: 48px;
   color: #111111;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  border-radius: 999px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+  background: none;
+  border: none;
+  box-shadow: none;
   text-decoration: none;
   opacity: 1;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 
 .collection-back-link:hover {
-  transform: translateX(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  opacity: 0.55;
 }
 
 body.collection-page.has-collection-bg .collection-back-link {
   color: #111111;
-  background: #ffffff;
+  background: none;
   text-shadow: none;
 }
 
