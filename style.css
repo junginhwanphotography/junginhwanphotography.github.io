@@ -191,11 +191,10 @@ body.collection-page.has-collection-bg::before {
 }
 
 .collection-back {
-  align-self: stretch;
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 3.25rem 0 1.5rem;
+  margin: 2.5rem 0 1.75rem;
   position: relative;
   z-index: 2;
 }
@@ -212,17 +211,15 @@ body.collection-page.has-collection-bg::before {
   box-shadow: none;
   text-decoration: none;
   opacity: 1;
-  transition: opacity 0.2s ease;
 }
 
 .collection-back-link:hover {
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
 body.collection-page.has-collection-bg .collection-back-link {
   color: #111111;
   background: none;
-  text-shadow: none;
 }
 
 /* 메인 화면: 로고 아래 흰 공백 */
@@ -570,6 +567,12 @@ body.collection-comsec .gallery-item img,
   body.collection-comsec main.main-full {
     padding-left: 2.6rem;
     padding-right: 2.6rem;
+  }
+
+  body.collection-page .collection-back {
+    display: flex;
+    justify-content: center;
+    margin: 2.25rem 0 1.75rem;
   }
 }
 

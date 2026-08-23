@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=back-arrow-6" />
+    <link rel="stylesheet" href="style.css?v=back-arrow-7" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -31,21 +31,30 @@
     <main class="main-full">
       <h2 class="collection-title" id="collection-title"></h2>
       <section class="gallery" aria-label="사진 갤러리" id="gallery"></section>
-      <nav class="collection-back" aria-label="메인으로">
-        <a href="index.html" class="collection-back-link" aria-label="메인 화면으로">
-          <svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false">
-            <path
-              d="M20 12 H7.5 M12.5 6.2 L6.2 12 L12.5 17.8"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3.4"
-              stroke-linecap="square"
-              stroke-linejoin="miter"
-            />
-          </svg>
-        </a>
-      </nav>
     </main>
+
+    <nav class="collection-back" aria-label="메인으로">
+      <a href="index.html" class="collection-back-link" aria-label="메인 화면으로">
+        <svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false">
+          <path
+            d="M20 12 H7.5 M12.5 6.2 L6.2 12 L12.5 17.8"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="5.6"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+          />
+          <path
+            d="M20 12 H7.5 M12.5 6.2 L6.2 12 L12.5 17.8"
+            fill="none"
+            stroke="#111111"
+            stroke-width="3.4"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+          />
+        </svg>
+      </a>
+    </nav>
 
     <!-- 클릭 시 확대 보기용 라이트박스 -->
     <div class="lightbox" id="lightbox" aria-hidden="true">
