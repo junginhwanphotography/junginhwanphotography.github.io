@@ -70,7 +70,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const collectionId = urlParams.get("collection") || "all";
 
-      if ((collectionId || "").toUpperCase() === "COMSEC") {
+      if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
         document.body.classList.add("collection-comsec");
         const galleryEarly = document.getElementById("gallery");
         if (galleryEarly) galleryEarly.classList.add("gallery-single-col");
