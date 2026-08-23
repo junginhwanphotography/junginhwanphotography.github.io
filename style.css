@@ -159,11 +159,19 @@ body.collection-page {
 }
 
 body.collection-page.has-collection-bg {
-  background-color: #000000;
+  background-color: transparent;
+}
+
+body.collection-page.has-collection-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--collection-bg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  pointer-events: none;
 }
 
 body.collection-page.has-collection-bg .site-header {
@@ -247,7 +255,6 @@ body.collection-comsec .gallery,
   align-items: stretch;
   justify-content: flex-start;
   max-width: 720px;
-  gap: 0.85rem;
 }
 
 body.collection-comsec .gallery-item,
@@ -256,10 +263,13 @@ body.collection-comsec .gallery-item,
   max-width: 100% !important;
   height: auto !important;
   flex: 0 0 auto !important;
-  background-color: transparent;
-  border-radius: 0;
-  padding: 0;
-  margin: 0;
+}
+
+body.collection-comsec .gallery-item img,
+.gallery.gallery-single-col .gallery-item img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 body.collection-comsec .gallery-item img,
@@ -440,13 +450,6 @@ body.collection-comsec .gallery-item img,
 }
 
 @media (max-width: 640px) {
-  body.collection-page.has-collection-bg {
-    /* iOS에서 fixed+cover 조합이 배경을 과도하게 확대해 보임 */
-    background-attachment: scroll;
-    background-size: 100% auto;
-    background-position: center top;
-  }
-
   body.main-page .collection-nav {
     top: 10rem;
     padding: 0 0.75rem 2rem 0.75rem;
@@ -485,42 +488,31 @@ body.collection-comsec .gallery-item img,
     letter-spacing: 0.16em;
   }
 
-  /* 모바일: 사진 사이·좌우로 배경이 보이게 */
-  .gallery {
-    --gallery-row-height: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem !important;
-    flex-wrap: nowrap;
-    margin: 0;
-    padding: 0;
+  /* 컬렉션 페이지: PC와 같은 여백·배치 (한 줄 한 장, 좌우 배경, 사진 간격) */
+  body.collection-page main,
+  body.collection-page main.main-full {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
-  .gallery-item {
-    flex: 0 0 auto;
-    width: 100%;
+  body.collection-page .gallery {
+    --gallery-row-height: 280px;
+    gap: 0.6rem !important;
+    max-width: 720px;
+  }
+
+  body.collection-page .gallery-item {
     height: auto !important;
-    margin: 0 !important;
     padding: 0 !important;
-    display: flex;
-    box-sizing: border-box;
-    background-color: transparent;
-    border-radius: 2px;
+    margin: 0;
   }
 
-  .gallery-item img {
+  body.collection-page .gallery-item img {
     width: 100%;
     height: auto;
-    object-fit: cover;
-  }
-
-  .gallery-item:last-child {
-    padding-bottom: 0 !important;
-  }
-
-  body.collection-page main.main-full {
-    padding-left: 1.1rem;
-    padding-right: 1.1rem;
   }
 }
 
