@@ -247,7 +247,7 @@ body.collection-comsec .gallery,
   align-items: stretch;
   justify-content: flex-start;
   max-width: 720px;
-  gap: 0 !important;
+  gap: 0.85rem;
 }
 
 body.collection-comsec .gallery-item,
@@ -485,14 +485,12 @@ body.collection-comsec .gallery-item img,
     letter-spacing: 0.16em;
   }
 
-  /* 모바일: 갤러리 한 열, 사진 사이 흰 여백 없음 */
+  /* 모바일: 사진 사이·좌우로 배경이 보이게 */
   .gallery {
     --gallery-row-height: auto;
     display: flex;
     flex-direction: column;
-    gap: 0 !important;
-    row-gap: 0 !important;
-    column-gap: 0 !important;
+    gap: 0.85rem !important;
     flex-wrap: nowrap;
     margin: 0;
     padding: 0;
@@ -507,7 +505,7 @@ body.collection-comsec .gallery-item img,
     display: flex;
     box-sizing: border-box;
     background-color: transparent;
-    border-radius: 0;
+    border-radius: 2px;
   }
 
   .gallery-item img {
@@ -521,8 +519,8 @@ body.collection-comsec .gallery-item img,
   }
 
   body.collection-page main.main-full {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
   }
 }
 
