@@ -226,22 +226,30 @@ main.main-blank {
   filter: brightness(1.02);
 }
 
-/* COMSEC: 한 줄에 한 장씩 */
+/* COMSEC: 한 줄에 한 장씩 (가로로 여러 장 붙지 않게 강제) */
+body.collection-comsec .gallery,
 .gallery.gallery-single-col {
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  max-width: 900px;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch;
+  justify-content: flex-start;
+  max-width: 720px;
 }
 
+body.collection-comsec .gallery-item,
 .gallery.gallery-single-col .gallery-item {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
 }
 
+body.collection-comsec .gallery-item img,
 .gallery.gallery-single-col .gallery-item img {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 /* 라이트박스(이미지 확대) */

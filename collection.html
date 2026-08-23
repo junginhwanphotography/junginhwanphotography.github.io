@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=comsec-1" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -69,6 +69,12 @@
       // URL에서 컬렉션 파라미터 가져오기
       const urlParams = new URLSearchParams(window.location.search);
       const collectionId = urlParams.get("collection") || "all";
+
+      if ((collectionId || "").toUpperCase() === "COMSEC") {
+        document.body.classList.add("collection-comsec");
+        const galleryEarly = document.getElementById("gallery");
+        if (galleryEarly) galleryEarly.classList.add("gallery-single-col");
+      }
 
       // 전역 변수: 이미지 배열과 현재 인덱스
       let imageList = [];
