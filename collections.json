@@ -8,5 +8,10 @@
     "id": "COMSEC",
     "name": "COMSEC",
     "path": "collection.html?collection=COMSEC"
+  },
+  {
+    "id": "okinawa",
+    "name": "okinawa",
+    "path": "collection.html?collection=okinawa"
   }
 ]
