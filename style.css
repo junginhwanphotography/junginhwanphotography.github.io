@@ -189,6 +189,34 @@ body.collection-page.has-collection-bg::before {
   white-space: nowrap;
 }
 
+.collection-back {
+  align-self: stretch;
+  width: 100%;
+  margin: 2.75rem 0 2.25rem;
+}
+
+.collection-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: #111111;
+  text-decoration: none;
+  opacity: 0.72;
+  transition: opacity 0.2s ease;
+}
+
+.collection-back-link:hover {
+  opacity: 1;
+}
+
+body.collection-page.has-collection-bg .collection-back-link {
+  color: #ffffff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+}
+
 /* 메인 화면: 로고 아래 흰 공백 */
 main.main-blank {
   flex: 1;
