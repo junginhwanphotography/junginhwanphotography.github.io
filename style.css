@@ -305,6 +305,34 @@ body.collection-comsec .gallery-item img,
   max-height: none !important;
 }
 
+/* shizuoka 1: 한 줄에 두 장 */
+body.collection-shizuoka .gallery,
+.gallery.gallery-two-col {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  flex-direction: unset !important;
+  flex-wrap: unset !important;
+  align-items: start;
+  justify-content: stretch;
+  gap: 0.6rem;
+  max-width: 1100px;
+}
+
+body.collection-shizuoka .gallery-item,
+.gallery.gallery-two-col .gallery-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  flex: none !important;
+}
+
+body.collection-shizuoka .gallery-item img,
+.gallery.gallery-two-col .gallery-item img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
 /* 라이트박스(이미지 확대) */
 .lightbox {
   position: fixed;
@@ -567,6 +595,26 @@ body.collection-comsec .gallery-item img,
   body.collection-comsec main.main-full {
     padding-left: 2.6rem;
     padding-right: 2.6rem;
+  }
+
+  body.collection-shizuoka .gallery,
+  .gallery.gallery-two-col {
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+    gap: 0.5rem !important;
+  }
+
+  body.collection-shizuoka .gallery-item,
+  .gallery.gallery-two-col .gallery-item {
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  body.collection-shizuoka .gallery-item img,
+  .gallery.gallery-two-col .gallery-item img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
   }
 
   body.collection-page .collection-back {
