@@ -167,7 +167,8 @@ body.collection-page.has-collection-bg {
   background-color: transparent;
 }
 
-body.collection-page.has-collection-bg::before {
+body.collection-page.has-collection-bg::before,
+body.collection-page.has-collection-bg.collection-shizuoka::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -177,6 +178,12 @@ body.collection-page.has-collection-bg::before {
   background-position: center;
   background-repeat: no-repeat;
   pointer-events: none;
+}
+
+/* shizuoka 1: 10번 사진 구간에서 배경이 흑백으로 스크럽 */
+body.collection-page.has-collection-bg.collection-shizuoka::after {
+  filter: grayscale(1);
+  opacity: var(--bg-bw, 0);
 }
 
 /* 컬렉션 제목: 폴더명과 동일하게 표시(대소문자 그대로) */

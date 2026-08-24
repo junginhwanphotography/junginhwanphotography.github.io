@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=shizuoka-two-col-1" />
+    <link rel="stylesheet" href="style.css?v=shizuoka-bg-bw-1" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -165,6 +165,8 @@
           imageList.forEach((item, index) => {
             const figure = document.createElement("figure");
             figure.className = "gallery-item";
+            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "");
+            figure.dataset.photoNum = stem;
 
             const img = document.createElement("img");
             img.src = imageUrlForItem(collectionId, item);
@@ -182,9 +184,43 @@
             figure.appendChild(img);
             galleryEl.appendChild(figure);
           });
+
+          setupShizuokaBgBw();
         } catch (error) {
           console.error("갤러리 로드 중 오류:", error);
         }
+      }
+
+      function setupShizuokaBgBw() {
+        if ((collectionId || "").toUpperCase() !== "SHIZUOKA 1") return;
+        const trigger = document.querySelector('.gallery-item[data-photo-num="10"]');
+        if (!trigger) return;
+
+        let ticking = false;
+        const apply = () => {
+          ticking = false;
+          const rect = trigger.getBoundingClientRect();
+          const vh = window.innerHeight || 1;
+          const start = vh * 0.9;
+          const end = vh * 0.28;
+          const t = (start - rect.top) / (start - end);
+          const clamped = Math.max(0, Math.min(1, t));
+          const eased = clamped * clamped * (3 - 2 * clamped);
+          document.body.style.setProperty("--bg-bw", eased.toFixed(4));
+        };
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(apply);
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        const galleryEl = document.getElementById("gallery");
+        if (galleryEl && "ResizeObserver" in window) {
+          new ResizeObserver(onScroll).observe(galleryEl);
+        }
+        apply();
       }
 
       function openLightbox(index) {
