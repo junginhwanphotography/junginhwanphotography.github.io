@@ -70,7 +70,7 @@ async function getCollectionDirsByCreationOrder() {
         return { id: e.name, birthtime: t };
       })
     );
-    withBirth.sort((a, b) => a.birthtime - b.birthtime);
+    withBirth.sort((a, b) => b.birthtime - a.birthtime);
     return withBirth.map((d) => d.id);
   } catch {
     return [];

@@ -5,9 +5,9 @@
     "path": "collection.html?collection=_WALL"
   },
   {
-    "id": "COMSEC",
-    "name": "COMSEC",
-    "path": "collection.html?collection=COMSEC"
+    "id": "shizuoka 1",
+    "name": "shizuoka 1",
+    "path": "collection.html?collection=shizuoka%201"
   },
   {
     "id": "okinawa",
@@ -15,8 +15,8 @@
     "path": "collection.html?collection=okinawa"
   },
   {
-    "id": "shizuoka 1",
-    "name": "shizuoka 1",
-    "path": "collection.html?collection=shizuoka%201"
+    "id": "COMSEC",
+    "name": "COMSEC",
+    "path": "collection.html?collection=COMSEC"
   }
 ]
