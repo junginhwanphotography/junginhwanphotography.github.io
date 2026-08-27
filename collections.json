@@ -2,21 +2,31 @@
   {
     "id": "_WALL",
     "name": "_WALL",
-    "path": "collection.html?collection=_WALL"
+    "path": "collection.html?collection=_WALL",
+    "photoOrder": "desc"
   },
   {
-    "id": "shizuoka 1",
-    "name": "shizuoka 1",
-    "path": "collection.html?collection=shizuoka%201"
+    "id": "Mt.Fuji to Tokyo with BAHNO 1",
+    "name": "Mt.Fuji to Tokyo with BAHNO 1",
+    "path": "collection.html?collection=Mt.Fuji%20to%20Tokyo%20with%20BAHNO%201",
+    "photoOrder": "asc"
+  },
+  {
+    "id": "shizuoka",
+    "name": "shizuoka",
+    "path": "collection.html?collection=shizuoka",
+    "photoOrder": "asc"
   },
   {
     "id": "okinawa",
     "name": "okinawa",
-    "path": "collection.html?collection=okinawa"
+    "path": "collection.html?collection=okinawa",
+    "photoOrder": "desc"
   },
   {
     "id": "COMSEC",
     "name": "COMSEC",
-    "path": "collection.html?collection=COMSEC"
+    "path": "collection.html?collection=COMSEC",
+    "photoOrder": "desc"
   }
 ]

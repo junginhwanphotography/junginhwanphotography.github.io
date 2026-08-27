@@ -121,6 +121,18 @@ async function imagesJsonPathsMatchId(collectionId) {
   }
 }
 
+function photoOrderForCollection(entry, isNew) {
+  if (isNew) return "asc";
+  return entry && entry.photoOrder === "asc" ? "asc" : "desc";
+}
+
+function sortPhotoNames(names, order) {
+  const copy = [...names];
+  copy.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+  if (order !== "asc") copy.reverse();
+  return copy;
+}
+
 function arraysEqual(a, b) {
   if (!a || !b || a.length !== b.length) return false;
   return a.every((v, i) => v === b[i]);
@@ -146,7 +158,7 @@ function run(cmd, cwd = ROOT) {
 }
 
 /** 컬렉션 폴더의 사진 목록을 읽어 images.json 생성/갱신 (프로세스 분리 없이 직접 실행) */
-async function generateCollectionImagesJson(collectionId) {
+async function generateCollectionImagesJson(collectionId, photoOrder = "desc") {
   const dir = path.join(ROOT, "collections", collectionId);
   const outFile = path.join(dir, "images.json");
   try {
@@ -154,10 +166,12 @@ async function generateCollectionImagesJson(collectionId) {
   } catch (e) {}
   const backgroundFile = await normalizeBackgroundFilename(dir);
   const entries = await fs.readdir(dir, { withFileTypes: true });
-  const files = entries
-    .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
-    .map((e) => e.name)
-    .sort((a, b) => b.localeCompare(a, "en", { numeric: true }));
+  const files = sortPhotoNames(
+    entries
+      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
+      .map((e) => e.name),
+    photoOrder
+  );
   const images = files.map((file) => ({
     src: `collections/${collectionId}/${file}`,
     alt: path.parse(file).name,
@@ -201,6 +215,7 @@ async function runSync() {
       id,
       name: id,
       path: `collection.html?collection=${encodeURIComponent(id)}`,
+      photoOrder: "asc",
     });
     changed = true;
     console.log(`📁 새 컬렉션 추가: ${id}`);
@@ -212,13 +227,16 @@ async function runSync() {
   const ordered = [...prefixFirst, ...rest].map((c) => ({
     ...c,
     path: `collection.html?collection=${encodeURIComponent(c.id)}`,
+    photoOrder: photoOrderForCollection(c, newIds.has(c.id)),
   }));
   await saveCollectionsJson(ordered);
 
   // 모든 컬렉션의 images.json을 매번 재생성 (사진 추가/삭제/변경 반영)
   for (const id of collectionDirs) {
     try {
-      const { count, background } = await generateCollectionImagesJson(id);
+      const entry = byId.get(id);
+      const photoOrder = photoOrderForCollection(entry, newIds.has(id));
+      const { count, background } = await generateCollectionImagesJson(id, photoOrder);
       const bgNote = background ? `, 배경 ${background}` : "";
       console.log(`🖼 컬렉션 "${id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
       changed = true;

@@ -21,6 +21,18 @@ function isBackgroundFile(name) {
   return stem === "background" || stem === "bsckground";
 }
 
+async function photoOrderFor(collectionId) {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, "collections.json"), "utf8");
+    const list = JSON.parse(raw);
+    const entry = Array.isArray(list) && list.find((c) => c && c.id === collectionId);
+    if (!entry) return "asc";
+    return entry.photoOrder === "asc" ? "asc" : "desc";
+  } catch {
+    return "asc";
+  }
+}
+
 async function main() {
   try {
     // 컬렉션 폴더가 없으면 생성
@@ -31,6 +43,7 @@ async function main() {
       console.log(`✅ 컬렉션 폴더 생성: ${COLLECTION_DIR}`);
     }
 
+    const photoOrder = await photoOrderFor(COLLECTION_NAME);
     const entries = await fs.readdir(COLLECTION_DIR, { withFileTypes: true });
 
     const files = entries
@@ -39,8 +52,9 @@ async function main() {
       .filter((name) =>
         IMAGE_EXTENSIONS.includes(path.extname(name).toLowerCase())
       )
-      .filter((name) => !isBackgroundFile(name))
-      .sort((a, b) => b.localeCompare(a, "en", { numeric: true }));
+      .filter((name) => !isBackgroundFile(name));
+    files.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+    if (photoOrder !== "asc") files.reverse();
 
     const backgroundFile = entries
       .filter((entry) => entry.isFile() && isBackgroundFile(entry.name))

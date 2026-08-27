@@ -1,0 +1,73 @@
+{
+  "background": "collections/shizuoka/background.gif",
+  "images": [
+    {
+      "src": "collections/shizuoka/1.jpg",
+      "alt": "1"
+    },
+    {
+      "src": "collections/shizuoka/2.jpg",
+      "alt": "2"
+    },
+    {
+      "src": "collections/shizuoka/3.jpg",
+      "alt": "3"
+    },
+    {
+      "src": "collections/shizuoka/4.jpg",
+      "alt": "4"
+    },
+    {
+      "src": "collections/shizuoka/5.jpg",
+      "alt": "5"
+    },
+    {
+      "src": "collections/shizuoka/6.jpg",
+      "alt": "6"
+    },
+    {
+      "src": "collections/shizuoka/7.jpg",
+      "alt": "7"
+    },
+    {
+      "src": "collections/shizuoka/8.jpg",
+      "alt": "8"
+    },
+    {
+      "src": "collections/shizuoka/9.jpg",
+      "alt": "9"
+    },
+    {
+      "src": "collections/shizuoka/10.jpg",
+      "alt": "10"
+    },
+    {
+      "src": "collections/shizuoka/11.jpg",
+      "alt": "11"
+    },
+    {
+      "src": "collections/shizuoka/12.jpg",
+      "alt": "12"
+    },
+    {
+      "src": "collections/shizuoka/13.jpg",
+      "alt": "13"
+    },
+    {
+      "src": "collections/shizuoka/14.jpg",
+      "alt": "14"
+    },
+    {
+      "src": "collections/shizuoka/15.jpg",
+      "alt": "15"
+    },
+    {
+      "src": "collections/shizuoka/16.jpg",
+      "alt": "16"
+    },
+    {
+      "src": "collections/shizuoka/17.jpg",
+      "alt": "17"
+    }
+  ]
+}
