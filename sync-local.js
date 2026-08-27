@@ -221,10 +221,21 @@ async function runSync() {
     console.log(`📁 새 컬렉션 추가: ${id}`);
   }
 
-  const creationOrdered = collectionDirsByCreation.filter((id) => byId.has(id)).map((id) => byId.get(id));
-  const prefixFirst = creationOrdered.filter((c) => c.id.startsWith(TOP_COLLECTION_PREFIX));
-  const rest = creationOrdered.filter((c) => !c.id.startsWith(TOP_COLLECTION_PREFIX));
-  const ordered = [...prefixFirst, ...rest].map((c) => ({
+  // 기존 메뉴 순서는 유지한다. CI에서 checkout 시각으로 birthtime이 바뀌면
+  // 전체를 다시 정렬해 라이브 순서가 뒤집히므로, 새 컬렉션만 보이는 목록 맨 위에 넣는다.
+  const prefixExisting = collections.filter(
+    (c) => c.id.startsWith(TOP_COLLECTION_PREFIX) && byId.has(c.id)
+  );
+  const restExisting = collections.filter(
+    (c) => !c.id.startsWith(TOP_COLLECTION_PREFIX) && collectionDirs.includes(c.id)
+  );
+  const newPrefix = collectionDirsByCreation
+    .filter((id) => newIds.has(id) && id.startsWith(TOP_COLLECTION_PREFIX))
+    .map((id) => byId.get(id));
+  const newRest = collectionDirsByCreation
+    .filter((id) => newIds.has(id) && !id.startsWith(TOP_COLLECTION_PREFIX))
+    .map((id) => byId.get(id));
+  const ordered = [...prefixExisting, ...newPrefix, ...newRest, ...restExisting].map((c) => ({
     ...c,
     path: `collection.html?collection=${encodeURIComponent(c.id)}`,
     photoOrder: photoOrderForCollection(c, newIds.has(c.id)),
