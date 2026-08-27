@@ -15,7 +15,7 @@
     "id": "shizuoka",
     "name": "shizuoka",
     "path": "collection.html?collection=shizuoka",
-    "photoOrder": "asc"
+    "photoOrder": "desc"
   },
   {
     "id": "okinawa",
