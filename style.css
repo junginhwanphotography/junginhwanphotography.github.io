@@ -394,11 +394,14 @@ body.collection-fuji .gallery,
   align-items: center;
   justify-content: flex-start;
   gap: 0.75rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0 1.5rem 0.65rem;
+  overflow-x: scroll !important;
+  overflow-y: hidden !important;
+  padding: 0 4.25rem 0.9rem 1.5rem;
   overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.08);
 }
 
 body.collection-fuji .gallery-item,
@@ -420,7 +423,8 @@ body.collection-fuji .gallery-item img,
 }
 
 body.collection-fuji .gallery::-webkit-scrollbar {
-  height: 10px;
+  height: 12px;
+  display: block;
 }
 
 body.collection-fuji .gallery::-webkit-scrollbar-track {
@@ -434,12 +438,17 @@ body.collection-fuji .gallery::-webkit-scrollbar-thumb {
 
 body.collection-fuji .collection-back {
   position: fixed;
-  left: 0;
+  top: 50%;
   right: 0;
-  bottom: 1.15rem;
+  left: auto;
+  bottom: auto;
+  width: auto;
+  transform: translateY(-50%);
   margin: 0;
-  z-index: 3;
+  z-index: 6;
   pointer-events: none;
+  justify-content: flex-end;
+  padding: 0 0.15rem 0 0;
 }
 
 body.collection-fuji .collection-back-link {
@@ -739,6 +748,9 @@ body.collection-fuji .collection-back-link {
     flex-wrap: nowrap !important;
     max-width: none !important;
     justify-content: flex-start !important;
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    padding: 0 3.5rem 0.9rem 1rem;
   }
 
   body.collection-fuji .gallery-item,
@@ -755,14 +767,21 @@ body.collection-fuji .collection-back-link {
     max-width: none !important;
   }
 
-  body.collection-fuji .collection-back {
-    margin: 0;
-  }
-
   body.collection-page .collection-back {
     display: flex;
     justify-content: center;
     margin: 2.25rem 0 1.75rem;
+  }
+
+  body.collection-fuji .collection-back {
+    position: fixed !important;
+    top: 50%;
+    right: 0;
+    left: auto;
+    bottom: auto;
+    margin: 0 !important;
+    transform: translateY(-50%);
+    justify-content: flex-end;
   }
 }
 

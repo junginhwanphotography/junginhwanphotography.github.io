@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-hscroll-1" />
+    <link rel="stylesheet" href="style.css?v=fuji-hscroll-2" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -237,17 +237,26 @@
       function setupFujiHScroll() {
         if (!isFujiCollection(collectionId)) return;
         const galleryEl = document.getElementById("gallery");
-        if (!galleryEl) return;
+        if (!galleryEl || galleryEl.dataset.hscrollBound === "1") return;
+        galleryEl.dataset.hscrollBound = "1";
 
         const onWheel = (event) => {
           const lightbox = document.getElementById("lightbox");
           if (lightbox && lightbox.classList.contains("is-open")) return;
-          if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+          const dx = event.deltaX;
+          const dy = event.deltaY;
+          if (Math.abs(dx) > Math.abs(dy)) {
+            if (event.target === galleryEl || galleryEl.contains(event.target)) return;
+            event.preventDefault();
+            galleryEl.scrollLeft += dx;
+            return;
+          }
+          if (dy === 0) return;
           event.preventDefault();
-          galleryEl.scrollLeft += event.deltaY;
+          galleryEl.scrollLeft += dy;
         };
 
-        window.addEventListener("wheel", onWheel, { passive: false });
+        window.addEventListener("wheel", onWheel, { passive: false, capture: true });
       }
 
       function openLightbox(index) {
@@ -400,6 +409,7 @@
         });
       })();
 
+      setupFujiHScroll();
       loadGallery();
       setCollectionTitle();
     </script>
