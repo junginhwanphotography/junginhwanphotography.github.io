@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-hscroll-2" />
+    <link rel="stylesheet" href="style.css?v=fuji-hscroll-3" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -185,6 +185,8 @@
 
             img.addEventListener("load", () => {
               if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
+              const galleryEl = document.getElementById("gallery");
+              if (galleryEl && typeof galleryEl._syncFujiEnd === "function") galleryEl._syncFujiEnd();
             });
 
             img.addEventListener("click", () => {
@@ -197,6 +199,10 @@
 
           setupShizuokaBgBw();
           setupFujiHScroll();
+          const fujiGallery = document.getElementById("gallery");
+          if (fujiGallery && typeof fujiGallery._syncFujiEnd === "function") {
+            requestAnimationFrame(() => fujiGallery._syncFujiEnd());
+          }
         } catch (error) {
           console.error("갤러리 로드 중 오류:", error);
         }
@@ -240,6 +246,13 @@
         if (!galleryEl || galleryEl.dataset.hscrollBound === "1") return;
         galleryEl.dataset.hscrollBound = "1";
 
+        const syncEnd = () => {
+          const max = galleryEl.scrollWidth - galleryEl.clientWidth;
+          const atEnd = max <= 4 || galleryEl.scrollLeft >= max - 16;
+          document.body.classList.toggle("is-fuji-end", atEnd);
+        };
+        galleryEl._syncFujiEnd = syncEnd;
+
         const onWheel = (event) => {
           const lightbox = document.getElementById("lightbox");
           if (lightbox && lightbox.classList.contains("is-open")) return;
@@ -257,6 +270,12 @@
         };
 
         window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+        galleryEl.addEventListener("scroll", syncEnd, { passive: true });
+        window.addEventListener("resize", syncEnd);
+        if ("ResizeObserver" in window) {
+          new ResizeObserver(syncEnd).observe(galleryEl);
+        }
+        syncEnd();
       }
 
       function openLightbox(index) {

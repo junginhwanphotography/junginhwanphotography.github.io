@@ -391,12 +391,12 @@ body.collection-fuji .gallery,
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 0.75rem;
   overflow-x: scroll !important;
   overflow-y: hidden !important;
-  padding: 0 4.25rem 0.9rem 1.5rem;
+  padding: 0.4rem 4.25rem 3.4rem 1.5rem;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
@@ -406,10 +406,11 @@ body.collection-fuji .gallery,
 
 body.collection-fuji .gallery-item,
 .gallery.gallery-hscroll .gallery-item {
-  height: calc(100% - 0.5rem) !important;
+  height: calc(100% - 3.6rem) !important;
   width: auto !important;
   max-width: none !important;
   flex: 0 0 auto !important;
+  align-self: flex-start;
   background: transparent;
 }
 
@@ -449,9 +450,21 @@ body.collection-fuji .collection-back {
   pointer-events: none;
   justify-content: flex-end;
   padding: 0 0.15rem 0 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+body.collection-fuji.is-fuji-end .collection-back {
+  opacity: 1;
+  visibility: visible;
 }
 
 body.collection-fuji .collection-back-link {
+  pointer-events: none;
+}
+
+body.collection-fuji.is-fuji-end .collection-back-link {
   pointer-events: auto;
 }
 
@@ -750,12 +763,12 @@ body.collection-fuji .collection-back-link {
     justify-content: flex-start !important;
     overflow-x: scroll !important;
     overflow-y: hidden !important;
-    padding: 0 3.5rem 0.9rem 1rem;
+    padding: 0.35rem 3.5rem 2.8rem 1rem;
   }
 
   body.collection-fuji .gallery-item,
   .gallery.gallery-hscroll .gallery-item {
-    height: calc(100% - 0.5rem) !important;
+    height: calc(100% - 3rem) !important;
     width: auto !important;
     max-width: none !important;
   }
