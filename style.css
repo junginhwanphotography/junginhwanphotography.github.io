@@ -397,10 +397,10 @@ body.collection-fuji .gallery,
   flex-wrap: nowrap !important;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0.75rem;
+  gap: 0.35rem;
   overflow-x: scroll !important;
   overflow-y: hidden !important;
-  padding: 0.4rem 4.25rem 3.4rem 1.5rem;
+  padding: 0.85rem 4.25rem 3.4rem 1.75rem;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
@@ -410,12 +410,20 @@ body.collection-fuji .gallery,
 
 body.collection-fuji .gallery-item,
 .gallery.gallery-hscroll .gallery-item {
-  height: calc(100% - 3.6rem) !important;
+  position: relative;
+  top: var(--fuji-y, 8%);
+  height: var(--fuji-h, 46%) !important;
   width: auto !important;
   max-width: none !important;
   flex: 0 0 auto !important;
   align-self: flex-start;
+  margin-left: var(--fuji-ml, 1.6rem);
+  margin-right: 0.15rem;
+  transform: rotate(var(--fuji-rot, 0deg));
+  transform-origin: center center;
   background: transparent;
+  overflow: visible;
+  box-shadow: none;
 }
 
 body.collection-fuji .gallery-item img,
@@ -425,6 +433,7 @@ body.collection-fuji .gallery-item img,
   max-width: none !important;
   max-height: none !important;
   object-fit: contain;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
 }
 
 body.collection-fuji .gallery::-webkit-scrollbar {
@@ -781,7 +790,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
 
   body.collection-fuji .gallery-item,
   .gallery.gallery-hscroll .gallery-item {
-    height: calc(100% - 3rem) !important;
+    height: var(--fuji-h, 42%) !important;
     width: auto !important;
     max-width: none !important;
   }
