@@ -376,9 +376,13 @@ body.collection-fuji main.main-full {
 body.collection-fuji .collection-title {
   flex-shrink: 0;
   margin: 0 1.5rem 0.75rem;
-  font-size: clamp(1.15rem, 2.6vw, 2.4rem);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: clamp(1.05rem, 4.4vw, 2.4rem);
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+  line-height: 1.25;
+  max-width: calc(100% - 3rem);
+  letter-spacing: 0.04em;
 }
 
 body.collection-fuji .gallery,
@@ -754,6 +758,15 @@ body.collection-fuji.is-fuji-end .collection-back-link {
 
   body.collection-fuji main.main-full {
     padding: 0 0 0.35rem !important;
+  }
+
+  body.collection-fuji .collection-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset;
+    font-size: clamp(1.05rem, 5.4vw, 1.7rem);
+    margin: 0 1rem 0.55rem;
+    max-width: calc(100% - 2rem);
   }
 
   body.collection-fuji .gallery,
