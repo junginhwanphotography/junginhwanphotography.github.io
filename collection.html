@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=shizuoka-bg-bw-1" />
+    <link rel="stylesheet" href="style.css?v=fuji-hscroll-1" />
   </head>
   <body class="collection-page">
     <header class="site-header">
@@ -92,6 +92,10 @@
         }
       })();
 
+      function isFujiCollection(id) {
+        return (id || "").toUpperCase().includes("MT.FUJI");
+      }
+
       if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
         document.body.classList.add("collection-comsec");
         const galleryEarly = document.getElementById("gallery");
@@ -100,10 +104,16 @@
       if ((collectionId || "").toUpperCase() === "OKINAWA") {
         document.body.classList.add("collection-okinawa");
       }
-      if ((collectionId || "").toUpperCase() === "SHIZUOKA 1") {
+      if ((collectionId || "").toUpperCase() === "SHIZUOKA 1" || (collectionId || "").toUpperCase() === "SHIZUOKA") {
         document.body.classList.add("collection-shizuoka");
         const galleryEarly = document.getElementById("gallery");
         if (galleryEarly) galleryEarly.classList.add("gallery-two-col");
+      }
+      if (isFujiCollection(collectionId)) {
+        document.documentElement.classList.add("collection-fuji");
+        document.body.classList.add("collection-fuji");
+        const galleryEarly = document.getElementById("gallery");
+        if (galleryEarly) galleryEarly.classList.add("gallery-hscroll");
       }
 
       // 전역 변수: 이미지 배열과 현재 인덱스
@@ -186,13 +196,14 @@
           });
 
           setupShizuokaBgBw();
+          setupFujiHScroll();
         } catch (error) {
           console.error("갤러리 로드 중 오류:", error);
         }
       }
 
       function setupShizuokaBgBw() {
-        if ((collectionId || "").toUpperCase() !== "SHIZUOKA 1") return;
+        if (!["SHIZUOKA 1", "SHIZUOKA"].includes((collectionId || "").toUpperCase())) return;
         const trigger = document.querySelector('.gallery-item[data-photo-num="10"]');
         if (!trigger) return;
 
@@ -221,6 +232,22 @@
           new ResizeObserver(onScroll).observe(galleryEl);
         }
         apply();
+      }
+
+      function setupFujiHScroll() {
+        if (!isFujiCollection(collectionId)) return;
+        const galleryEl = document.getElementById("gallery");
+        if (!galleryEl) return;
+
+        const onWheel = (event) => {
+          const lightbox = document.getElementById("lightbox");
+          if (lightbox && lightbox.classList.contains("is-open")) return;
+          if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+          event.preventDefault();
+          galleryEl.scrollLeft += event.deltaY;
+        };
+
+        window.addEventListener("wheel", onWheel, { passive: false });
       }
 
       function openLightbox(index) {
