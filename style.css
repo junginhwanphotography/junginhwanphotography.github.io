@@ -340,7 +340,11 @@ body.collection-shizuoka .gallery-item img,
   max-height: none !important;
 }
 
-/* Mt.Fuji: 한 줄 횡스크롤, 스크롤바는 화면 하단 */
+.collection-flow {
+  display: contents;
+}
+
+/* Mt.Fuji: 한 줄 횡스크롤, 로고·제목도 함께 움직임 */
 html.collection-fuji,
 body.collection-fuji {
   width: 100%;
@@ -355,57 +359,74 @@ body.collection-fuji {
   flex-direction: column;
 }
 
-body.collection-fuji .site-header {
-  flex-shrink: 0;
+body.collection-fuji .collection-flow {
+  display: grid;
+  grid-template-columns: minmax(12rem, 22rem) max-content;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "brand photos"
+    "title photos";
+  flex: 1;
+  min-height: 0;
   width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.08);
+}
+
+body.collection-fuji .site-header {
+  grid-area: brand;
+  position: static;
+  flex-shrink: 0;
+  width: auto;
+  align-self: start;
+  background: transparent;
+}
+
+body.collection-fuji .header-inner {
+  padding: 1.5rem 1rem 0.4rem 1.5rem;
 }
 
 body.collection-fuji main.main-full {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  width: 100% !important;
-  max-width: none;
-  margin-left: 0 !important;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 0 0 0.35rem;
+  display: contents;
 }
 
 body.collection-fuji .collection-title {
+  grid-area: title;
   flex-shrink: 0;
-  margin: 0 1.5rem 0.75rem;
+  margin: 0 1.25rem 1.25rem 1.5rem;
   font-size: clamp(1.05rem, 4.4vw, 2.4rem);
   overflow: visible;
   text-overflow: unset;
   white-space: normal;
   line-height: 1.25;
-  max-width: calc(100% - 3rem);
+  max-width: 20rem;
   letter-spacing: 0.04em;
+  align-self: start;
 }
 
 body.collection-fuji .gallery,
 .gallery.gallery-hscroll {
-  flex: 1;
+  grid-area: photos;
+  flex: none;
   min-height: 0;
-  width: 100% !important;
+  width: max-content !important;
   max-width: none !important;
   min-width: 0;
+  height: 100%;
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.35rem;
-  overflow-x: scroll !important;
-  overflow-y: hidden !important;
+  overflow: visible !important;
   padding: 0.85rem 4.25rem 3.4rem 1.75rem;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
-  scrollbar-width: auto;
-  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.08);
 }
 
 body.collection-fuji .gallery-item,
@@ -436,16 +457,16 @@ body.collection-fuji .gallery-item img,
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
 }
 
-body.collection-fuji .gallery::-webkit-scrollbar {
+body.collection-fuji .collection-flow::-webkit-scrollbar {
   height: 12px;
   display: block;
 }
 
-body.collection-fuji .gallery::-webkit-scrollbar-track {
+body.collection-fuji .collection-flow::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.06);
 }
 
-body.collection-fuji .gallery::-webkit-scrollbar-thumb {
+body.collection-fuji .collection-flow::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.28);
   border-radius: 99px;
 }
@@ -766,7 +787,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   }
 
   body.collection-fuji main.main-full {
-    padding: 0 0 0.35rem !important;
+    display: contents;
+    padding: 0 !important;
   }
 
   body.collection-fuji .collection-title {
@@ -774,8 +796,12 @@ body.collection-fuji.is-fuji-end .collection-back-link {
     overflow: visible !important;
     text-overflow: unset;
     font-size: clamp(1.05rem, 5.4vw, 1.7rem);
-    margin: 0 1rem 0.55rem;
-    max-width: calc(100% - 2rem);
+    margin: 0 0.85rem 1rem 1rem;
+    max-width: 11.5rem;
+  }
+
+  body.collection-fuji .collection-flow {
+    grid-template-columns: minmax(9.5rem, 13rem) max-content;
   }
 
   body.collection-fuji .gallery,
@@ -783,8 +809,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
     flex-wrap: nowrap !important;
     max-width: none !important;
     justify-content: flex-start !important;
-    overflow-x: scroll !important;
-    overflow-y: hidden !important;
+    overflow: visible !important;
     padding: 0.35rem 3.5rem 2.8rem 1rem;
   }
 
