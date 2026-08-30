@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=nav-fit-1" />
   </head>
   <body class="main-page">
     <nav class="collection-nav" id="collection-nav">
@@ -73,9 +73,41 @@
             }
             nav.appendChild(link);
           });
+          fitNavLinks();
         } catch (e) {}
       }
-      loadSidebar();
+
+      function fitNavLinks() {
+        const nav = document.getElementById("collection-nav");
+        if (!nav) return;
+        const vw =
+          (window.visualViewport && window.visualViewport.width) ||
+          document.documentElement.clientWidth ||
+          window.innerWidth;
+        const styles = getComputedStyle(nav);
+        const pad =
+          (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+        const avail = Math.max(80, vw - pad);
+        nav.querySelectorAll("a").forEach((link) => {
+          link.style.transform = "none";
+          link.style.whiteSpace = "nowrap";
+          const need = link.scrollWidth;
+          if (need > avail && need > 0) {
+            link.style.transformOrigin = "left center";
+            link.style.transform = `scale(${avail / need})`;
+          }
+        });
+      }
+
+      window.addEventListener("resize", fitNavLinks);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", fitNavLinks);
+      }
+      loadSidebar().then(() => {
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(fitNavLinks);
+        }
+      });
     </script>
   </body>
 </html>

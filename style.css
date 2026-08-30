@@ -685,6 +685,9 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   body.main-page .collection-nav {
     top: 10rem;
     padding: 0 0.75rem 2rem 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   body.main-page .collection-nav a,
