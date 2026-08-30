@@ -413,10 +413,10 @@ body.collection-fuji .collection-title {
   margin: 0;
   font-size: clamp(1.05rem, 4.4vw, 2.4rem);
   overflow: visible;
-  text-overflow: unset;
-  white-space: normal;
+  text-overflow: clip;
+  white-space: nowrap;
   line-height: 1.25;
-  max-width: min(36rem, 72vw);
+  max-width: none;
   letter-spacing: 0.04em;
   pointer-events: none;
 }
@@ -803,12 +803,12 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   body.collection-fuji .collection-title {
     white-space: nowrap !important;
     overflow: visible !important;
-    text-overflow: unset;
-    font-size: clamp(0.72rem, 4.1vw, 1.35rem);
+    text-overflow: clip;
+    font-size: 1.15rem;
     top: 4.15rem;
     left: 0.75rem;
-    max-width: none;
-    letter-spacing: 0.02em;
+    max-width: none !important;
+    letter-spacing: 0.015em;
   }
 
   body.collection-fuji .header-inner {

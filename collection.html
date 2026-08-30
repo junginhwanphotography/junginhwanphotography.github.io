@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-title-fit-1" />
+    <link rel="stylesheet" href="style.css?v=fuji-title-fit-2" />
   </head>
   <body class="collection-page">
     <div class="collection-flow" id="collection-flow">
@@ -395,14 +395,20 @@
         if (!isFujiCollection(collectionId)) return;
         const el = document.getElementById("collection-title");
         if (!el || !el.textContent) return;
+        el.style.whiteSpace = "nowrap";
+        el.style.maxWidth = "none";
+        el.style.transform = "none";
         el.style.fontSize = "";
-        if (window.innerWidth > 720) return;
-        const left = parseFloat(getComputedStyle(el).left) || 16;
-        const maxW = Math.max(96, window.innerWidth - left - 10);
-        let size = parseFloat(getComputedStyle(el).fontSize) || 18;
-        while (el.scrollWidth > maxW && size > 9) {
-          size -= 0.35;
-          el.style.fontSize = `${size}px`;
+        const vw =
+          (window.visualViewport && window.visualViewport.width) ||
+          document.documentElement.clientWidth ||
+          window.innerWidth;
+        const left = 12;
+        const avail = Math.max(80, vw - left - 8);
+        const need = el.scrollWidth;
+        if (need > avail && need > 0) {
+          el.style.transformOrigin = "left top";
+          el.style.transform = `scale(${avail / need})`;
         }
       }
 
