@@ -413,6 +413,9 @@
       }
 
       window.addEventListener("resize", fitFujiTitle);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", fitFujiTitle);
+      }
 
       // 터치 스와이프 감지
       let touchStartX = 0;
