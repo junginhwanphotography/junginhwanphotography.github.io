@@ -801,13 +801,14 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   }
 
   body.collection-fuji .collection-title {
-    white-space: normal !important;
+    white-space: nowrap !important;
     overflow: visible !important;
     text-overflow: unset;
-    font-size: clamp(1.05rem, 5.4vw, 1.7rem);
+    font-size: clamp(0.72rem, 4.1vw, 1.35rem);
     top: 4.15rem;
-    left: 1rem;
-    max-width: min(22rem, 78vw);
+    left: 0.75rem;
+    max-width: none;
+    letter-spacing: 0.02em;
   }
 
   body.collection-fuji .header-inner {
