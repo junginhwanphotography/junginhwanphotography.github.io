@@ -693,6 +693,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   body.main-page .collection-nav a,
   .sidebar-link {
     font-size: 1.8rem;
+    white-space: nowrap;
+    max-width: 100%;
   }
 
   /* 모바일: 메인 페이지 헤더를 컬렉션 페이지와 동일하게 */
