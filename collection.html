@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-title-fit-2" />
+    <link rel="stylesheet" href="style.css?v=fuji-title-revert-1" />
   </head>
   <body class="collection-page">
     <div class="collection-flow" id="collection-flow">
@@ -388,33 +388,6 @@
         } catch (e) {
           titleEl.textContent = displayName(collectionId);
         }
-        fitFujiTitle();
-      }
-
-      function fitFujiTitle() {
-        if (!isFujiCollection(collectionId)) return;
-        const el = document.getElementById("collection-title");
-        if (!el || !el.textContent) return;
-        el.style.whiteSpace = "nowrap";
-        el.style.maxWidth = "none";
-        el.style.transform = "none";
-        el.style.fontSize = "";
-        const vw =
-          (window.visualViewport && window.visualViewport.width) ||
-          document.documentElement.clientWidth ||
-          window.innerWidth;
-        const left = 12;
-        const avail = Math.max(80, vw - left - 8);
-        const need = el.scrollWidth;
-        if (need > avail && need > 0) {
-          el.style.transformOrigin = "left top";
-          el.style.transform = `scale(${avail / need})`;
-        }
-      }
-
-      window.addEventListener("resize", fitFujiTitle);
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", fitFujiTitle);
       }
 
       // 터치 스와이프 감지
@@ -489,11 +462,7 @@
 
       setupFujiHScroll();
       loadGallery();
-      setCollectionTitle().then(() => {
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(fitFujiTitle);
-        }
-      });
+      setCollectionTitle();
     </script>
   </body>
 </html>
