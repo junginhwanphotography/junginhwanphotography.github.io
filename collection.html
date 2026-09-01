@@ -14,9 +14,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-title-revert-1" />
+    <link rel="stylesheet" href="style.css?v=fuji-train-10" />
   </head>
   <body class="collection-page">
+    <div class="fuji-scene" aria-hidden="true">
+      <div class="fuji-land" id="fuji-land"></div>
+    </div>
+    <div class="fuji-train-wrap" id="fuji-train-wrap" aria-hidden="true">
+      <div class="fuji-train-cars" id="fuji-train-cars"></div>
+    </div>
     <div class="collection-flow" id="collection-flow">
     <div class="collection-track">
     <header class="site-header">
@@ -118,6 +124,13 @@
         document.body.classList.add("collection-fuji");
         const galleryEarly = document.getElementById("gallery");
         if (galleryEarly) galleryEarly.classList.add("gallery-hscroll");
+        const folder =
+          "collections/" + encodeURIComponent(collectionId) + "/";
+        const landEl = document.getElementById("fuji-land");
+        if (landEl) {
+          landEl.style.backgroundImage = `url("${folder}bg-fuji-land.png?v=panorama-6")`;
+        }
+        setupFujiTrainCars(folder);
       }
 
       // 전역 변수: 이미지 배열과 현재 인덱스
@@ -169,7 +182,7 @@
           imageList = images.filter((item) => {
             if (!item || !item.src) return false;
             const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "").toLowerCase();
-            return stem !== "background" && stem !== "bsckground";
+            return stem !== "background" && stem !== "bsckground" && !stem.startsWith("bg-");
           });
           console.log("로드된 이미지 개수:", imageList.length);
           if (imageList.length > 0) {
@@ -270,6 +283,89 @@
         apply();
       }
 
+      function setupFujiTrainCars(folder) {
+        const wrap = document.getElementById("fuji-train-wrap");
+        const cars = document.getElementById("fuji-train-cars");
+        if (!wrap || !cars || !folder) return;
+        wrap.dataset.folder = folder;
+        cars.replaceChildren();
+        const vw = Math.max(window.innerWidth || 0, 320);
+        const carH = wrap.clientHeight || 80;
+        const leadW = (522 / 168) * carH;
+        const coachW = Math.max(24, (319 / 168) * carH - 10);
+        const noseX = vw * (2 / 3);
+        const coachCount = Math.max(2, Math.ceil((noseX - leadW) / coachW) + 1);
+        for (let i = 0; i < coachCount; i += 1) {
+          const coach = document.createElement("img");
+          coach.className = "fuji-coach";
+          coach.src = folder + "bg-fuji-coach.png";
+          coach.alt = "";
+          cars.appendChild(coach);
+        }
+        const lead = document.createElement("img");
+        lead.className = "fuji-train";
+        lead.id = "fuji-train";
+        lead.src = folder + "bg-fuji-train.png";
+        lead.alt = "";
+        cars.appendChild(lead);
+        if (wrap.dataset.resizeBound !== "1") {
+          wrap.dataset.resizeBound = "1";
+          window.addEventListener("resize", () => {
+            setupFujiTrainCars(wrap.dataset.folder);
+          });
+        }
+      }
+
+      function setupFujiTrainMotion(scroller) {
+        if (!scroller || scroller.dataset.trainMotion === "1") return;
+        scroller.dataset.trainMotion = "1";
+        const wrap = document.getElementById("fuji-train-wrap");
+        const periods = [208, 276, 186, 318, 242, 354, 196, 292, 228];
+        const phases = [0.15, 1.55, 2.4, 0.7, 3.05, 1.9, 2.75, 0.35, 1.2];
+        let rate = 0;
+        let target = 0;
+        let simTime = 0;
+        let lastTick = performance.now();
+        let lastScrollAt = 0;
+        let lastLeft = scroller.scrollLeft;
+
+        const onPedal = () => {
+          const now = performance.now();
+          const dx = Math.abs(scroller.scrollLeft - lastLeft);
+          lastLeft = scroller.scrollLeft;
+          lastScrollAt = now;
+          target = Math.min(1, Math.max(0.72, 0.4 + dx / 28));
+        };
+        scroller.addEventListener("scroll", onPedal, { passive: true });
+
+        const tick = (now) => {
+          const dt = Math.min(48, now - lastTick);
+          lastTick = now;
+          if (now - lastScrollAt > 160) target = 0;
+          const ease = target > rate ? 0.18 : 0.05;
+          rate += (target - rate) * ease;
+          if (rate < 0.002 && target === 0) rate = 0;
+          simTime += dt * rate;
+          if (wrap) {
+            wrap.style.setProperty("--fuji-roll", rate.toFixed(4));
+          }
+          const nodes = wrap ? wrap.querySelectorAll(".fuji-coach, .fuji-train") : [];
+          nodes.forEach((car, i) => {
+            const period = periods[i % periods.length];
+            const phase = phases[i % phases.length];
+            const wave = (simTime / period) * Math.PI * 2 + phase;
+            const ampY = 1.15 + (i % 4) * 0.32;
+            const ampX = 0.42 + (i % 3) * 0.14;
+            const y = (Math.sin(wave) - Math.sin(phase)) * ampY;
+            const x = (Math.sin(wave * 1.28 + 0.5) - Math.sin(phase * 1.28 + 0.5)) * ampX;
+            const rot = (Math.sin(wave * 0.82) - Math.sin(phase * 0.82)) * 0.28;
+            car.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rot}deg)`;
+          });
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
       function setupFujiHScroll() {
         if (!isFujiCollection(collectionId)) return;
         const galleryEl = document.getElementById("gallery");
@@ -282,7 +378,53 @@
           const atEnd = max <= 4 || scroller.scrollLeft >= max - 16;
           document.body.classList.toggle("is-fuji-end", atEnd);
         };
-        galleryEl._syncFujiEnd = syncEnd;
+        let fujiLandK = 0;
+        let fujiLandTravel = 0;
+        let fujiLandNat = { w: 0, h: 0 };
+        const recomputeLandK = () => {
+          const land = document.getElementById("fuji-land");
+          if (!land || !fujiLandNat.w) return;
+          const viewH = land.clientHeight || window.innerHeight || 1;
+          const viewW = scroller.clientWidth || window.innerWidth || 1;
+          const displayW = fujiLandNat.w * (viewH / Math.max(fujiLandNat.h, 1));
+          const max = scroller.scrollWidth - scroller.clientWidth;
+          fujiLandTravel = Math.max(0, displayW - viewW);
+          if (max > 48) {
+            fujiLandK = fujiLandTravel / max;
+          }
+          syncLand();
+        };
+        const measureLandK = () => {
+          const land = document.getElementById("fuji-land");
+          if (!land) return;
+          if (fujiLandNat.w) {
+            recomputeLandK();
+            return;
+          }
+          const bg = land.style.backgroundImage || "";
+          const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+          if (!match) return;
+          const probe = new Image();
+          probe.onload = () => {
+            fujiLandNat = { w: probe.naturalWidth, h: probe.naturalHeight };
+            recomputeLandK();
+          };
+          probe.src = match[1];
+        };
+        const syncLand = () => {
+          const shifted = Math.min(
+            scroller.scrollLeft * fujiLandK,
+            fujiLandTravel
+          );
+          document.documentElement.style.setProperty(
+            "--fuji-land-x",
+            `${-shifted}px`
+          );
+        };
+        galleryEl._syncFujiEnd = () => {
+          syncEnd();
+          recomputeLandK();
+        };
 
         const onWheel = (event) => {
           const lightbox = document.getElementById("lightbox");
@@ -301,13 +443,30 @@
         };
 
         window.addEventListener("wheel", onWheel, { passive: false, capture: true });
-        scroller.addEventListener("scroll", syncEnd, { passive: true });
-        window.addEventListener("resize", syncEnd);
+        scroller.addEventListener(
+          "scroll",
+          () => {
+            syncEnd();
+            syncLand();
+          },
+          { passive: true }
+        );
+        window.addEventListener("resize", () => {
+          syncEnd();
+          measureLandK();
+          syncLand();
+        });
         if ("ResizeObserver" in window) {
-          new ResizeObserver(syncEnd).observe(scroller);
+          new ResizeObserver(() => {
+            syncEnd();
+            measureLandK();
+          }).observe(scroller);
           new ResizeObserver(syncEnd).observe(galleryEl);
         }
         syncEnd();
+        measureLandK();
+        syncLand();
+        setupFujiTrainMotion(scroller);
       }
 
       function openLightbox(index) {

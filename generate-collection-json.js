@@ -21,6 +21,15 @@ function isBackgroundFile(name) {
   return stem === "background" || stem === "bsckground";
 }
 
+function isSceneAssetFile(name) {
+  const stem = path.parse(name).name.toLowerCase();
+  return stem.startsWith("bg-");
+}
+
+function isGalleryExcludedFile(name) {
+  return isBackgroundFile(name) || isSceneAssetFile(name);
+}
+
 async function photoOrderFor(collectionId) {
   try {
     const raw = await fs.readFile(path.join(ROOT, "collections.json"), "utf8");
@@ -52,7 +61,7 @@ async function main() {
       .filter((name) =>
         IMAGE_EXTENSIONS.includes(path.extname(name).toLowerCase())
       )
-      .filter((name) => !isBackgroundFile(name));
+      .filter((name) => !isGalleryExcludedFile(name));
     files.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
     if (photoOrder !== "asc") files.reverse();
 

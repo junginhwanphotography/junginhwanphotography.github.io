@@ -22,6 +22,16 @@ function isBackgroundFile(name) {
   return stem === "background" || stem === "bsckground";
 }
 
+/** bg- 접두사 씬 에셋(기차·랜드 등)은 갤러리에서 제외 */
+function isSceneAssetFile(name) {
+  const stem = path.parse(name).name.toLowerCase();
+  return stem.startsWith("bg-");
+}
+
+function isGalleryExcludedFile(name) {
+  return isBackgroundFile(name) || isSceneAssetFile(name);
+}
+
 /** bsckground.* → background.* 로 통일 (확장자 유지) */
 async function normalizeBackgroundFilename(dir) {
   try {
@@ -82,7 +92,7 @@ async function getCollectionImageList(collectionId) {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     return entries
-      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
+      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isGalleryExcludedFile(e.name))
       .map((e) => e.name)
       .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
   } catch {
@@ -168,7 +178,7 @@ async function generateCollectionImagesJson(collectionId, photoOrder = "desc") {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const files = sortPhotoNames(
     entries
-      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isBackgroundFile(e.name))
+      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isGalleryExcludedFile(e.name))
       .map((e) => e.name),
     photoOrder
   );
