@@ -372,8 +372,6 @@ body.collection-fuji .fuji-scene {
   inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 100dvh;
-  min-height: 100vh;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -888,6 +886,12 @@ body.collection-fuji.is-fuji-end .collection-back-link {
 
   body.collection-fuji .header-inner {
     padding: 1.25rem 1rem 0.25rem 1rem;
+  }
+
+  body.collection-fuji .fuji-land {
+    top: -5.2vh;
+    height: calc(100% + 5.2vh);
+    bottom: auto;
   }
 
   body.collection-fuji .gallery,
