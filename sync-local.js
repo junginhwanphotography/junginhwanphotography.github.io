@@ -6,6 +6,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 const { execSync } = require("child_process");
+const { generateSitemap } = require("./generate-sitemap.js");
 
 const ROOT = path.resolve(__dirname);
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
@@ -271,6 +272,8 @@ async function runSync() {
   } else {
     console.log("\n✅ 모든 컬렉션 갱신 완료.");
   }
+
+  await generateSitemap();
 
   return changed;
 }
