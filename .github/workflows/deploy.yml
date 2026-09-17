@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Sync collections (images.json, collections.json)
+      - name: Sync collections and sitemap
         run: node -e "require('./sync-local.js').runSync()"
 
       - name: Upload artifact

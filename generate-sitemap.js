@@ -1,6 +1,7 @@
 /**
- * collections.json 기준으로 sitemap.xml을 만들고,
+ * collections.json과 루트 HTML을 기준으로 sitemap.xml / robots.txt를 만들고,
  * index.html noscript 컬렉션 링크를 동기화합니다.
+ * 동기화(runSync)와 GitHub Pages 배포에서 자동 실행됩니다.
  */
 
 const fs = require("fs").promises;
@@ -8,6 +9,7 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname);
 const DEFAULT_SITE_URL = "https://junginhwanphotography.github.io";
+const SKIP_HTML = new Set(["index.html", "collection.html", "wall.html"]);
 
 function isHiddenCollection(id) {
   const n = String(id || "")
@@ -42,6 +44,22 @@ async function publicCollections() {
   return list.filter((c) => c && c.id && !isHiddenCollection(c.id));
 }
 
+async function extraHtmlPages(origin) {
+  const entries = await fs.readdir(ROOT, { withFileTypes: true });
+  return entries
+    .filter(
+      (e) =>
+        e.isFile() &&
+        e.name.toLowerCase().endsWith(".html") &&
+        !SKIP_HTML.has(e.name)
+    )
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((e) => ({
+      loc: origin + "/" + encodeURI(e.name),
+      priority: "0.6",
+    }));
+}
+
 function xmlEscape(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -50,15 +68,24 @@ function xmlEscape(value) {
     .replace(/"/g, "&quot;");
 }
 
-async function writeSitemap(origin, collections, lastmod) {
-  const urls = [
-    { loc: origin + "/", priority: "1.0" },
-    ...collections.map((c) => ({
-      loc: origin + "/collection.html?collection=" + encodeURIComponent(c.id),
-      priority: "0.8",
-    })),
-  ];
+function locList(xml) {
+  return [...String(xml).matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
+}
 
+function sameLocs(a, b) {
+  if (a.length !== b.length) return false;
+  return a.every((loc, i) => loc === b[i]);
+}
+
+async function readIfExists(filePath) {
+  try {
+    return await fs.readFile(filePath, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+function buildSitemapXml(urls, lastmod) {
   const body = urls
     .map(
       (u) => `  <url>
@@ -70,12 +97,30 @@ async function writeSitemap(origin, collections, lastmod) {
     )
     .join("\n");
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${body}
 </urlset>
 `;
-  await fs.writeFile(path.join(ROOT, "sitemap.xml"), xml, "utf8");
+}
+
+async function writeSitemap(origin, collections, lastmod, bumpLastmod) {
+  const extra = await extraHtmlPages(origin);
+  const urls = [
+    { loc: origin + "/", priority: "1.0" },
+    ...collections.map((c) => ({
+      loc: origin + "/collection.html?collection=" + encodeURIComponent(c.id),
+      priority: "0.8",
+    })),
+    ...extra,
+  ];
+  const xml = buildSitemapXml(urls, lastmod);
+  const filePath = path.join(ROOT, "sitemap.xml");
+  const prev = await readIfExists(filePath);
+  const urlsChanged = !sameLocs(locList(prev), urls.map((u) => u.loc));
+  if (!urlsChanged && !bumpLastmod && prev) return urls.length;
+  await fs.writeFile(filePath, xml, "utf8");
+  return urls.length;
 }
 
 async function writeRobots(origin) {
@@ -84,7 +129,10 @@ Allow: /
 
 Sitemap: ${origin}/sitemap.xml
 `;
-  await fs.writeFile(path.join(ROOT, "robots.txt"), text, "utf8");
+  const filePath = path.join(ROOT, "robots.txt");
+  const prev = await readIfExists(filePath);
+  if (prev === text) return;
+  await fs.writeFile(filePath, text, "utf8");
 }
 
 async function updateIndexNoscript(collections) {
@@ -104,27 +152,29 @@ async function updateIndexNoscript(collections) {
     })
     .join("\n");
 
-  html =
+  const next =
     html.slice(0, startAt + start.length) +
     "\n" +
     links +
     "\n        " +
     html.slice(endAt);
-  await fs.writeFile(indexPath, html, "utf8");
+  if (next === html) return;
+  await fs.writeFile(indexPath, next, "utf8");
 }
 
-async function generateSitemap() {
+async function generateSitemap(opts = {}) {
+  const bumpLastmod = Boolean(opts.bumpLastmod);
   const origin = await siteUrl();
   const collections = await publicCollections();
   const lastmod = new Date().toISOString().slice(0, 10);
-  await writeSitemap(origin, collections, lastmod);
+  const urlCount = await writeSitemap(origin, collections, lastmod, bumpLastmod);
   await writeRobots(origin);
   await updateIndexNoscript(collections);
-  console.log(`🗺 sitemap.xml 갱신 (${collections.length + 1}개 URL)`);
+  console.log(`🗺 sitemap.xml 갱신 (${urlCount}개 URL)`);
 }
 
 if (require.main === module) {
-  generateSitemap().catch((err) => {
+  generateSitemap({ bumpLastmod: true }).catch((err) => {
     console.error("❌ sitemap 생성 실패:", err.message);
     process.exit(1);
   });

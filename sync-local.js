@@ -273,7 +273,7 @@ async function runSync() {
     console.log("\n✅ 모든 컬렉션 갱신 완료.");
   }
 
-  await generateSitemap();
+  await generateSitemap({ bumpLastmod: changed });
 
   return changed;
 }

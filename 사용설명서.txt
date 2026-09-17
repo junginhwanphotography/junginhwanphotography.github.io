@@ -72,8 +72,8 @@
   1) 동기화-및-로컬서버.bat  [테스트 서버]
   -------------------------------------------------------------------------------
   • 더블클릭으로 실행.
-  • 로컬 파일(collections 폴더) 변경을 감지해서 images.json·collections.json을
-    자동으로 갱신한 뒤, 테스트 서버를 띄우고 브라우저를 엽니다.
+  • 로컬 파일(collections 폴더) 변경을 감지해서 images.json·collections.json·
+    sitemap.xml을 자동으로 갱신한 뒤, 테스트 서버를 띄우고 브라우저를 엽니다.
   • 푸시는 하지 않습니다.
 
   [서버가 이미 켜져 있을 때]
@@ -86,7 +86,7 @@
   2) 동기화-및-푸시.bat  [동기화 + Git 푸시]
   -------------------------------------------------------------------------------
   • 더블클릭으로 실행.
-  • collections 변경을 감지해 적용한 뒤,
+  • collections 변경을 감지해 적용하고 sitemap.xml도 맞춘 뒤,
     git add → commit → push 까지 한 번에 수행합니다.
   • 원격 저장소(GitHub 등)에 올릴 때 사용합니다.
   • Git 저장소가 아니거나 원격이 없으면 푸시만 건너뜁니다.
@@ -177,7 +177,9 @@
   • collections/ (모든 컬렉션이 여기만 있음)
     각 컬렉션은 폴더 하나씩입니다.
     - 새 폴더 만들기 → collections.json 에 항목 추가 + 해당 폴더의
-      images.json 생성
+      images.json 생성 + sitemap.xml 에 주소 추가
+    - 루트에 HTML 페이지를 추가하면 sitemap.xml 에 함께 들어갑니다.
+      (index.html, collection.html, wall.html 제외)
     - 폴더 안 사진 추가/삭제 → 해당 컬렉션의 images.json 만 갱신
     - 폴더 삭제 → collections.json 에서 해당 항목 제거
     - 폴더 이름 변경 → 이름이 곧 컬렉션 id이므로, 새 이름으로 취급됩니다.
