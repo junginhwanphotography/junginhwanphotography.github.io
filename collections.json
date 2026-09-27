@@ -6,6 +6,12 @@
     "photoOrder": "desc"
   },
   {
+    "id": "paris to rome",
+    "name": "paris to rome",
+    "path": "collection.html?collection=paris%20to%20rome",
+    "photoOrder": "asc"
+  },
+  {
     "id": "Mt.Fuji to Tokyo with BAHNO 1",
     "name": "Mt.Fuji to Tokyo with BAHNO 1",
     "path": "collection.html?collection=Mt.Fuji%20to%20Tokyo%20with%20BAHNO%201",
