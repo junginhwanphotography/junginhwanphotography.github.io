@@ -2,31 +2,11 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jung In Hwan Photography</title>
-    <script>
-      (function () {
-        fetch("collections.json", { cache: "no-store" })
-          .then(function (r) { return r.json(); })
-          .then(function (list) {
-            if (!Array.isArray(list)) return;
-            var first = list.find(function (c) {
-              if (!c.id) return false;
-              var n = String(c.id).replace(/^_/, "").toUpperCase();
-              if (n === "WALL") return false;
-              return c.id.startsWith("_");
-            });
-            if (first) {
-              window.location.replace("collection.html?collection=" + encodeURIComponent(first.id));
-              return;
-            }
-            window.location.replace("index.html");
-          })
-          .catch(function () { window.location.replace("index.html"); });
-      })();
-    </script>
+    <meta http-equiv="refresh" content="0; url=index.html" />
+    <title>YONGHO CHOI</title>
+    <script>window.location.replace("index.html");</script>
   </head>
   <body>
-    <p>이동 중…</p>
+    <p><a href="index.html">홈으로</a></p>
   </body>
 </html>

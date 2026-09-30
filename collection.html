@@ -3,506 +3,121 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jung In Hwan Photography | 정인환</title>
-    <meta
-      name="description"
-      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
-    />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://junginhwanphotography.github.io/" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="apple-touch-icon" href="favicon.png" />
+    <title>YONGHO CHOI</title>
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ko_KR" />
-    <meta property="og:site_name" content="Jung In Hwan Photography" />
-    <meta property="og:title" content="Jung In Hwan Photography" />
-    <meta
-      property="og:description"
-      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
-    />
-    <meta property="og:url" content="https://junginhwanphotography.github.io/" />
-    <meta property="og:image" content="https://junginhwanphotography.github.io/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Jung In Hwan Photography" />
-    <meta
-      name="twitter:description"
-      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
-    />
-    <meta name="twitter:image" content="https://junginhwanphotography.github.io/og-image.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-train-11" />
+    <meta property="og:title" content="YONGHO CHOI" />
+    <link rel="stylesheet" href="style.css?v=yongho-6" />
   </head>
-  <body class="collection-page">
-    <div class="fuji-scene" aria-hidden="true">
-      <div class="fuji-land" id="fuji-land"></div>
-    </div>
-    <div class="fuji-train-wrap" id="fuji-train-wrap" aria-hidden="true">
-      <div class="fuji-train-cars" id="fuji-train-cars"></div>
-    </div>
-    <div class="collection-flow" id="collection-flow">
-    <div class="collection-track">
+  <body data-page="">
     <header class="site-header">
       <div class="header-inner">
-        <div>
-          <h1 class="site-title">
-            <a href="index.html" class="site-title-link">Jung In Hwan</a>
-          </h1>
-          <p class="site-subtitle">Photography</p>
-        </div>
+        <a href="index.html" class="site-logo">YONGHO CHOI</a>
+        <nav class="site-nav" id="site-nav" aria-label="사이트">
+          <a href="index.html" class="nav-link" data-nav="home">Home</a>
+          <div class="nav-item">
+            <button type="button" class="nav-link" data-nav="personal">Personal Works</button>
+            <div class="nav-panel" id="panel-personal"></div>
+          </div>
+          <div class="nav-item">
+            <button type="button" class="nav-link" data-nav="works">Works</button>
+            <div class="nav-panel" id="panel-works"></div>
+          </div>
+          <a href="about.html" class="nav-link" data-nav="about">About</a>
+          <a href="contact.html" class="nav-link" data-nav="contact">Contact</a>
+        </nav>
       </div>
     </header>
 
-    <main class="main-full">
-      <h2 class="collection-title" id="collection-title"></h2>
-      <section class="gallery" aria-label="사진 갤러리" id="gallery"></section>
+    <main>
+      <section class="gallery-stack" id="gallery" aria-label="사진 갤러리"></section>
     </main>
-    </div>
-    </div>
 
-    <nav class="collection-back" aria-label="메인으로">
-      <a href="index.html" class="collection-back-link" aria-label="메인 화면으로">
-        <svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false">
-          <path
-            d="M20 12 H7.5 M12.5 6.2 L6.2 12 L12.5 17.8"
-            fill="none"
-            stroke="#111111"
-            stroke-width="3.4"
-            stroke-linecap="square"
-            stroke-linejoin="miter"
-          />
-        </svg>
-      </a>
-    </nav>
+    <footer class="site-footer">© 2026 YONGHO CHOI</footer>
 
-    <!-- 클릭 시 확대 보기용 라이트박스 -->
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <div class="lightbox-backdrop" data-lightbox-close></div>
       <figure class="lightbox-content">
         <img id="lightbox-image" alt="" />
-        <button
-          class="lightbox-close"
-          type="button"
-          aria-label="확대 이미지 닫기"
-          data-lightbox-close
-        >
-          ×
-        </button>
+        <button class="lightbox-close" type="button" aria-label="닫기" data-lightbox-close>×</button>
       </figure>
-      <button
-        class="lightbox-nav lightbox-nav-prev"
-        type="button"
-        aria-label="이전 사진"
-        data-lightbox-nav="prev"
-      >
-        ‹
-      </button>
-      <button
-        class="lightbox-nav lightbox-nav-next"
-        type="button"
-        aria-label="다음 사진"
-        data-lightbox-nav="next"
-      >
-        ›
-      </button>
+      <button class="lightbox-nav lightbox-nav-prev" type="button" aria-label="이전 사진" data-lightbox-nav="prev">‹</button>
+      <button class="lightbox-nav lightbox-nav-next" type="button" aria-label="다음 사진" data-lightbox-nav="next">›</button>
     </div>
 
+    <script src="site.js?v=yongho-6"></script>
     <script>
-      // URL에서 컬렉션 파라미터 가져오기
-      const urlParams = new URLSearchParams(window.location.search);
-      const collectionId = urlParams.get("collection") || "all";
+      const params = new URLSearchParams(window.location.search);
+      const section = params.get("section") || "";
+      const collectionId = params.get("id") || params.get("collection") || "";
+      const allowed = section === "personal-works" || section === "works";
 
-      (function hideWallCollection() {
-        const n = (collectionId || "").replace(/^_/, "").toUpperCase();
-        if (n === "WALL") {
-          window.location.replace("index.html");
-        }
-      })();
+      document.body.setAttribute("data-page", section === "works" ? "works" : "personal");
 
-      function isFujiCollection(id) {
-        return (id || "").toUpperCase().includes("MT.FUJI");
-      }
-
-      if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
-        document.body.classList.add("collection-comsec");
-        const galleryEarly = document.getElementById("gallery");
-        if (galleryEarly) galleryEarly.classList.add("gallery-single-col");
-      }
-      if ((collectionId || "").toUpperCase() === "OKINAWA") {
-        document.body.classList.add("collection-okinawa");
-      }
-      if ((collectionId || "").toUpperCase() === "SHIZUOKA 1" || (collectionId || "").toUpperCase() === "SHIZUOKA") {
-        document.body.classList.add("collection-shizuoka");
-        const galleryEarly = document.getElementById("gallery");
-        if (galleryEarly) galleryEarly.classList.add("gallery-two-col");
-      }
-      if (isFujiCollection(collectionId)) {
-        document.documentElement.classList.add("collection-fuji");
-        document.body.classList.add("collection-fuji");
-        const galleryEarly = document.getElementById("gallery");
-        if (galleryEarly) galleryEarly.classList.add("gallery-hscroll");
-        const folder =
-          "collections/" + encodeURIComponent(collectionId) + "/";
-        const landEl = document.getElementById("fuji-land");
-        if (landEl) {
-          landEl.style.backgroundImage = `url("${folder}bg-fuji-land.png?v=panorama-6")`;
-        }
-        setupFujiTrainCars(folder);
-      }
-
-      // 전역 변수: 이미지 배열과 현재 인덱스
       let imageList = [];
       let currentImageIndex = -1;
 
-      // 현재 컬렉션 id + 파일명으로 이미지 URL 생성 (폴더명 변경 후에도 항상 올바른 경로)
-      function imageUrlForItem(colId, item) {
-        if (!item || !item.src) return "";
-        const filename = item.src.split("/").pop() || item.src;
-        const path = "collections/" + encodeURIComponent(colId) + "/" + encodeURIComponent(filename);
-        return window.location.origin + "/" + path;
+      function galleryRelPath() {
+        return section + "/" + collectionId;
       }
 
-      // 컬렉션 폴더의 images.json을 불러와 갤러리를 채우는 스크립트
+      function imageUrlForItem(item) {
+        if (!item || !item.src) return "";
+        return window.YonghoSite.imageUrl(item.src);
+      }
+
       async function loadGallery() {
         const galleryEl = document.getElementById("gallery");
         if (!galleryEl) return;
-
-        if (collectionId === "all") {
-          console.error("컬렉션 페이지는 'all'을 지원하지 않습니다.");
+        if (!allowed || !collectionId) {
+          window.location.replace("index.html");
           return;
         }
 
         try {
-          // 컬렉션 폴더의 images.json 경로 (# 등 특수문자 인코딩)
-          const jsonPath = `collections/${encodeURIComponent(collectionId)}/images.json`;
-          console.log("컬렉션 ID:", collectionId, "JSON 경로:", jsonPath);
+          const jsonPath = window.YonghoSite.encodeSegments(galleryRelPath()) + "/images.json";
           const res = await fetch(jsonPath, { cache: "no-store" });
-          if (!res.ok) {
-            console.error(`${jsonPath} 로드 실패:`, res.status);
-            return;
-          }
+          if (!res.ok) return;
           const data = await res.json();
           const images = Array.isArray(data) ? data : data.images;
-          const backgroundSrc = Array.isArray(data) ? null : data.background;
-          if (!Array.isArray(images)) {
-            console.error("images.json 형식이 올바르지 않습니다.");
-            return;
-          }
+          if (!Array.isArray(images)) return;
 
-          if (backgroundSrc) {
-            const bgUrl = `url("${imageUrlForItem(collectionId, { src: backgroundSrc })}")`;
-            document.body.style.setProperty("--collection-bg", bgUrl);
-            document.body.classList.add("has-collection-bg");
-          }
-
-          // 전역 변수에 이미지 배열 저장 (배경 파일은 갤러리에서 제외)
           imageList = images.filter((item) => {
             if (!item || !item.src) return false;
-            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "").toLowerCase();
+            const stem = window.YonghoSite.filenameOf(item.src).replace(/\.[^.]+$/, "").toLowerCase();
             return stem !== "background" && stem !== "bsckground" && !stem.startsWith("bg-");
           });
-          console.log("로드된 이미지 개수:", imageList.length);
-          if (imageList.length > 0) {
-            console.log("첫 번째 이미지 경로:", imageList[0].src);
-          }
+
+          const collections = await window.YonghoSite.loadCollections();
+          const list = section === "works" ? collections.works : collections.personalWorks;
+          const entry = list.find((item) => item.id === collectionId);
+          document.title = (entry && entry.name ? entry.name : collectionId) + " | YONGHO CHOI";
 
           imageList.forEach((item, index) => {
             const figure = document.createElement("figure");
             figure.className = "gallery-item";
-            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "");
-            figure.dataset.photoNum = stem;
-            if (isFujiCollection(collectionId)) {
-              applyFujiMemoryLayout(figure, index);
-            }
-
             const img = document.createElement("img");
-            img.src = imageUrlForItem(collectionId, item);
+            img.src = imageUrlForItem(item);
             img.alt = item.alt || "";
             img.loading = "lazy";
-
-            img.addEventListener("load", () => {
-              if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
-              const galleryEl = document.getElementById("gallery");
-              if (galleryEl && typeof galleryEl._syncFujiEnd === "function") galleryEl._syncFujiEnd();
-            });
-
-            img.addEventListener("click", () => {
-              openLightbox(index);
-            });
-
+            img.addEventListener("click", () => openLightbox(index));
             figure.appendChild(img);
             galleryEl.appendChild(figure);
           });
-
-          setupShizuokaBgBw();
-          setupFujiHScroll();
-          const fujiGallery = document.getElementById("gallery");
-          if (fujiGallery && typeof fujiGallery._syncFujiEnd === "function") {
-            requestAnimationFrame(() => fujiGallery._syncFujiEnd());
-          }
         } catch (error) {
           console.error("갤러리 로드 중 오류:", error);
         }
       }
 
-      function fujiRand(seed) {
-        let t = (seed + 1) * 997 + 42;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      }
-
-      function applyFujiMemoryLayout(figure, index) {
-        const a = fujiRand(index);
-        const b = fujiRand(index + 17);
-        const c = fujiRand(index + 31);
-        const d = fujiRand(index + 53);
-        const bands = [0.38, 0.5, 0.43, 0.47];
-        const scale = Math.min(0.58, Math.max(0.34, bands[index % bands.length] + (a - 0.5) * 0.08));
-        const y = Math.max(0.03, Math.min(0.9 - scale, b * (0.9 - scale)));
-        const ml = 1.35 + c * 2.6;
-        const rot = (d - 0.5) * 3.4;
-        figure.style.setProperty("--fuji-h", `${(scale * 100).toFixed(1)}%`);
-        figure.style.setProperty("--fuji-y", `${(y * 100).toFixed(1)}%`);
-        figure.style.setProperty("--fuji-ml", `${ml.toFixed(2)}rem`);
-        figure.style.setProperty("--fuji-rot", `${rot.toFixed(2)}deg`);
-      }
-
-      function setupShizuokaBgBw() {
-        if (!["SHIZUOKA 1", "SHIZUOKA"].includes((collectionId || "").toUpperCase())) return;
-        const trigger = document.querySelector('.gallery-item[data-photo-num="10"]');
-        if (!trigger) return;
-
-        let ticking = false;
-        const apply = () => {
-          ticking = false;
-          const rect = trigger.getBoundingClientRect();
-          const vh = window.innerHeight || 1;
-          const start = vh * 0.9;
-          const end = vh * 0.28;
-          const t = (start - rect.top) / (start - end);
-          const clamped = Math.max(0, Math.min(1, t));
-          const eased = clamped * clamped * (3 - 2 * clamped);
-          document.body.style.setProperty("--bg-bw", eased.toFixed(4));
-        };
-        const onScroll = () => {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(apply);
-        };
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll);
-        const galleryEl = document.getElementById("gallery");
-        if (galleryEl && "ResizeObserver" in window) {
-          new ResizeObserver(onScroll).observe(galleryEl);
-        }
-        apply();
-      }
-
-      function setupFujiTrainCars(folder) {
-        const wrap = document.getElementById("fuji-train-wrap");
-        const cars = document.getElementById("fuji-train-cars");
-        if (!wrap || !cars || !folder) return;
-        wrap.dataset.folder = folder;
-        cars.replaceChildren();
-        const vw = Math.max(window.innerWidth || 0, 320);
-        const carH = wrap.clientHeight || 80;
-        const leadW = (522 / 168) * carH;
-        const coachW = Math.max(24, (319 / 168) * carH - 10);
-        const noseX = vw * (2 / 3);
-        const coachCount = Math.max(2, Math.ceil((noseX - leadW) / coachW) + 1);
-        for (let i = 0; i < coachCount; i += 1) {
-          const coach = document.createElement("img");
-          coach.className = "fuji-coach";
-          coach.src = folder + "bg-fuji-coach.png";
-          coach.alt = "";
-          cars.appendChild(coach);
-        }
-        const lead = document.createElement("img");
-        lead.className = "fuji-train";
-        lead.id = "fuji-train";
-        lead.src = folder + "bg-fuji-train.png";
-        lead.alt = "";
-        cars.appendChild(lead);
-        if (wrap.dataset.resizeBound !== "1") {
-          wrap.dataset.resizeBound = "1";
-          window.addEventListener("resize", () => {
-            setupFujiTrainCars(wrap.dataset.folder);
-          });
-        }
-      }
-
-      function setupFujiTrainMotion(scroller) {
-        if (!scroller || scroller.dataset.trainMotion === "1") return;
-        scroller.dataset.trainMotion = "1";
-        const wrap = document.getElementById("fuji-train-wrap");
-        const periods = [208, 276, 186, 318, 242, 354, 196, 292, 228];
-        const phases = [0.15, 1.55, 2.4, 0.7, 3.05, 1.9, 2.75, 0.35, 1.2];
-        let rate = 0;
-        let target = 0;
-        let simTime = 0;
-        let lastTick = performance.now();
-        let lastScrollAt = 0;
-        let lastLeft = scroller.scrollLeft;
-
-        const onPedal = () => {
-          const now = performance.now();
-          const dx = Math.abs(scroller.scrollLeft - lastLeft);
-          lastLeft = scroller.scrollLeft;
-          lastScrollAt = now;
-          target = Math.min(1, Math.max(0.72, 0.4 + dx / 28));
-        };
-        scroller.addEventListener("scroll", onPedal, { passive: true });
-
-        const tick = (now) => {
-          const dt = Math.min(48, now - lastTick);
-          lastTick = now;
-          if (now - lastScrollAt > 160) target = 0;
-          const ease = target > rate ? 0.18 : 0.05;
-          rate += (target - rate) * ease;
-          if (rate < 0.002 && target === 0) rate = 0;
-          simTime += dt * rate;
-          if (wrap) {
-            wrap.style.setProperty("--fuji-roll", rate.toFixed(4));
-          }
-          const nodes = wrap ? wrap.querySelectorAll(".fuji-coach, .fuji-train") : [];
-          nodes.forEach((car, i) => {
-            const period = periods[i % periods.length];
-            const phase = phases[i % phases.length];
-            const wave = (simTime / period) * Math.PI * 2 + phase;
-            const ampY = 1.15 + (i % 4) * 0.32;
-            const ampX = 0.42 + (i % 3) * 0.14;
-            const y = (Math.sin(wave) - Math.sin(phase)) * ampY;
-            const x = (Math.sin(wave * 1.28 + 0.5) - Math.sin(phase * 1.28 + 0.5)) * ampX;
-            const rot = (Math.sin(wave * 0.82) - Math.sin(phase * 0.82)) * 0.28;
-            car.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rot}deg)`;
-          });
-          requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-
-      function setupFujiHScroll() {
-        if (!isFujiCollection(collectionId)) return;
-        const galleryEl = document.getElementById("gallery");
-        const scroller = document.getElementById("collection-flow");
-        if (!galleryEl || !scroller || scroller.dataset.hscrollBound === "1") return;
-        scroller.dataset.hscrollBound = "1";
-
-        const syncEnd = () => {
-          const max = scroller.scrollWidth - scroller.clientWidth;
-          const atEnd = max <= 4 || scroller.scrollLeft >= max - 16;
-          document.body.classList.toggle("is-fuji-end", atEnd);
-        };
-        let fujiLandK = 0;
-        let fujiLandTravel = 0;
-        let fujiLandNat = { w: 0, h: 0 };
-        const recomputeLandK = () => {
-          const land = document.getElementById("fuji-land");
-          if (!land || !fujiLandNat.w) return;
-          const viewH = land.clientHeight || window.innerHeight || 1;
-          const viewW = scroller.clientWidth || window.innerWidth || 1;
-          const displayW = fujiLandNat.w * (viewH / Math.max(fujiLandNat.h, 1));
-          const max = scroller.scrollWidth - scroller.clientWidth;
-          fujiLandTravel = Math.max(0, displayW - viewW);
-          if (max > 48) {
-            fujiLandK = fujiLandTravel / max;
-          }
-          syncLand();
-        };
-        const measureLandK = () => {
-          const land = document.getElementById("fuji-land");
-          if (!land) return;
-          if (fujiLandNat.w) {
-            recomputeLandK();
-            return;
-          }
-          const bg = land.style.backgroundImage || "";
-          const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
-          if (!match) return;
-          const probe = new Image();
-          probe.onload = () => {
-            fujiLandNat = { w: probe.naturalWidth, h: probe.naturalHeight };
-            recomputeLandK();
-          };
-          probe.src = match[1];
-        };
-        const syncLand = () => {
-          const shifted = Math.min(
-            scroller.scrollLeft * fujiLandK,
-            fujiLandTravel
-          );
-          document.documentElement.style.setProperty(
-            "--fuji-land-x",
-            `${-shifted}px`
-          );
-        };
-        galleryEl._syncFujiEnd = () => {
-          syncEnd();
-          recomputeLandK();
-        };
-
-        const onWheel = (event) => {
-          const lightbox = document.getElementById("lightbox");
-          if (lightbox && lightbox.classList.contains("is-open")) return;
-          const dx = event.deltaX;
-          const dy = event.deltaY;
-          if (Math.abs(dx) > Math.abs(dy)) {
-            if (event.target === scroller || scroller.contains(event.target)) return;
-            event.preventDefault();
-            scroller.scrollLeft += dx;
-            return;
-          }
-          if (dy === 0) return;
-          event.preventDefault();
-          scroller.scrollLeft += dy;
-        };
-
-        window.addEventListener("wheel", onWheel, { passive: false, capture: true });
-        scroller.addEventListener(
-          "scroll",
-          () => {
-            syncEnd();
-            syncLand();
-          },
-          { passive: true }
-        );
-        window.addEventListener("resize", () => {
-          syncEnd();
-          measureLandK();
-          syncLand();
-        });
-        if ("ResizeObserver" in window) {
-          new ResizeObserver(() => {
-            syncEnd();
-            measureLandK();
-          }).observe(scroller);
-          new ResizeObserver(syncEnd).observe(galleryEl);
-        }
-        syncEnd();
-        measureLandK();
-        syncLand();
-        setupFujiTrainMotion(scroller);
-      }
-
       function openLightbox(index) {
         if (index < 0 || index >= imageList.length) return;
-
         const lightbox = document.getElementById("lightbox");
         const img = document.getElementById("lightbox-image");
         if (!lightbox || !img) return;
-
         currentImageIndex = index;
         const item = imageList[index];
-        img.src = imageUrlForItem(collectionId, item);
+        img.src = imageUrlForItem(item);
         img.alt = item.alt || "";
-
         updateNavButtons();
-
         lightbox.classList.add("is-open");
         lightbox.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
@@ -511,7 +126,6 @@
       function closeLightbox() {
         const lightbox = document.getElementById("lightbox");
         if (!lightbox) return;
-
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
@@ -520,166 +134,60 @@
 
       function navigateImage(direction) {
         if (currentImageIndex < 0 || imageList.length === 0) return;
-
-        let newIndex;
-        if (direction === "next") {
-          newIndex = (currentImageIndex + 1) % imageList.length;
-        } else if (direction === "prev") {
-          newIndex = (currentImageIndex - 1 + imageList.length) % imageList.length;
-        } else {
-          return;
-        }
-
+        const next =
+          direction === "next"
+            ? (currentImageIndex + 1) % imageList.length
+            : (currentImageIndex - 1 + imageList.length) % imageList.length;
         const img = document.getElementById("lightbox-image");
         if (!img) return;
-
-        const item = imageList[newIndex];
-        img.src = imageUrlForItem(collectionId, item);
+        const item = imageList[next];
+        img.src = imageUrlForItem(item);
         img.alt = item.alt || "";
-        currentImageIndex = newIndex;
-
+        currentImageIndex = next;
         updateNavButtons();
       }
 
       function updateNavButtons() {
         const prevBtn = document.querySelector(".lightbox-nav-prev");
         const nextBtn = document.querySelector(".lightbox-nav-next");
-
         if (prevBtn && nextBtn) {
           prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
           nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
         }
       }
 
-      // 컬렉션 제목 표시: 폴더명(id)과 동일, _ 로 시작하면 _ 만 제거
-      function displayName(id) {
-        return id && id.startsWith("_") ? id.slice(1) : (id || "");
-      }
-      function setHeadMeta(attr, key, value) {
-        const selector = attr === "property" ? `meta[property="${key}"]` : `meta[name="${key}"]`;
-        let el = document.head.querySelector(selector);
-        if (!el) {
-          el = document.createElement("meta");
-          el.setAttribute(attr, key);
-          document.head.appendChild(el);
-        }
-        el.setAttribute("content", value);
-      }
-      function setCanonical(href) {
-        let el = document.head.querySelector('link[rel="canonical"]');
-        if (!el) {
-          el = document.createElement("link");
-          el.rel = "canonical";
-          document.head.appendChild(el);
-        }
-        el.setAttribute("href", href);
-      }
-      function applyCollectionSeo(name) {
-        const origin = window.location.origin;
-        const canonical =
-          origin + "/collection.html?collection=" + encodeURIComponent(collectionId);
-        const title = name + " — Jung In Hwan Photography";
-        const description =
-          name + " collection by photographer Jung In Hwan. 사진가 정인환 포트폴리오.";
-        document.title = title;
-        setHeadMeta("name", "description", description);
-        setHeadMeta("property", "og:title", title);
-        setHeadMeta("property", "og:description", description);
-        setHeadMeta("property", "og:url", canonical);
-        setHeadMeta("name", "twitter:title", title);
-        setHeadMeta("name", "twitter:description", description);
-        setCanonical(canonical);
-      }
-      async function setCollectionTitle() {
-        const titleEl = document.getElementById("collection-title");
-        let name = displayName(collectionId);
-        try {
-          const res = await fetch("collections.json", { cache: "no-store" });
-          if (res.ok) {
-            const collections = await res.json();
-            const c = Array.isArray(collections) && collections.find((x) => x.id === collectionId);
-            name = c ? displayName(c.id) : displayName(collectionId);
-          }
-        } catch (e) {
-          name = displayName(collectionId);
-        }
-        if (titleEl) titleEl.textContent = name;
-        applyCollectionSeo(name);
-      }
-
-      // 터치 스와이프 감지
       let touchStartX = 0;
       let touchEndX = 0;
 
-      function handleTouchStart(e) {
-        touchStartX = e.changedTouches[0].screenX;
-      }
-
-      function handleTouchEnd(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }
-
-      function handleSwipe() {
-        const lightbox = document.getElementById("lightbox");
-        if (!lightbox || !lightbox.classList.contains("is-open")) return;
-
-        const swipeThreshold = 50; // 최소 스와이프 거리
-        const diff = touchStartX - touchEndX;
-
-        if (Math.abs(diff) > swipeThreshold) {
-          if (diff > 0) {
-            // 왼쪽으로 스와이프 (다음 이미지)
-            navigateImage("next");
-          } else {
-            // 오른쪽으로 스와이프 (이전 이미지)
-            navigateImage("prev");
-          }
-        }
-      }
-
-      // 라이트박스 이벤트 바인딩
       (function setupLightboxEvents() {
         const lightbox = document.getElementById("lightbox");
         if (!lightbox) return;
-
-        // 터치 이벤트 추가
-        lightbox.addEventListener("touchstart", handleTouchStart, { passive: true });
-        lightbox.addEventListener("touchend", handleTouchEnd, { passive: true });
-
+        lightbox.addEventListener("touchstart", (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        lightbox.addEventListener("touchend", (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          if (!lightbox.classList.contains("is-open")) return;
+          const diff = touchStartX - touchEndX;
+          if (Math.abs(diff) > 50) navigateImage(diff > 0 ? "next" : "prev");
+        }, { passive: true });
         lightbox.addEventListener("click", (event) => {
           const target = event.target;
-          if (
-            target instanceof HTMLElement &&
-            target.hasAttribute("data-lightbox-close")
-          ) {
-            closeLightbox();
-          } else if (
-            target instanceof HTMLElement &&
-            target.hasAttribute("data-lightbox-nav")
-          ) {
-            const direction = target.getAttribute("data-lightbox-nav");
-            navigateImage(direction);
+          if (!(target instanceof HTMLElement)) return;
+          if (target.hasAttribute("data-lightbox-close")) closeLightbox();
+          if (target.hasAttribute("data-lightbox-nav")) {
+            navigateImage(target.getAttribute("data-lightbox-nav"));
           }
         });
-
         window.addEventListener("keydown", (event) => {
-          const lightbox = document.getElementById("lightbox");
-          if (!lightbox || !lightbox.classList.contains("is-open")) return;
-
-          if (event.key === "Escape") {
-            closeLightbox();
-          } else if (event.key === "ArrowLeft") {
-            navigateImage("prev");
-          } else if (event.key === "ArrowRight") {
-            navigateImage("next");
-          }
+          if (!lightbox.classList.contains("is-open")) return;
+          if (event.key === "Escape") closeLightbox();
+          if (event.key === "ArrowLeft") navigateImage("prev");
+          if (event.key === "ArrowRight") navigateImage("next");
         });
       })();
 
-      setupFujiHScroll();
       loadGallery();
-      setCollectionTitle();
     </script>
   </body>
 </html>
