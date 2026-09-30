@@ -3,35 +3,161 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>YONGHO CHOI</title>
+    <meta name="google-site-verification" content="eIiyJ4BsBxMVX4c1UmZpLB01z6JMwUCTiJLinB-fcLk" />
+    <meta name="naver-site-verification" content="f56b86571fb73593f3c0cfc6dee9985395a3b15a" />
+    <title>Jung In Hwan Photography | 정인환</title>
+    <meta
+      name="description"
+      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://junginhwanphotography.github.io/" />
+    <link rel="sitemap" type="application/xml" href="https://junginhwanphotography.github.io/sitemap.xml" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
     <meta property="og:type" content="website" />
-    <link rel="stylesheet" href="style.css?v=yongho-6" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="Jung In Hwan Photography" />
+    <meta property="og:title" content="Jung In Hwan Photography" />
+    <meta
+      property="og:description"
+      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
+    />
+    <meta property="og:url" content="https://junginhwanphotography.github.io/" />
+    <meta property="og:image" content="https://junginhwanphotography.github.io/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jung In Hwan Photography" />
+    <meta
+      name="twitter:description"
+      content="Photographer Jung In Hwan. Landscape and documentary photography. 사진가 정인환 포트폴리오."
+    />
+    <meta name="twitter:image" content="https://junginhwanphotography.github.io/og-image.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jung In Hwan",
+        "alternateName": "정인환",
+        "jobTitle": "Photographer",
+        "url": "https://junginhwanphotography.github.io/",
+        "image": "https://junginhwanphotography.github.io/og-image.png",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Jung In Hwan Photography",
+          "url": "https://junginhwanphotography.github.io/"
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=nav-fit-1" />
   </head>
-  <body data-page="home">
+  <body class="main-page">
+    <nav class="collection-nav" id="collection-nav">
+      <!-- collections.json을 통해 자동으로 메뉴가 렌더링됩니다. -->
+    </nav>
+
     <header class="site-header">
       <div class="header-inner">
-        <a href="index.html" class="site-logo">YONGHO CHOI</a>
-        <nav class="site-nav" id="site-nav" aria-label="사이트">
-          <a href="index.html" class="nav-link" data-nav="home">Home</a>
-          <div class="nav-item">
-            <button type="button" class="nav-link" data-nav="personal">Personal Works</button>
-            <div class="nav-panel" id="panel-personal"></div>
-          </div>
-          <div class="nav-item">
-            <button type="button" class="nav-link" data-nav="works">Works</button>
-            <div class="nav-panel" id="panel-works"></div>
-          </div>
-          <a href="about.html" class="nav-link" data-nav="about">About</a>
-          <a href="contact.html" class="nav-link" data-nav="contact">Contact</a>
-        </nav>
+        <div>
+          <h1 class="site-title">
+            <a href="index.html" class="site-title-link">Jung In Hwan</a>
+          </h1>
+          <p class="site-subtitle">Photography</p>
+        </div>
       </div>
     </header>
 
-    <main>
-      <div class="home-featured" id="home-featured"></div>
+    <main class="main-blank">
+      <!-- 메인: 로고 아래 흰 공백 -->
     </main>
+    <noscript>
+      <nav aria-label="Collections">
+        <!-- SEO_COLLECTION_LINKS -->
+        <a href="collection.html?collection=paris%20to%20rome">paris to rome</a>
+        <a href="collection.html?collection=Mt.Fuji%20to%20Tokyo%20with%20BAHNO%201">Mt.Fuji to Tokyo with BAHNO 1</a>
+        <a href="collection.html?collection=shizuoka">shizuoka</a>
+        <a href="collection.html?collection=okinawa">okinawa</a>
+        <a href="collection.html?collection=COMSEC">COMSEC</a>
+        <!-- /SEO_COLLECTION_LINKS -->
+      </nav>
+    </noscript>
 
-    <footer class="site-footer">© 2026 YONGHO CHOI</footer>
-    <script src="site.js?v=yongho-6"></script>
+    <script>
+      // 컬렉션 메뉴 로드 (WALL, COLLECTION#1, COLLECTION#2)
+      async function loadSidebar() {
+        const nav = document.getElementById("collection-nav");
+        if (!nav) return;
+
+        let currentId = "index";
+        if (window.location.pathname.includes("collection.html")) {
+          currentId = new URLSearchParams(window.location.search).get("collection") || "";
+        }
+
+        try {
+          const res = await fetch("collections.json", { cache: "no-store" });
+          if (!res.ok) return;
+          const collections = await res.json();
+          if (!Array.isArray(collections)) return;
+
+          function displayName(id) {
+            return id && id.startsWith("_") ? id.slice(1) : (id || "");
+          }
+          function isHiddenCollection(id) {
+            const n = (id || "").replace(/^_/, "").toUpperCase();
+            return n === "WALL";
+          }
+          collections.forEach((collection, index) => {
+            if (isHiddenCollection(collection.id)) return;
+            const link = document.createElement("a");
+            link.href = "collection.html?collection=" + encodeURIComponent(collection.id);
+            link.textContent = displayName(collection.id);
+            link.className = "sidebar-link";
+            if (collection.id === currentId) link.classList.add("active");
+            // _ 로 시작하는 컬렉션은 맨 위에 표시하고 아래 간격 추가
+            if (collection.id.startsWith("_")) {
+              link.classList.add("wall-link");
+            }
+            nav.appendChild(link);
+          });
+          fitNavLinks();
+        } catch (e) {}
+      }
+
+      function fitNavLinks() {
+        const nav = document.getElementById("collection-nav");
+        if (!nav) return;
+        const vw =
+          (window.visualViewport && window.visualViewport.width) ||
+          document.documentElement.clientWidth ||
+          window.innerWidth;
+        const styles = getComputedStyle(nav);
+        const pad =
+          (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+        const avail = Math.max(80, vw - pad);
+        nav.querySelectorAll("a").forEach((link) => {
+          link.style.transform = "none";
+          link.style.whiteSpace = "nowrap";
+          const need = link.scrollWidth;
+          if (need > avail && need > 0) {
+            link.style.transformOrigin = "left center";
+            link.style.transform = `scale(${avail / need})`;
+          }
+        });
+      }
+
+      window.addEventListener("resize", fitNavLinks);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", fitNavLinks);
+      }
+      loadSidebar().then(() => {
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(fitNavLinks);
+        }
+      });
+    </script>
   </body>
 </html>

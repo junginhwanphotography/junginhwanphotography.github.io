@@ -1,10 +1,4 @@
 User-agent: *
 Allow: /
 
-Disallow: /installer-app/
-Disallow: /build/
-Disallow: /node_modules/
-Disallow: /.photo-site-manager/
-Disallow: /__tests__/
-
 Sitemap: https://junginhwanphotography.github.io/sitemap.xml

@@ -1,34 +1,38 @@
-{
-  "home": {
-    "featured": "ssoorl-28.jpg"
+[
+  {
+    "id": "_WALL",
+    "name": "_WALL",
+    "path": "collection.html?collection=_WALL",
+    "photoOrder": "desc"
   },
-  "personalWorks": [
-    {
-      "id": "_WALL",
-      "name": "_WALL",
-      "photoOrder": "asc"
-    },
-    {
-      "id": "Mt.Fuji to Tokyo with BAHNO 1",
-      "name": "Mt.Fuji to Tokyo with BAHNO 1",
-      "photoOrder": "asc"
-    },
-    {
-      "id": "shizuoka",
-      "name": "shizuoka",
-      "photoOrder": "desc"
-    },
-    {
-      "id": "okinawa",
-      "name": "okinawa",
-      "photoOrder": "desc"
-    }
-  ],
-  "works": [
-    {
-      "id": "COMSEC",
-      "name": "COMSEC",
-      "photoOrder": "desc"
-    }
-  ]
-}
+  {
+    "id": "paris to rome",
+    "name": "paris to rome",
+    "path": "collection.html?collection=paris%20to%20rome",
+    "photoOrder": "asc"
+  },
+  {
+    "id": "Mt.Fuji to Tokyo with BAHNO 1",
+    "name": "Mt.Fuji to Tokyo with BAHNO 1",
+    "path": "collection.html?collection=Mt.Fuji%20to%20Tokyo%20with%20BAHNO%201",
+    "photoOrder": "asc"
+  },
+  {
+    "id": "shizuoka",
+    "name": "shizuoka",
+    "path": "collection.html?collection=shizuoka",
+    "photoOrder": "desc"
+  },
+  {
+    "id": "okinawa",
+    "name": "okinawa",
+    "path": "collection.html?collection=okinawa",
+    "photoOrder": "desc"
+  },
+  {
+    "id": "COMSEC",
+    "name": "COMSEC",
+    "path": "collection.html?collection=COMSEC",
+    "photoOrder": "desc"
+  }
+]

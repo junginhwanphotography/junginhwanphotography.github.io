@@ -1,5 +1,6 @@
 /**
- * WALL / collections 변경 감지 → images.json(갤러리+background) 생성/갱신 → git commit & push
+ * WALL / collections 변경 감지 → images.json(갤러리+background) 생성/갱신
+ * → sitemap.xml·robots.txt 갱신 → git commit & push
  * 프로젝트 루트에서 실행: node sync-and-push.js
  */
 
@@ -23,7 +24,7 @@ runSync()
       }
       console.log("\n📤 Git 커밋 및 푸시...");
       run("git add -A");
-      run('git commit -m "chore: collections 동기화"');
+      run('git commit -m "chore: collections and sitemap sync"');
       run("git push");
       console.log("\n✅ 동기화 및 푸시 완료. 사이트가 곧 반영됩니다.");
     } catch (e) {
