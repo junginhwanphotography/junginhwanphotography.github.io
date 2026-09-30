@@ -1,29 +1,34 @@
 /**
- * collections 변경 감지 → images.json·collections.json 갱신만 (Git/서버 없음)
- * 폴더 이름이 _ 로 시작하면 "맨 위 + 간격" 컬렉션으로 표시됩니다.
+ * 사진 폴더 변경 감지 → images.json·collections.json 갱신만 (Git/서버 없음)
+ *
+ * 구조:
+ *   home/                      홈 대표사진
+ *   personal-works/{이름}/     Personal Works 컬렉션
+ *   works/{이름}/              Works 컬렉션
+ *
+ * 홈 대표사진: 파일명을 featured.* 로 두거나, collections.json 의 home.featured 로 지정
  */
 
 const fs = require("fs").promises;
 const path = require("path");
-const { execSync } = require("child_process");
-const { generateSitemap } = require("./generate-sitemap.js");
 
 const ROOT = path.resolve(__dirname);
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
-/** 맨 위에 간격을 두는 컬렉션: 폴더 이름이 이 문자로 시작 */
-const TOP_COLLECTION_PREFIX = "_";
+const SECTION_DIRS = {
+  home: "home",
+  personalWorks: "personal-works",
+  works: "works",
+};
 
 function isImage(name) {
   return IMAGE_EXT.includes(path.extname(name).toLowerCase());
 }
 
-/** 파일명 stem이 background(오타 bsckground 포함)면 페이지 배경용 */
 function isBackgroundFile(name) {
   const stem = path.parse(name).name.toLowerCase();
   return stem === "background" || stem === "bsckground";
 }
 
-/** bg- 접두사 씬 에셋(기차·랜드 등)은 갤러리에서 제외 */
 function isSceneAssetFile(name) {
   const stem = path.parse(name).name.toLowerCase();
   return stem.startsWith("bg-");
@@ -33,7 +38,52 @@ function isGalleryExcludedFile(name) {
   return isBackgroundFile(name) || isSceneAssetFile(name);
 }
 
-/** bsckground.* → background.* 로 통일 (확장자 유지) */
+function photoOrderFor(entry, isNew) {
+  if (isNew) return "asc";
+  return entry && entry.photoOrder === "asc" ? "asc" : "desc";
+}
+
+function sortPhotoNames(names, order) {
+  const copy = [...names];
+  copy.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+  if (order !== "asc") copy.reverse();
+  return copy;
+}
+
+async function ensureDir(dir) {
+  await fs.mkdir(dir, { recursive: true });
+}
+
+async function listSubdirs(dir) {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    return entries.filter((e) => e.isDirectory()).map((e) => e.name);
+  } catch {
+    return [];
+  }
+}
+
+async function subdirsByBirth(dir) {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    const dirs = entries.filter((e) => e.isDirectory());
+    const withBirth = await Promise.all(
+      dirs.map(async (e) => {
+        const stat = await fs.stat(path.join(dir, e.name));
+        const t =
+          (stat.birthtime && stat.birthtime.getTime && stat.birthtime.getTime()) ||
+          (stat.mtime && stat.mtime.getTime && stat.mtime.getTime()) ||
+          0;
+        return { id: e.name, birthtime: t };
+      })
+    );
+    withBirth.sort((a, b) => b.birthtime - a.birthtime);
+    return withBirth.map((d) => d.id);
+  } catch {
+    return [];
+  }
+}
+
 async function normalizeBackgroundFilename(dir) {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -59,223 +109,166 @@ async function normalizeBackgroundFilename(dir) {
   }
 }
 
-async function getCollectionDirs() {
-  const dir = path.join(ROOT, "collections");
-  try {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    return entries.filter((e) => e.isDirectory()).map((e) => e.name);
-  } catch {
-    return [];
-  }
-}
-
-async function getCollectionDirsByCreationOrder() {
-  const dir = path.join(ROOT, "collections");
-  try {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    const dirs = entries.filter((e) => e.isDirectory());
-    const withBirth = await Promise.all(
-      dirs.map(async (e) => {
-        const stat = await fs.stat(path.join(dir, e.name));
-        const t = (stat.birthtime && stat.birthtime.getTime) ? stat.birthtime.getTime() : (stat.mtime && stat.mtime.getTime ? stat.mtime.getTime() : 0);
-        return { id: e.name, birthtime: t };
-      })
-    );
-    withBirth.sort((a, b) => b.birthtime - a.birthtime);
-    return withBirth.map((d) => d.id);
-  } catch {
-    return [];
-  }
-}
-
-async function getCollectionImageList(collectionId) {
-  const dir = path.join(ROOT, "collections", collectionId);
-  try {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    return entries
-      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isGalleryExcludedFile(e.name))
-      .map((e) => e.name)
-      .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
-  } catch {
-    return [];
-  }
-}
-
-async function getCollectionJsonList(collectionId) {
-  const file = path.join(ROOT, "collections", collectionId, "images.json");
+async function loadCollectionsJson() {
+  const file = path.join(ROOT, "collections.json");
   try {
     const raw = await fs.readFile(file, "utf8");
     const data = JSON.parse(raw);
-    const list = Array.isArray(data) ? data : (data.images || []);
-    return (list || [])
-      .filter((item) => item && item.src)
-      .map((item) => path.basename(item.src))
-      .sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+    if (data && !Array.isArray(data)) {
+      return {
+        home: data.home && typeof data.home === "object" ? data.home : {},
+        personalWorks: Array.isArray(data.personalWorks) ? data.personalWorks : [],
+        works: Array.isArray(data.works) ? data.works : [],
+      };
+    }
+  } catch {
+    // empty
+  }
+  return { home: {}, personalWorks: [], works: [] };
+}
+
+async function saveCollectionsJson(data) {
+  const file = path.join(ROOT, "collections.json");
+  await fs.writeFile(file, JSON.stringify(data, null, 2), "utf8");
+}
+
+async function readImagesJson(relPath) {
+  const file = path.join(ROOT, relPath, "images.json");
+  try {
+    const raw = await fs.readFile(file, "utf8");
+    return JSON.parse(raw);
   } catch {
     return null;
   }
 }
 
-/** images.json 안의 src가 모두 현재 폴더명(id)과 일치하는지 검사. 이름 변경 시 false */
-async function imagesJsonPathsMatchId(collectionId) {
-  const file = path.join(ROOT, "collections", collectionId, "images.json");
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    const data = JSON.parse(raw);
-    const list = Array.isArray(data) ? data : (data.images || []);
-    const srcList = (list || []).filter((item) => item && item.src).map((item) => item.src);
-    if (srcList.length === 0) return true;
-    const prefix = `collections/${collectionId}/`;
-    return srcList.every((src) => src.startsWith(prefix));
-  } catch {
-    return false;
-  }
+function pickFeatured(files, previousFeatured) {
+  const featuredFile = files.find(
+    (name) => path.parse(name).name.toLowerCase() === "featured"
+  );
+  if (featuredFile) return featuredFile;
+  if (previousFeatured && files.includes(previousFeatured)) return previousFeatured;
+  return files[0] || null;
 }
 
-function photoOrderForCollection(entry, isNew) {
-  if (isNew) return "asc";
-  return entry && entry.photoOrder === "asc" ? "asc" : "desc";
-}
-
-function sortPhotoNames(names, order) {
-  const copy = [...names];
-  copy.sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
-  if (order !== "asc") copy.reverse();
-  return copy;
-}
-
-function arraysEqual(a, b) {
-  if (!a || !b || a.length !== b.length) return false;
-  return a.every((v, i) => v === b[i]);
-}
-
-async function loadCollectionsJson() {
-  const file = path.join(ROOT, "collections.json");
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function saveCollectionsJson(list) {
-  const file = path.join(ROOT, "collections.json");
-  await fs.writeFile(file, JSON.stringify(list, null, 2), "utf8");
-}
-
-function run(cmd, cwd = ROOT) {
-  execSync(cmd, { cwd, stdio: "inherit", shell: true });
-}
-
-/** 컬렉션 폴더의 사진 목록을 읽어 images.json 생성/갱신 (프로세스 분리 없이 직접 실행) */
-async function generateCollectionImagesJson(collectionId, photoOrder = "desc") {
-  const dir = path.join(ROOT, "collections", collectionId);
+async function generateImagesJson(relPath, photoOrder, extra = {}) {
+  const dir = path.join(ROOT, relPath);
   const outFile = path.join(dir, "images.json");
-  try {
-    await fs.mkdir(dir, { recursive: true });
-  } catch (e) {}
+  await ensureDir(dir);
   const backgroundFile = await normalizeBackgroundFilename(dir);
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const files = sortPhotoNames(
     entries
-      .filter((e) => e.isFile() && e.name !== "images.json" && isImage(e.name) && !isGalleryExcludedFile(e.name))
+      .filter(
+        (e) =>
+          e.isFile() &&
+          e.name !== "images.json" &&
+          isImage(e.name) &&
+          !isGalleryExcludedFile(e.name)
+      )
       .map((e) => e.name),
     photoOrder
   );
   const images = files.map((file) => ({
-    src: `collections/${collectionId}/${file}`,
+    src: `${relPath}/${file}`,
     alt: path.parse(file).name,
   }));
+  const previous = await readImagesJson(relPath);
   const data = {
-    background: backgroundFile
-      ? `collections/${collectionId}/${backgroundFile}`
-      : null,
+    background: backgroundFile ? `${relPath}/${backgroundFile}` : null,
     images,
+    ...extra,
   };
+  if (extra.keepFeatured) {
+    const prevName = previous && previous.featured
+      ? path.basename(String(previous.featured))
+      : extra.featured || null;
+    const featured = pickFeatured(files, prevName);
+    data.featured = featured;
+    delete data.keepFeatured;
+  }
   await fs.writeFile(outFile, JSON.stringify(data, null, 2), "utf8");
-  return { count: images.length, background: backgroundFile };
+  return { count: images.length, background: backgroundFile, featured: data.featured || null };
+}
+
+function mergeSectionList(existing, dirIds, dirIdsByBirth) {
+  const byId = new Map(existing.map((c) => [c.id, c]));
+  const newIds = new Set();
+  for (const id of dirIds) {
+    if (byId.has(id)) continue;
+    newIds.add(id);
+    byId.set(id, { id, name: id, photoOrder: "asc" });
+  }
+  const kept = existing.filter((c) => dirIds.includes(c.id));
+  const newcomers = dirIdsByBirth
+    .filter((id) => newIds.has(id))
+    .map((id) => byId.get(id));
+  return [...newcomers, ...kept].map((c) => ({
+    id: c.id,
+    name: c.name || c.id,
+    photoOrder: photoOrderFor(c, newIds.has(c.id)),
+  }));
 }
 
 async function runSync() {
   process.chdir(ROOT);
-  console.log("📷 collections 동기화\n");
+  console.log("📷 사진 폴더 동기화\n");
   console.log("   작업 폴더:", ROOT, "\n");
 
-  let changed = false;
+  const homeDir = path.join(ROOT, SECTION_DIRS.home);
+  const personalDir = path.join(ROOT, SECTION_DIRS.personalWorks);
+  const worksDir = path.join(ROOT, SECTION_DIRS.works);
+  await ensureDir(homeDir);
+  await ensureDir(personalDir);
+  await ensureDir(worksDir);
 
-  const collectionDirs = await getCollectionDirs();
-  const collectionDirsByCreation = await getCollectionDirsByCreationOrder();
-  let collections = await loadCollectionsJson();
-  const byId = new Map(collections.map((c) => [c.id, c]));
+  const state = await loadCollectionsJson();
+  const personalIds = await listSubdirs(personalDir);
+  const worksIds = await listSubdirs(worksDir);
+  const personalByBirth = await subdirsByBirth(personalDir);
+  const worksByBirth = await subdirsByBirth(worksDir);
 
-  const kept = collections.filter((c) => collectionDirs.includes(c.id));
-  if (kept.length !== collections.length) {
-    collections = kept;
-    byId.clear();
-    collections.forEach((c) => byId.set(c.id, c));
-    changed = true;
-    console.log("📁 삭제된 컬렉션 폴더 반영 (collections.json 정리)");
-  }
+  state.personalWorks = mergeSectionList(state.personalWorks, personalIds, personalByBirth);
+  state.works = mergeSectionList(state.works, worksIds, worksByBirth);
 
-  const newIds = new Set();
-  for (const id of collectionDirs) {
-    if (byId.has(id)) continue;
-    newIds.add(id);
-    byId.set(id, {
-      id,
-      name: id,
-      path: `collection.html?collection=${encodeURIComponent(id)}`,
-      photoOrder: "asc",
-    });
-    changed = true;
-    console.log(`📁 새 컬렉션 추가: ${id}`);
-  }
-
-  // 기존 메뉴 순서는 유지한다. CI에서 checkout 시각으로 birthtime이 바뀌면
-  // 전체를 다시 정렬해 라이브 순서가 뒤집히므로, 새 컬렉션만 보이는 목록 맨 위에 넣는다.
-  const prefixExisting = collections.filter(
-    (c) => c.id.startsWith(TOP_COLLECTION_PREFIX) && byId.has(c.id)
+  const homeResult = await generateImagesJson(SECTION_DIRS.home, "asc", {
+    keepFeatured: true,
+    featured: state.home && state.home.featured,
+  });
+  state.home = {
+    featured: homeResult.featured,
+  };
+  console.log(
+    `🖼 홈 → images.json 갱신 (${homeResult.count}개 이미지` +
+      (homeResult.featured ? `, 대표 ${homeResult.featured}` : "") +
+      `)`
   );
-  const restExisting = collections.filter(
-    (c) => !c.id.startsWith(TOP_COLLECTION_PREFIX) && collectionDirs.includes(c.id)
-  );
-  const newPrefix = collectionDirsByCreation
-    .filter((id) => newIds.has(id) && id.startsWith(TOP_COLLECTION_PREFIX))
-    .map((id) => byId.get(id));
-  const newRest = collectionDirsByCreation
-    .filter((id) => newIds.has(id) && !id.startsWith(TOP_COLLECTION_PREFIX))
-    .map((id) => byId.get(id));
-  const ordered = [...prefixExisting, ...newPrefix, ...newRest, ...restExisting].map((c) => ({
-    ...c,
-    path: `collection.html?collection=${encodeURIComponent(c.id)}`,
-    photoOrder: photoOrderForCollection(c, newIds.has(c.id)),
-  }));
-  await saveCollectionsJson(ordered);
 
-  // 모든 컬렉션의 images.json을 매번 재생성 (사진 추가/삭제/변경 반영)
-  for (const id of collectionDirs) {
+  for (const entry of state.personalWorks) {
+    const rel = `${SECTION_DIRS.personalWorks}/${entry.id}`;
     try {
-      const entry = byId.get(id);
-      const photoOrder = photoOrderForCollection(entry, newIds.has(id));
-      const { count, background } = await generateCollectionImagesJson(id, photoOrder);
+      const { count, background } = await generateImagesJson(rel, entry.photoOrder);
       const bgNote = background ? `, 배경 ${background}` : "";
-      console.log(`🖼 컬렉션 "${id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
-      changed = true;
+      console.log(`🖼 Personal Works "${entry.id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
     } catch (err) {
-      console.error(`❌ 컬렉션 "${id}" images.json 생성 실패:`, err.message);
+      console.error(`❌ Personal Works "${entry.id}" 실패:`, err.message);
     }
   }
 
-  if (!changed) {
-    console.log("\n✅ 적용할 변경 없음 (컬렉션 폴더 없음).");
-  } else {
-    console.log("\n✅ 모든 컬렉션 갱신 완료.");
+  for (const entry of state.works) {
+    const rel = `${SECTION_DIRS.works}/${entry.id}`;
+    try {
+      const { count, background } = await generateImagesJson(rel, entry.photoOrder);
+      const bgNote = background ? `, 배경 ${background}` : "";
+      console.log(`🖼 Works "${entry.id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
+    } catch (err) {
+      console.error(`❌ Works "${entry.id}" 실패:`, err.message);
+    }
   }
 
-  await generateSitemap({ bumpLastmod: changed });
-
-  return changed;
+  await saveCollectionsJson(state);
+  console.log("\n✅ 모든 컬렉션 갱신 완료.");
+  return true;
 }
 
-module.exports = { runSync };
+module.exports = { runSync, generateImagesJson, SECTION_DIRS };

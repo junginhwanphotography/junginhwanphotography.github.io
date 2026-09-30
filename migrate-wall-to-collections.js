@@ -8,7 +8,7 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname);
 const WALL_SRC = path.join(ROOT, "WALL");
-const WALL_DST = path.join(ROOT, "collections", "_wall");
+const WALL_DST = path.join(ROOT, "personal-works", "_WALL");
 
 async function main() {
   try {
@@ -18,7 +18,7 @@ async function main() {
     return;
   }
 
-  await fs.mkdir(path.join(ROOT, "collections"), { recursive: true });
+  await fs.mkdir(path.join(ROOT, "personal-works"), { recursive: true });
   await fs.mkdir(WALL_DST, { recursive: true });
 
   const entries = await fs.readdir(WALL_SRC, { withFileTypes: true });
@@ -31,7 +31,7 @@ async function main() {
     }
   }
 
-  console.log("\n✅ collections/_wall 에 복사했습니다.");
+  console.log("\n✅ personal-works/_WALL 에 복사했습니다.");
   console.log("   원하는 경우 루트의 WALL 폴더를 수동으로 삭제하세요.");
   console.log("   이어서 동기화(동기화-및-로컬서버.bat 또는 npm run serve)를 실행하세요.");
 }
