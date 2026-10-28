@@ -168,15 +168,26 @@
         if (!el) return;
 
         const colors = ["#111111", "#c43c3c", "#2f6fed", "#1a9b6c", "#d4a017", "#8a4baf"];
-        const speed = 2.3;
+        const desktopSpeed = 2.3;
+        const mobileSpeed = 1.1;
         let colorIndex = 0;
         let x = 0;
         let y = 0;
-        let vx = speed;
-        let vy = speed;
+        let vx = desktopSpeed;
+        let vy = desktopSpeed;
         let width = 0;
         let height = 0;
         let last = 0;
+
+        function currentSpeed() {
+          return window.matchMedia("(max-width: 640px)").matches ? mobileSpeed : desktopSpeed;
+        }
+
+        function applySpeed() {
+          const s = currentSpeed();
+          vx = (vx < 0 ? -1 : 1) * s;
+          vy = (vy < 0 ? -1 : 1) * s;
+        }
 
         function measure() {
           const box = el.getBoundingClientRect();
@@ -231,13 +242,17 @@
           const maxY = Math.max(0, window.innerHeight - height);
           x = Math.random() * maxX;
           y = Math.random() * maxY;
-          vx = speed * (Math.random() < 0.5 ? 1 : -1);
-          vy = speed * (Math.random() < 0.5 ? 1 : -1);
+          const s = currentSpeed();
+          vx = s * (Math.random() < 0.5 ? 1 : -1);
+          vy = s * (Math.random() < 0.5 ? 1 : -1);
           el.style.transform = "translate(" + x + "px," + y + "px)";
           requestAnimationFrame(frame);
         }
 
-        window.addEventListener("resize", measure);
+        window.addEventListener("resize", () => {
+          measure();
+          applySpeed();
+        });
         if (document.fonts && document.fonts.ready) {
           document.fonts.ready.then(start);
         } else {
