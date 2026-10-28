@@ -111,6 +111,8 @@ const KNOWN_PROCESS_PATTERNS = [
   "sync-and-push\\.js",
   "동기화-및-로컬서버\\.bat",
   "동기화-및-푸시\\.bat",
+  "tools\\\\sync-and-push\\.js",
+  "tools\\\\run-test-server\\.js",
   "설치하기\\.bat",
   "설치하기\\.command",
 ];

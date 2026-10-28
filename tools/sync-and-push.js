@@ -1,14 +1,14 @@
 /**
  * WALL / collections 변경 감지 → images.json(갤러리+background) 생성/갱신
  * → sitemap.xml·robots.txt 갱신 → git commit & push
- * 프로젝트 루트에서 실행: node sync-and-push.js
+ * 프로젝트 루트에서 실행: node tools/sync-and-push.js
  */
 
 const path = require("path");
 const { execSync } = require("child_process");
 const { runSync } = require("./sync-local.js");
 
-const ROOT = path.resolve(__dirname);
+const { PROJECT: ROOT } = require("./paths");
 
 function run(cmd, cwd = ROOT) {
   execSync(cmd, { cwd, stdio: "inherit", shell: true });

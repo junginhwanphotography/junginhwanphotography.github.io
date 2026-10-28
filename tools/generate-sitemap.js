@@ -7,7 +7,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const ROOT = path.resolve(__dirname);
+const { PROJECT, WEB: ROOT } = require("./paths");
 const DEFAULT_SITE_URL = "https://junginhwanphotography.github.io";
 const SKIP_HTML = new Set(["index.html", "collection.html", "wall.html"]);
 
@@ -25,7 +25,7 @@ function displayName(id) {
 async function siteUrl() {
   try {
     const raw = await fs.readFile(
-      path.join(ROOT, ".photo-site-manager", "layout.json"),
+      path.join(PROJECT, ".photo-site-manager", "layout.json"),
       "utf8"
     );
     const layout = JSON.parse(raw);

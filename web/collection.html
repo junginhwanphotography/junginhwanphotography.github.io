@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=fuji-train-11" />
+    <link rel="stylesheet" href="style.css?v=all-gallery-2" />
   </head>
   <body class="collection-page">
     <div class="fuji-scene" aria-hidden="true">
@@ -126,6 +126,9 @@
         return (id || "").toUpperCase().includes("MT.FUJI");
       }
 
+      if (collectionId === "all") {
+        document.body.classList.add("collection-all");
+      }
       if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
         document.body.classList.add("collection-comsec");
         const galleryEarly = document.getElementById("gallery");
@@ -160,9 +163,60 @@
       // 현재 컬렉션 id + 파일명으로 이미지 URL 생성 (폴더명 변경 후에도 항상 올바른 경로)
       function imageUrlForItem(colId, item) {
         if (!item || !item.src) return "";
+        const id = (item && item.collectionId) || colId;
         const filename = item.src.split("/").pop() || item.src;
-        const path = "collections/" + encodeURIComponent(colId) + "/" + encodeURIComponent(filename);
+        const path = "collections/" + encodeURIComponent(id) + "/" + encodeURIComponent(filename);
         return window.location.origin + "/" + path;
+      }
+
+      function isHiddenCollection(id) {
+        const n = (id || "").replace(/^_/, "").toUpperCase();
+        return n === "WALL";
+      }
+
+      function galleryItemsFromData(colId, data) {
+        const images = Array.isArray(data) ? data : data && data.images;
+        if (!Array.isArray(images)) return [];
+        return images
+          .filter((item) => {
+            if (!item || !item.src) return false;
+            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "").toLowerCase();
+            return stem !== "background" && stem !== "bsckground" && !stem.startsWith("bg-");
+          })
+          .map((item) => Object.assign({}, item, { collectionId: colId }));
+      }
+
+      function renderGallery(items) {
+        const galleryEl = document.getElementById("gallery");
+        if (!galleryEl) return;
+        imageList = items;
+        imageList.forEach((item, index) => {
+          const figure = document.createElement("figure");
+          figure.className = "gallery-item";
+          const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "");
+          figure.dataset.photoNum = stem;
+          if (isFujiCollection(collectionId)) {
+            applyFujiMemoryLayout(figure, index);
+          }
+
+          const img = document.createElement("img");
+          img.src = imageUrlForItem(collectionId, item);
+          img.alt = item.alt || "";
+          img.loading = "lazy";
+
+          img.addEventListener("load", () => {
+            if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
+            const gallery = document.getElementById("gallery");
+            if (gallery && typeof gallery._syncFujiEnd === "function") gallery._syncFujiEnd();
+          });
+
+          img.addEventListener("click", () => {
+            openLightbox(index);
+          });
+
+          figure.appendChild(img);
+          galleryEl.appendChild(figure);
+        });
       }
 
       // 컬렉션 폴더의 images.json을 불러와 갤러리를 채우는 스크립트
@@ -171,7 +225,25 @@
         if (!galleryEl) return;
 
         if (collectionId === "all") {
-          console.error("컬렉션 페이지는 'all'을 지원하지 않습니다.");
+          try {
+            const listRes = await fetch("collections.json", { cache: "no-store" });
+            if (!listRes.ok) return;
+            const collections = await listRes.json();
+            const publicCols = Array.isArray(collections)
+              ? collections.filter((c) => c && c.id && !isHiddenCollection(c.id))
+              : [];
+            const groups = await Promise.all(
+              publicCols.map(async (c) => {
+                const jsonPath = `collections/${encodeURIComponent(c.id)}/images.json`;
+                const res = await fetch(jsonPath, { cache: "no-store" });
+                if (!res.ok) return [];
+                return galleryItemsFromData(c.id, await res.json());
+              })
+            );
+            renderGallery(groups.flat());
+          } catch (error) {
+            console.error("전체 갤러리 로드 중 오류:", error);
+          }
           return;
         }
 
@@ -185,12 +257,7 @@
             return;
           }
           const data = await res.json();
-          const images = Array.isArray(data) ? data : data.images;
           const backgroundSrc = Array.isArray(data) ? null : data.background;
-          if (!Array.isArray(images)) {
-            console.error("images.json 형식이 올바르지 않습니다.");
-            return;
-          }
 
           if (backgroundSrc) {
             const bgUrl = `url("${imageUrlForItem(collectionId, { src: backgroundSrc })}")`;
@@ -198,44 +265,7 @@
             document.body.classList.add("has-collection-bg");
           }
 
-          // 전역 변수에 이미지 배열 저장 (배경 파일은 갤러리에서 제외)
-          imageList = images.filter((item) => {
-            if (!item || !item.src) return false;
-            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "").toLowerCase();
-            return stem !== "background" && stem !== "bsckground" && !stem.startsWith("bg-");
-          });
-          console.log("로드된 이미지 개수:", imageList.length);
-          if (imageList.length > 0) {
-            console.log("첫 번째 이미지 경로:", imageList[0].src);
-          }
-
-          imageList.forEach((item, index) => {
-            const figure = document.createElement("figure");
-            figure.className = "gallery-item";
-            const stem = (item.src.split("/").pop() || "").replace(/\.[^.]+$/, "");
-            figure.dataset.photoNum = stem;
-            if (isFujiCollection(collectionId)) {
-              applyFujiMemoryLayout(figure, index);
-            }
-
-            const img = document.createElement("img");
-            img.src = imageUrlForItem(collectionId, item);
-            img.alt = item.alt || "";
-            img.loading = "lazy";
-
-            img.addEventListener("load", () => {
-              if (img.naturalWidth > img.naturalHeight) figure.classList.add("landscape");
-              const galleryEl = document.getElementById("gallery");
-              if (galleryEl && typeof galleryEl._syncFujiEnd === "function") galleryEl._syncFujiEnd();
-            });
-
-            img.addEventListener("click", () => {
-              openLightbox(index);
-            });
-
-            figure.appendChild(img);
-            galleryEl.appendChild(figure);
-          });
+          renderGallery(galleryItemsFromData(collectionId, data));
 
           setupShizuokaBgBw();
           setupFujiHScroll();
@@ -592,6 +622,11 @@
       }
       async function setCollectionTitle() {
         const titleEl = document.getElementById("collection-title");
+        if (collectionId === "all") {
+          if (titleEl) titleEl.textContent = "";
+          document.title = "Jung In Hwan Photography | 정인환";
+          return;
+        }
         let name = displayName(collectionId);
         try {
           const res = await fetch("collections.json", { cache: "no-store" });

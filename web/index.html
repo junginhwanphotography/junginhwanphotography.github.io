@@ -53,7 +53,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=nav-fit-1" />
+    <link rel="stylesheet" href="style.css?v=dvd-bounce-5" />
   </head>
   <body class="main-page">
     <nav class="collection-nav" id="collection-nav">
@@ -74,6 +74,10 @@
     <main class="main-blank">
       <!-- 메인: 로고 아래 흰 공백 -->
     </main>
+    <a class="dvd-bounce" id="dvd-bounce" href="collection.html?collection=all" aria-label="모든 사진 보기">
+      <p class="dvd-bounce-title">Jung In Hwan</p>
+      <p class="dvd-bounce-subtitle">Photography</p>
+    </a>
     <noscript>
       <nav aria-label="Collections">
         <!-- SEO_COLLECTION_LINKS -->
@@ -158,6 +162,88 @@
           document.fonts.ready.then(fitNavLinks);
         }
       });
+
+      (function startDvdBounce() {
+        const el = document.getElementById("dvd-bounce");
+        if (!el) return;
+
+        const colors = ["#111111", "#c43c3c", "#2f6fed", "#1a9b6c", "#d4a017", "#8a4baf"];
+        const speed = 2.3;
+        let colorIndex = 0;
+        let x = 0;
+        let y = 0;
+        let vx = speed;
+        let vy = speed;
+        let width = 0;
+        let height = 0;
+        let last = 0;
+
+        function measure() {
+          const box = el.getBoundingClientRect();
+          width = box.width;
+          height = box.height;
+          const maxX = Math.max(0, window.innerWidth - width);
+          const maxY = Math.max(0, window.innerHeight - height);
+          x = Math.min(Math.max(0, x), maxX);
+          y = Math.min(Math.max(0, y), maxY);
+        }
+
+        function nextColor() {
+          colorIndex = (colorIndex + 1) % colors.length;
+          el.style.color = colors[colorIndex];
+        }
+
+        function frame(now) {
+          if (!last) last = now;
+          const dt = Math.min(32, now - last) / 16.67;
+          last = now;
+          const maxX = Math.max(0, window.innerWidth - width);
+          const maxY = Math.max(0, window.innerHeight - height);
+          x += vx * dt;
+          y += vy * dt;
+          let bounced = false;
+          if (x <= 0) {
+            x = 0;
+            vx = Math.abs(vx);
+            bounced = true;
+          } else if (x >= maxX) {
+            x = maxX;
+            vx = -Math.abs(vx);
+            bounced = true;
+          }
+          if (y <= 0) {
+            y = 0;
+            vy = Math.abs(vy);
+            bounced = true;
+          } else if (y >= maxY) {
+            y = maxY;
+            vy = -Math.abs(vy);
+            bounced = true;
+          }
+          if (bounced) nextColor();
+          el.style.transform = "translate(" + x + "px," + y + "px)";
+          requestAnimationFrame(frame);
+        }
+
+        function start() {
+          measure();
+          const maxX = Math.max(0, window.innerWidth - width);
+          const maxY = Math.max(0, window.innerHeight - height);
+          x = Math.random() * maxX;
+          y = Math.random() * maxY;
+          vx = speed * (Math.random() < 0.5 ? 1 : -1);
+          vy = speed * (Math.random() < 0.5 ? 1 : -1);
+          el.style.transform = "translate(" + x + "px," + y + "px)";
+          requestAnimationFrame(frame);
+        }
+
+        window.addEventListener("resize", measure);
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(start);
+        } else {
+          start();
+        }
+      })();
     </script>
   </body>
 </html>

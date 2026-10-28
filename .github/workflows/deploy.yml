@@ -23,12 +23,15 @@ jobs:
           node-version: '20'
 
       - name: Sync collections and sitemap
-        run: node -e "require('./sync-local.js').runSync()"
+        run: node -e "require('./tools/sync-local.js').runSync()"
+
+      - name: Prepare public site
+        run: node tools/prepare-pages.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
   deploy:
     runs-on: ubuntu-latest

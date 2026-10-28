@@ -6,7 +6,7 @@ echo.
 echo [서버 시작 중] C:\jeong-inhwan
 echo.
 
-node start-server.js
+node tools/start-server.js
 
 if errorlevel 1 (
   echo.

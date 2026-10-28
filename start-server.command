@@ -6,7 +6,7 @@ echo
 echo "[서버 시작 중] $(pwd)"
 echo
 
-node start-server.js
+node tools/start-server.js
 status=$?
 
 if [ "$status" -ne 0 ]; then

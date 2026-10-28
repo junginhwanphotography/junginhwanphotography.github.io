@@ -1,9 +1,9 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const ROOT = process.cwd();
-const IMAGES_DIR = path.join(ROOT, "WALL");
-const OUTPUT_FILE = path.join(ROOT, "images.json");
+const { PROJECT, WEB } = require("./paths");
+const IMAGES_DIR = path.join(PROJECT, "WALL");
+const OUTPUT_FILE = path.join(WEB, "images.json");
 
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 

@@ -20,6 +20,9 @@ desktop.ini
 .env
 .env.local
 
+# GitHub Pages 준비 폴더
+_site/
+
 # Installer build output (exceeds GitHub 100MB file limit)
 웹사이트 설치 프로그램/
 

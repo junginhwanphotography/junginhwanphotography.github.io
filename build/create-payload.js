@@ -10,7 +10,7 @@ const archiver = require("archiver");
 
 const ROOT = path.resolve(__dirname, "..");
 const OUT = path.join(__dirname, "payload.zip");
-const EXCLUDE = new Set(["node_modules", ".git", "build", "dist", "웹사이트 설치 프로그램", "payload.zip", ".DS_Store"]);
+const EXCLUDE = new Set(["node_modules", ".git", "build", "dist", "_site", "웹사이트 설치 프로그램", "payload.zip", ".DS_Store"]);
 
 function* walk(dir, prefix = "") {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

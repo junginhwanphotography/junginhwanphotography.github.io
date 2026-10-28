@@ -1,7 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const ROOT = path.resolve(__dirname);
+const { WEB, COLLECTIONS_DIR, COLLECTIONS_URL } = require("./paths");
 // 환경변수로 전달 시 # 등 특수문자가 Windows에서도 안전하게 전달됨
 const COLLECTION_NAME = process.env.COLLECTION_ID || process.argv[2];
 
@@ -11,7 +11,7 @@ if (!COLLECTION_NAME) {
   process.exit(1);
 }
 
-const COLLECTION_DIR = path.join(ROOT, "collections", COLLECTION_NAME);
+const COLLECTION_DIR = path.join(COLLECTIONS_DIR, COLLECTION_NAME);
 const OUTPUT_FILE = path.join(COLLECTION_DIR, "images.json");
 
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
@@ -32,7 +32,7 @@ function isGalleryExcludedFile(name) {
 
 async function photoOrderFor(collectionId) {
   try {
-    const raw = await fs.readFile(path.join(ROOT, "collections.json"), "utf8");
+    const raw = await fs.readFile(path.join(WEB, "collections.json"), "utf8");
     const list = JSON.parse(raw);
     const entry = Array.isArray(list) && list.find((c) => c && c.id === collectionId);
     if (!entry) return "asc";
@@ -70,13 +70,13 @@ async function main() {
       .map((entry) => entry.name)[0];
 
     const images = files.map((file) => ({
-      src: `collections/${COLLECTION_NAME}/${file}`,
+      src: `${COLLECTIONS_URL}/${COLLECTION_NAME}/${file}`,
       alt: path.parse(file).name,
     }));
 
     const data = {
       background: backgroundFile
-        ? `collections/${COLLECTION_NAME}/${backgroundFile}`
+        ? `${COLLECTIONS_URL}/${COLLECTION_NAME}/${backgroundFile}`
         : null,
       images,
     };

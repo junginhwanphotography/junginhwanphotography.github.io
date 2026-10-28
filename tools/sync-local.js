@@ -8,7 +8,7 @@ const path = require("path");
 const { execSync } = require("child_process");
 const { generateSitemap } = require("./generate-sitemap.js");
 
-const ROOT = path.resolve(__dirname);
+const { PROJECT: ROOT, WEB, COLLECTIONS_DIR, COLLECTIONS_URL } = require("./paths");
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 /** 맨 위에 간격을 두는 컬렉션: 폴더 이름이 이 문자로 시작 */
 const TOP_COLLECTION_PREFIX = "_";
@@ -60,7 +60,7 @@ async function normalizeBackgroundFilename(dir) {
 }
 
 async function getCollectionDirs() {
-  const dir = path.join(ROOT, "collections");
+  const dir = COLLECTIONS_DIR;
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     return entries.filter((e) => e.isDirectory()).map((e) => e.name);
@@ -70,7 +70,7 @@ async function getCollectionDirs() {
 }
 
 async function getCollectionDirsByCreationOrder() {
-  const dir = path.join(ROOT, "collections");
+  const dir = COLLECTIONS_DIR;
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     const dirs = entries.filter((e) => e.isDirectory());
@@ -89,7 +89,7 @@ async function getCollectionDirsByCreationOrder() {
 }
 
 async function getCollectionImageList(collectionId) {
-  const dir = path.join(ROOT, "collections", collectionId);
+  const dir = path.join(COLLECTIONS_DIR, collectionId);
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     return entries
@@ -102,7 +102,7 @@ async function getCollectionImageList(collectionId) {
 }
 
 async function getCollectionJsonList(collectionId) {
-  const file = path.join(ROOT, "collections", collectionId, "images.json");
+  const file = path.join(COLLECTIONS_DIR, collectionId, "images.json");
   try {
     const raw = await fs.readFile(file, "utf8");
     const data = JSON.parse(raw);
@@ -118,14 +118,14 @@ async function getCollectionJsonList(collectionId) {
 
 /** images.json 안의 src가 모두 현재 폴더명(id)과 일치하는지 검사. 이름 변경 시 false */
 async function imagesJsonPathsMatchId(collectionId) {
-  const file = path.join(ROOT, "collections", collectionId, "images.json");
+  const file = path.join(COLLECTIONS_DIR, collectionId, "images.json");
   try {
     const raw = await fs.readFile(file, "utf8");
     const data = JSON.parse(raw);
     const list = Array.isArray(data) ? data : (data.images || []);
     const srcList = (list || []).filter((item) => item && item.src).map((item) => item.src);
     if (srcList.length === 0) return true;
-    const prefix = `collections/${collectionId}/`;
+    const prefix = `${COLLECTIONS_URL}/${collectionId}/`;
     return srcList.every((src) => src.startsWith(prefix));
   } catch {
     return false;
@@ -150,7 +150,7 @@ function arraysEqual(a, b) {
 }
 
 async function loadCollectionsJson() {
-  const file = path.join(ROOT, "collections.json");
+  const file = path.join(WEB, "collections.json");
   try {
     const raw = await fs.readFile(file, "utf8");
     return JSON.parse(raw);
@@ -160,7 +160,7 @@ async function loadCollectionsJson() {
 }
 
 async function saveCollectionsJson(list) {
-  const file = path.join(ROOT, "collections.json");
+  const file = path.join(WEB, "collections.json");
   await fs.writeFile(file, JSON.stringify(list, null, 2), "utf8");
 }
 
@@ -170,7 +170,7 @@ function run(cmd, cwd = ROOT) {
 
 /** 컬렉션 폴더의 사진 목록을 읽어 images.json 생성/갱신 (프로세스 분리 없이 직접 실행) */
 async function generateCollectionImagesJson(collectionId, photoOrder = "desc") {
-  const dir = path.join(ROOT, "collections", collectionId);
+  const dir = path.join(COLLECTIONS_DIR, collectionId);
   const outFile = path.join(dir, "images.json");
   try {
     await fs.mkdir(dir, { recursive: true });
@@ -184,12 +184,12 @@ async function generateCollectionImagesJson(collectionId, photoOrder = "desc") {
     photoOrder
   );
   const images = files.map((file) => ({
-    src: `collections/${collectionId}/${file}`,
+    src: `${COLLECTIONS_URL}/${collectionId}/${file}`,
     alt: path.parse(file).name,
   }));
   const data = {
     background: backgroundFile
-      ? `collections/${collectionId}/${backgroundFile}`
+      ? `${COLLECTIONS_URL}/${collectionId}/${backgroundFile}`
       : null,
     images,
   };

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
-const ROOT = path.resolve(__dirname);
+const { PROJECT, WEB } = require("./paths");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -22,16 +22,20 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
   let urlPath = req.url === "/" ? "/index.html" : req.url.split("?")[0];
-  // URL 인코딩된 한글 경로 디코딩
   try {
     urlPath = decodeURIComponent(urlPath);
   } catch (e) {
     // 디코딩 실패 시 원본 사용
   }
-  // URL 경로를 파일 시스템 경로로 변환 (슬래시 유지)
   const safePath = urlPath.replace(/^\/+/, "").replace(/^(\.\.[/\\])+/, "");
-  // Windows에서도 슬래시 경로로 처리
-  const filePath = path.join(ROOT, safePath.split("/").join(path.sep));
+  const parts = safePath.split("/").filter(Boolean);
+  if (parts.some((part) => part === "." || part === "..")) {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("404 Not Found");
+    return;
+  }
+  const base = parts[0] === "collections" ? PROJECT : WEB;
+  const filePath = path.join(base, ...parts);
 
   fs.readFile(filePath, (err, data) => {
     if (err) {

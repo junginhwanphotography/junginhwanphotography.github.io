@@ -6,7 +6,7 @@ Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Seconds 1
 
 # 서버 시작
-node start-server.js
+node tools/start-server.js
 
 
 
