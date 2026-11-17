@@ -1,0 +1,13 @@
+---
+description: Collection menu order is creation date, newest first
+alwaysApply: true
+---
+
+# Collection menu order
+
+The homepage collection list is ordered by folder **creation date, newest at the top**. Keep that unless the user explicitly asks for a different order.
+
+- Renaming a collection (for example COMSEC → 통신보안) must not move it. Reuse its stored `createdAt`.
+- `_` prefix collections stay above the rest, then newest-created public collections.
+- Do not sort the menu by modified date, last sync, or last rename.
+- `tools/sync-local.js` writes `createdAt` into `web/collections.json` and sorts by it. Do not overwrite `createdAt` once set.

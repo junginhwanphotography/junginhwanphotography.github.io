@@ -69,23 +69,46 @@ async function getCollectionDirs() {
   }
 }
 
-async function getCollectionDirsByCreationOrder() {
+function createdMsFromStat(stat) {
+  const birth = (stat.birthtimeMs || (stat.birthtime && stat.birthtime.getTime()) || 0);
+  const mtime = (stat.mtimeMs || (stat.mtime && stat.mtime.getTime()) || 0);
+  if (birth > 0) return birth;
+  return mtime;
+}
+
+function createdMsFromIso(value) {
+  if (!value) return 0;
+  const t = Date.parse(value);
+  return Number.isFinite(t) ? t : 0;
+}
+
+async function getCollectionCreatedMs() {
   const dir = COLLECTIONS_DIR;
+  const map = new Map();
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
-    const dirs = entries.filter((e) => e.isDirectory());
-    const withBirth = await Promise.all(
-      dirs.map(async (e) => {
-        const stat = await fs.stat(path.join(dir, e.name));
-        const t = (stat.birthtime && stat.birthtime.getTime) ? stat.birthtime.getTime() : (stat.mtime && stat.mtime.getTime ? stat.mtime.getTime() : 0);
-        return { id: e.name, birthtime: t };
-      })
+    await Promise.all(
+      entries
+        .filter((e) => e.isDirectory())
+        .map(async (e) => {
+          const stat = await fs.stat(path.join(dir, e.name));
+          map.set(e.name, createdMsFromStat(stat));
+        })
     );
-    withBirth.sort((a, b) => b.birthtime - a.birthtime);
-    return withBirth.map((d) => d.id);
   } catch {
-    return [];
+    // collections 폴더가 없으면 빈 맵
   }
+  return map;
+}
+
+function detectRenames(oldIds, newIds) {
+  const removed = oldIds.filter((id) => !newIds.includes(id));
+  const added = newIds.filter((id) => !oldIds.includes(id));
+  const map = new Map();
+  if (removed.length === 1 && added.length === 1) {
+    map.set(added[0], removed[0]);
+  }
+  return map;
 }
 
 async function getCollectionImageList(collectionId) {
@@ -205,9 +228,13 @@ async function runSync() {
   let changed = false;
 
   const collectionDirs = await getCollectionDirs();
-  const collectionDirsByCreation = await getCollectionDirsByCreationOrder();
+  const createdMsById = await getCollectionCreatedMs();
   let collections = await loadCollectionsJson();
   const byId = new Map(collections.map((c) => [c.id, c]));
+  const renameFrom = detectRenames(
+    collections.map((c) => c.id),
+    collectionDirs
+  );
 
   const kept = collections.filter((c) => collectionDirs.includes(c.id));
   if (kept.length !== collections.length) {
@@ -221,36 +248,46 @@ async function runSync() {
   const newIds = new Set();
   for (const id of collectionDirs) {
     if (byId.has(id)) continue;
+    const oldId = renameFrom.get(id);
+    const oldEntry = oldId ? byId.get(oldId) : null;
     newIds.add(id);
     byId.set(id, {
       id,
       name: id,
       path: `collection.html?collection=${encodeURIComponent(id)}`,
-      photoOrder: "asc",
+      photoOrder: oldEntry && oldEntry.photoOrder === "desc" ? "desc" : "asc",
+      createdAt: oldEntry && oldEntry.createdAt,
     });
     changed = true;
-    console.log(`📁 새 컬렉션 추가: ${id}`);
+    if (oldId) {
+      console.log(`📁 컬렉션 이름 변경: ${oldId} → ${id}`);
+    } else {
+      console.log(`📁 새 컬렉션 추가: ${id}`);
+    }
   }
 
-  // 기존 메뉴 순서는 유지한다. CI에서 checkout 시각으로 birthtime이 바뀌면
-  // 전체를 다시 정렬해 라이브 순서가 뒤집히므로, 새 컬렉션만 보이는 목록 맨 위에 넣는다.
-  const prefixExisting = collections.filter(
-    (c) => c.id.startsWith(TOP_COLLECTION_PREFIX) && byId.has(c.id)
-  );
-  const restExisting = collections.filter(
-    (c) => !c.id.startsWith(TOP_COLLECTION_PREFIX) && collectionDirs.includes(c.id)
-  );
-  const newPrefix = collectionDirsByCreation
-    .filter((id) => newIds.has(id) && id.startsWith(TOP_COLLECTION_PREFIX))
-    .map((id) => byId.get(id));
-  const newRest = collectionDirsByCreation
-    .filter((id) => newIds.has(id) && !id.startsWith(TOP_COLLECTION_PREFIX))
-    .map((id) => byId.get(id));
-  const ordered = [...prefixExisting, ...newPrefix, ...newRest, ...restExisting].map((c) => ({
-    ...c,
-    path: `collection.html?collection=${encodeURIComponent(c.id)}`,
-    photoOrder: photoOrderForCollection(c, newIds.has(c.id)),
-  }));
+  // 메뉴 순서는 폴더 생성일 최신이 위. 한 번 기록한 createdAt은 이름 변경·CI checkout에도 유지한다.
+  const ordered = collectionDirs
+    .map((id) => {
+      const c = byId.get(id);
+      const inherited = c && c.createdAt;
+      const createdAt =
+        inherited || new Date(createdMsById.get(id) || Date.now()).toISOString();
+      return {
+        ...c,
+        id,
+        name: id,
+        path: `collection.html?collection=${encodeURIComponent(id)}`,
+        photoOrder: photoOrderForCollection(c, newIds.has(id) && !renameFrom.has(id)),
+        createdAt,
+      };
+    })
+    .sort((a, b) => {
+      const aPrefix = a.id.startsWith(TOP_COLLECTION_PREFIX);
+      const bPrefix = b.id.startsWith(TOP_COLLECTION_PREFIX);
+      if (aPrefix !== bPrefix) return aPrefix ? -1 : 1;
+      return createdMsFromIso(b.createdAt) - createdMsFromIso(a.createdAt);
+    });
   await saveCollectionsJson(ordered);
 
   // 모든 컬렉션의 images.json을 매번 재생성 (사진 추가/삭제/변경 반영)

@@ -114,6 +114,15 @@
       // URL에서 컬렉션 파라미터 가져오기
       const urlParams = new URLSearchParams(window.location.search);
       const collectionId = urlParams.get("collection") || "all";
+      function collectionKey(id) {
+        return (id || "").normalize("NFC").toUpperCase();
+      }
+      if (collectionKey(collectionId) === "COMSEC") {
+        window.location.replace(
+          "collection.html?collection=" +
+            encodeURIComponent("통신보안".normalize("NFD"))
+        );
+      }
 
       (function hideWallCollection() {
         const n = (collectionId || "").replace(/^_/, "").toUpperCase();
@@ -129,7 +138,11 @@
       if (collectionId === "all") {
         document.body.classList.add("collection-all");
       }
-      if (["COMSEC", "OKINAWA"].includes((collectionId || "").toUpperCase())) {
+      if (
+        collectionKey(collectionId) === "COMSEC" ||
+        collectionKey(collectionId) === "통신보안" ||
+        collectionKey(collectionId) === "OKINAWA"
+      ) {
         document.body.classList.add("collection-comsec");
         const galleryEarly = document.getElementById("gallery");
         if (galleryEarly) galleryEarly.classList.add("gallery-single-col");
