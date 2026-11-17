@@ -6,6 +6,12 @@
     "photoOrder": "desc"
   },
   {
+    "id": "바닥을 기어다니며",
+    "name": "바닥을 기어다니며",
+    "path": "collection.html?collection=%E1%84%87%E1%85%A1%E1%84%83%E1%85%A1%E1%86%A8%E1%84%8B%E1%85%B3%E1%86%AF%20%E1%84%80%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%83%E1%85%A1%E1%84%82%E1%85%B5%E1%84%86%E1%85%A7",
+    "photoOrder": "asc"
+  },
+  {
     "id": "paris to rome",
     "name": "paris to rome",
     "path": "collection.html?collection=paris%20to%20rome",
