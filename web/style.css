@@ -636,7 +636,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #ffffff;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -662,8 +662,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   margin: 0;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
-  background-color: #000000;
+  box-shadow: none;
+  background-color: #ffffff;
   display: block;
 }
 
@@ -672,7 +672,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   height: auto;
   max-height: 95vh;
   object-fit: contain;
-  background-color: #000000;
+  background-color: #ffffff;
   display: block;
 }
 
@@ -684,8 +684,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   width: 50px;
   height: 50px;
   border: none;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #111111;
   font-size: 2rem;
   cursor: pointer;
   display: flex;
@@ -701,7 +701,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
 }
 
 .lightbox-nav:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(0, 0, 0, 0.12);
   opacity: 1;
 }
 
@@ -734,8 +734,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   width: 44px;
   height: 44px;
   border: none;
-  background: rgba(0, 0, 0, 0.4);
-  color: #ffffff;
+  background: transparent;
+  color: #111111;
   font-size: 1.75rem;
   cursor: pointer;
   line-height: 1;
@@ -748,7 +748,7 @@ body.collection-fuji.is-fuji-end .collection-back-link {
 }
 
 .lightbox-close:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.08);
   opacity: 1;
 }
 
