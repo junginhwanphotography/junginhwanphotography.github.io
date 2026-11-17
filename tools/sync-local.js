@@ -9,6 +9,7 @@ const { execSync } = require("child_process");
 const { generateSitemap } = require("./generate-sitemap.js");
 
 const { PROJECT: ROOT, WEB, COLLECTIONS_DIR, COLLECTIONS_URL } = require("./paths");
+const { optimizeCollectionPhotos, summarize } = require("./optimize-photos");
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 /** 맨 위에 간격을 두는 컬렉션: 폴더 이름이 이 문자로 시작 */
 const TOP_COLLECTION_PREFIX = "_";
@@ -295,6 +296,9 @@ async function runSync() {
     try {
       const entry = byId.get(id);
       const photoOrder = photoOrderForCollection(entry, newIds.has(id));
+      const compressed = await optimizeCollectionPhotos(path.join(COLLECTIONS_DIR, id));
+      summarize(id, compressed);
+      if (compressed.changed) changed = true;
       const { count, background } = await generateCollectionImagesJson(id, photoOrder);
       const bgNote = background ? `, 배경 ${background}` : "";
       console.log(`🖼 컬렉션 "${id}" → images.json 갱신 (${count}개 이미지${bgNote})`);
