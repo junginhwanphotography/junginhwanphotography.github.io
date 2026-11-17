@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=flip-focus-1" />
+    <link rel="stylesheet" href="style.css?v=all-wall-1" />
   </head>
   <body class="collection-page">
     <div class="fuji-scene" aria-hidden="true">
@@ -287,6 +287,64 @@
         showFlipImage(0);
       }
 
+      function mosaicIndexFromEvent(event, imgEl, order) {
+        if (!imgEl || !order) return -1;
+        const rect = imgEl.getBoundingClientRect();
+        if (rect.width < 2 || rect.height < 2) return -1;
+        const cols = Number(order.cols) || 12;
+        const count = imageList.length;
+        const tile = Number(order.tile) || rect.width / cols;
+        const gap = Number(order.gap) || 0;
+        const rows = Number(order.rows) || Math.ceil(count / cols) || 1;
+        const width = cols * tile + Math.max(0, cols - 1) * gap;
+        const height = rows * tile + Math.max(0, rows - 1) * gap;
+        const px = ((event.clientX - rect.left) / rect.width) * width;
+        const py = ((event.clientY - rect.top) / rect.height) * height;
+        if (px < 0 || py < 0 || px >= width || py >= height) return -1;
+        const pitch = tile + gap;
+        const col = Math.min(cols - 1, Math.floor(px / pitch));
+        const row = Math.min(rows - 1, Math.floor(py / pitch));
+        if (px - col * pitch > tile || py - row * pitch > tile) return -1;
+        const idx = row * cols + col;
+        return idx < count ? idx : -1;
+      }
+
+      function renderAllMosaic(order) {
+        const galleryEl = document.getElementById("gallery");
+        if (!galleryEl || !order) return false;
+        imageList = Array.isArray(order.images)
+          ? order.images.map((item) => ({
+              src: item.src || item.file,
+              collectionId: item.collectionId,
+              alt: item.alt || "",
+            }))
+          : [];
+        galleryEl.replaceChildren();
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "all-mosaic";
+        button.setAttribute("aria-label", "전체 사진");
+        const img = document.createElement("img");
+        const version = String(order.hash || "1").slice(0, 12);
+        img.src = "all-photos/wall.jpg?v=" + encodeURIComponent(version);
+        img.alt = "전체 사진";
+        img.decoding = "async";
+        const cols = Number(order.cols) || 12;
+        const rows = Number(order.rows) || 1;
+        const tile = Number(order.tile) || 180;
+        const gap = Number(order.gap) || 0;
+        img.width = cols * tile + Math.max(0, cols - 1) * gap;
+        img.height = rows * tile + Math.max(0, rows - 1) * gap;
+        button.appendChild(img);
+        button.addEventListener("click", (event) => {
+          const idx = mosaicIndexFromEvent(event, img, order);
+          if (idx < 0) return;
+          openLightbox(idx);
+        });
+        galleryEl.appendChild(button);
+        return imageList.length > 0;
+      }
+
       function renderGallery(items) {
         const galleryEl = document.getElementById("gallery");
         if (!galleryEl) return;
@@ -331,6 +389,11 @@
 
         if (collectionId === "all") {
           try {
+            const wallRes = await fetch("all-photos/order.json", { cache: "no-store" });
+            if (wallRes.ok) {
+              const order = await wallRes.json();
+              if (renderAllMosaic(order)) return;
+            }
             const listRes = await fetch("collections.json", { cache: "no-store" });
             if (!listRes.ok) return;
             const collections = await listRes.json();

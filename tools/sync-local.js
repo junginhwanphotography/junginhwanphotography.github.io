@@ -10,6 +10,7 @@ const { generateSitemap } = require("./generate-sitemap.js");
 
 const { PROJECT: ROOT, WEB, COLLECTIONS_DIR, COLLECTIONS_URL } = require("./paths");
 const { optimizeCollectionPhotos, summarize } = require("./optimize-photos");
+const { buildAllWall } = require("./build-all-wall");
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 /** 맨 위에 간격을 두는 컬렉션: 폴더 이름이 이 문자로 시작 */
 const TOP_COLLECTION_PREFIX = "_";
@@ -306,6 +307,13 @@ async function runSync() {
     } catch (err) {
       console.error(`❌ 컬렉션 "${id}" images.json 생성 실패:`, err.message);
     }
+  }
+
+  try {
+    const wall = await buildAllWall(ordered);
+    if (wall && wall.changed) changed = true;
+  } catch (err) {
+    console.error("❌ 전체 사진 벽 생성 실패:", err.message);
   }
 
   if (!changed) {

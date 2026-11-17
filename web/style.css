@@ -255,49 +255,38 @@ body.collection-all main.main-full {
 }
 
 body.collection-all .gallery {
-  display: grid !important;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1px !important;
-  row-gap: 1px !important;
-  column-gap: 1px !important;
+  display: block !important;
   width: 100%;
   max-width: none;
   margin: 0;
   padding: 0;
+  gap: 0 !important;
   flex-wrap: unset;
-  justify-content: stretch;
-  align-content: start;
 }
 
-body.collection-all .gallery-item {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  max-width: none;
-  height: auto !important;
-  aspect-ratio: 1 / 1;
-  border-radius: 0;
-  overflow: hidden;
-  flex: none !important;
-  background-color: #f2f2f2;
+body.collection-all .all-mosaic {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-body.collection-all .gallery-item img {
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
+body.collection-all .all-mosaic img {
+  display: block;
+  width: 100%;
   max-width: none;
-  object-fit: cover !important;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 body.collection-all .collection-back {
   margin: 0.45rem 0 0.6rem;
-}
-
-body.collection-all .gallery-item:hover img {
-  transform: none;
-  filter: none;
 }
 
 body.collection-all .lightbox-content img {
@@ -1025,7 +1014,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   }
 
   body.collection-all .gallery {
-    grid-template-columns: repeat(8, 1fr);
+    display: block !important;
+    gap: 0 !important;
   }
 }
 
@@ -1119,19 +1109,8 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   }
 
   body.collection-all .gallery {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1px !important;
-  }
-
-  body.collection-all .gallery-item {
-    height: auto !important;
-    aspect-ratio: 1 / 1;
-  }
-
-  body.collection-all .gallery-item img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
+    display: block !important;
+    gap: 0 !important;
   }
 
   body.collection-comsec .gallery {
