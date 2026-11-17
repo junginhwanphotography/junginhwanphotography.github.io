@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=lightbox-white-1" />
+    <link rel="stylesheet" href="style.css?v=flip-view-1" />
   </head>
   <body class="collection-page">
     <div class="fuji-scene" aria-hidden="true">
@@ -135,8 +135,15 @@
         return (id || "").toUpperCase().includes("MT.FUJI");
       }
 
+      function isFlipCollection(id) {
+        return collectionKey(id) === "바닥을 기어다니며";
+      }
+
       if (collectionId === "all") {
         document.body.classList.add("collection-all");
+      }
+      if (isFlipCollection(collectionId)) {
+        document.body.classList.add("collection-flip");
       }
       if (
         collectionKey(collectionId) === "COMSEC" ||
@@ -199,10 +206,91 @@
           .map((item) => Object.assign({}, item, { collectionId: colId }));
       }
 
+      function showFlipImage(index) {
+        if (index < 0 || index >= imageList.length) return;
+        const img = document.getElementById("flip-image");
+        if (!img) return;
+        currentImageIndex = index;
+        const item = imageList[index];
+        img.src = imageUrlForItem(collectionId, item);
+        img.alt = item.alt || "";
+        const prevBtn = document.querySelector(".flip-nav-prev");
+        const nextBtn = document.querySelector(".flip-nav-next");
+        if (prevBtn && nextBtn) {
+          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
+          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
+        }
+        [index - 1, index + 1].forEach((i) => {
+          if (i < 0 || i >= imageList.length) return;
+          const preload = new Image();
+          preload.src = imageUrlForItem(collectionId, imageList[i]);
+        });
+      }
+
+      function flipNavigate(direction) {
+        if (!isFlipCollection(collectionId) || imageList.length === 0) return;
+        if (currentImageIndex < 0) currentImageIndex = 0;
+        let next = currentImageIndex;
+        if (direction === "next") next = (currentImageIndex + 1) % imageList.length;
+        else if (direction === "prev") next = (currentImageIndex - 1 + imageList.length) % imageList.length;
+        else return;
+        showFlipImage(next);
+      }
+
+      function setupFlipViewer(galleryEl) {
+        galleryEl.replaceChildren();
+        const stage = document.createElement("div");
+        stage.className = "flip-stage";
+
+        const img = document.createElement("img");
+        img.id = "flip-image";
+        img.alt = "";
+        img.addEventListener("click", (event) => {
+          const rect = img.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          flipNavigate(x < rect.width / 2 ? "prev" : "next");
+        });
+
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "flip-nav flip-nav-prev";
+        prevBtn.type = "button";
+        prevBtn.setAttribute("aria-label", "이전 사진");
+        prevBtn.textContent = "‹";
+        prevBtn.addEventListener("click", () => flipNavigate("prev"));
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "flip-nav flip-nav-next";
+        nextBtn.type = "button";
+        nextBtn.setAttribute("aria-label", "다음 사진");
+        nextBtn.textContent = "›";
+        nextBtn.addEventListener("click", () => flipNavigate("next"));
+
+        stage.appendChild(img);
+        stage.appendChild(prevBtn);
+        stage.appendChild(nextBtn);
+        galleryEl.appendChild(stage);
+
+        let startX = 0;
+        stage.addEventListener("touchstart", (e) => {
+          startX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        stage.addEventListener("touchend", (e) => {
+          const diff = startX - e.changedTouches[0].screenX;
+          if (Math.abs(diff) < 50) return;
+          flipNavigate(diff > 0 ? "next" : "prev");
+        }, { passive: true });
+
+        showFlipImage(0);
+      }
+
       function renderGallery(items) {
         const galleryEl = document.getElementById("gallery");
         if (!galleryEl) return;
         imageList = items;
+        if (isFlipCollection(collectionId)) {
+          setupFlipViewer(galleryEl);
+          return;
+        }
         imageList.forEach((item, index) => {
           const figure = document.createElement("figure");
           figure.className = "gallery-item";
@@ -713,15 +801,20 @@
 
         window.addEventListener("keydown", (event) => {
           const lightbox = document.getElementById("lightbox");
-          if (!lightbox || !lightbox.classList.contains("is-open")) return;
-
-          if (event.key === "Escape") {
-            closeLightbox();
-          } else if (event.key === "ArrowLeft") {
-            navigateImage("prev");
-          } else if (event.key === "ArrowRight") {
-            navigateImage("next");
+          const lightboxOpen = lightbox && lightbox.classList.contains("is-open");
+          if (lightboxOpen) {
+            if (event.key === "Escape") {
+              closeLightbox();
+            } else if (event.key === "ArrowLeft") {
+              navigateImage("prev");
+            } else if (event.key === "ArrowRight") {
+              navigateImage("next");
+            }
+            return;
           }
+          if (!isFlipCollection(collectionId)) return;
+          if (event.key === "ArrowLeft") flipNavigate("prev");
+          else if (event.key === "ArrowRight") flipNavigate("next");
         });
       })();
 

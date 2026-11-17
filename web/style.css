@@ -361,6 +361,74 @@ body.collection-comsec .gallery-item img,
   max-height: none !important;
 }
 
+/* 바닥을 기어다니며: 한 장씩 넘기기 */
+body.collection-flip .gallery {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+}
+
+body.collection-flip .flip-stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.collection-flip .flip-stage img {
+  max-width: 100%;
+  max-height: min(78vh, calc(100dvh - 14rem));
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  cursor: pointer;
+}
+
+body.collection-flip .flip-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #111111;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 4;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+body.collection-flip .flip-nav:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+body.collection-flip .flip-nav-prev {
+  left: 0.25rem;
+}
+
+body.collection-flip .flip-nav-next {
+  right: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  body.collection-flip .flip-nav {
+    display: none;
+  }
+}
+
 /* shizuoka 1: 한 줄에 두 장 */
 body.collection-shizuoka .gallery,
 .gallery.gallery-two-col {
