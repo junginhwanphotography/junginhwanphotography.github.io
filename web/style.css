@@ -246,6 +246,46 @@ body.collection-all .collection-title {
   display: none;
 }
 
+body.collection-all main.main-full {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0.35rem;
+}
+
+body.collection-all .gallery {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px !important;
+  width: 100%;
+  max-width: none;
+  flex-wrap: unset;
+  justify-content: stretch;
+  align-content: start;
+}
+
+body.collection-all .gallery-item {
+  width: 100% !important;
+  max-width: none;
+  height: auto !important;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+  overflow: hidden;
+  flex: none !important;
+  background-color: #f2f2f2;
+}
+
+body.collection-all .gallery-item img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover !important;
+}
+
+body.collection-all .gallery-item:hover img {
+  transform: none;
+  filter: none;
+}
+
 .collection-back {
   width: 100%;
   display: flex;
@@ -364,7 +404,7 @@ body.collection-comsec .gallery-item img,
 /* 바닥을 기어다니며: 한 장씩 넘기기 */
 body.collection-flip .gallery {
   width: 100%;
-  max-width: 1100px;
+  max-width: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -374,12 +414,15 @@ body.collection-flip .gallery {
 body.collection-flip .flip-stage {
   position: relative;
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 4.5rem;
   align-items: center;
-  justify-content: center;
+  column-gap: 0.75rem;
 }
 
 body.collection-flip .flip-stage img {
+  grid-column: 2;
+  justify-self: center;
   max-width: 100%;
   max-height: min(78vh, calc(100dvh - 14rem));
   width: auto;
@@ -391,9 +434,8 @@ body.collection-flip .flip-stage img {
 }
 
 body.collection-flip .flip-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
+  transform: none;
   width: 50px;
   height: 50px;
   border: none;
@@ -409,6 +451,7 @@ body.collection-flip .flip-nav {
   line-height: 1;
   padding: 0;
   margin: 0;
+  justify-self: center;
 }
 
 body.collection-flip .flip-nav:hover {
@@ -416,16 +459,21 @@ body.collection-flip .flip-nav:hover {
 }
 
 body.collection-flip .flip-nav-prev {
-  left: 0.25rem;
+  grid-column: 1;
 }
 
 body.collection-flip .flip-nav-next {
-  right: 0.25rem;
+  grid-column: 3;
 }
 
 @media (max-width: 640px) {
   body.collection-flip .flip-nav {
     display: none;
+  }
+
+  body.collection-flip .flip-stage {
+    grid-template-columns: 0 minmax(0, 1fr) 0;
+    column-gap: 0;
   }
 }
 
@@ -865,6 +913,10 @@ body.collection-fuji.is-fuji-end .collection-back-link {
   .gallery {
     --gallery-row-height: 240px;
   }
+
+  body.collection-all .gallery {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
@@ -949,6 +1001,27 @@ body.collection-fuji.is-fuji-end .collection-back-link {
     width: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  body.collection-all main.main-full {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  body.collection-all .gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px !important;
+  }
+
+  body.collection-all .gallery-item {
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
+
+  body.collection-all .gallery-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 
   body.collection-comsec .gallery {
