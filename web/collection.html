@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=flip-nav-2" />
+    <link rel="stylesheet" href="style.css?v=flip-focus-1" />
   </head>
   <body class="collection-page">
     <div class="fuji-scene" aria-hidden="true">
@@ -143,6 +143,7 @@
         document.body.classList.add("collection-all");
       }
       if (isFlipCollection(collectionId)) {
+        document.documentElement.classList.add("collection-flip");
         document.body.classList.add("collection-flip");
       }
       if (
@@ -217,8 +218,8 @@
         const prevBtn = document.querySelector(".flip-nav-prev");
         const nextBtn = document.querySelector(".flip-nav-next");
         if (prevBtn && nextBtn) {
-          prevBtn.style.display = imageList.length > 1 ? "flex" : "none";
-          nextBtn.style.display = imageList.length > 1 ? "flex" : "none";
+          prevBtn.style.display = imageList.length > 1 ? "" : "none";
+          nextBtn.style.display = imageList.length > 1 ? "" : "none";
         }
         [index - 1, index + 1].forEach((i) => {
           if (i < 0 || i >= imageList.length) return;
@@ -245,25 +246,28 @@
         const img = document.createElement("img");
         img.id = "flip-image";
         img.alt = "";
-        img.addEventListener("click", (event) => {
-          const rect = img.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          flipNavigate(x < rect.width / 2 ? "prev" : "next");
-        });
 
         const prevBtn = document.createElement("button");
         prevBtn.className = "flip-nav flip-nav-prev";
         prevBtn.type = "button";
+        prevBtn.tabIndex = -1;
         prevBtn.setAttribute("aria-label", "이전 사진");
-        prevBtn.textContent = "‹";
-        prevBtn.addEventListener("click", () => flipNavigate("prev"));
+        prevBtn.addEventListener("mousedown", (event) => event.preventDefault());
+        prevBtn.addEventListener("click", () => {
+          flipNavigate("prev");
+          prevBtn.blur();
+        });
 
         const nextBtn = document.createElement("button");
         nextBtn.className = "flip-nav flip-nav-next";
         nextBtn.type = "button";
+        nextBtn.tabIndex = -1;
         nextBtn.setAttribute("aria-label", "다음 사진");
-        nextBtn.textContent = "›";
-        nextBtn.addEventListener("click", () => flipNavigate("next"));
+        nextBtn.addEventListener("mousedown", (event) => event.preventDefault());
+        nextBtn.addEventListener("click", () => {
+          flipNavigate("next");
+          nextBtn.blur();
+        });
 
         stage.appendChild(img);
         stage.appendChild(prevBtn);
@@ -756,6 +760,8 @@
         handleSwipe();
       }
 
+      let skipLightboxClick = false;
+
       function handleSwipe() {
         const lightbox = document.getElementById("lightbox");
         if (!lightbox || !lightbox.classList.contains("is-open")) return;
@@ -764,6 +770,7 @@
         const diff = touchStartX - touchEndX;
 
         if (Math.abs(diff) > swipeThreshold) {
+          skipLightboxClick = true;
           if (diff > 0) {
             // 왼쪽으로 스와이프 (다음 이미지)
             navigateImage("next");
@@ -784,6 +791,10 @@
         lightbox.addEventListener("touchend", handleTouchEnd, { passive: true });
 
         lightbox.addEventListener("click", (event) => {
+          if (skipLightboxClick) {
+            skipLightboxClick = false;
+            return;
+          }
           const target = event.target;
           if (
             target instanceof HTMLElement &&
@@ -796,6 +807,12 @@
           ) {
             const direction = target.getAttribute("data-lightbox-nav");
             navigateImage(direction);
+          } else if (
+            collectionId === "all" &&
+            target instanceof HTMLElement &&
+            target.id === "lightbox-image"
+          ) {
+            closeLightbox();
           }
         });
 
