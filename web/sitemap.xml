@@ -7,6 +7,12 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://junginhwanphotography.github.io/collection.html?collection=%E1%84%90%E1%85%A9%E1%86%BC%E1%84%89%E1%85%B5%E1%86%AB%E1%84%87%E1%85%A9%E1%84%8B%E1%85%A1%E1%86%AB</loc>
+    <lastmod>2026-11-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://junginhwanphotography.github.io/collection.html?collection=%E1%84%87%E1%85%A1%E1%84%83%E1%85%A1%E1%86%A8%E1%84%8B%E1%85%B3%E1%86%AF%20%E1%84%80%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%83%E1%85%A1%E1%84%82%E1%85%B5%E1%84%86%E1%85%A7</loc>
     <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -32,12 +38,6 @@
   </url>
   <url>
     <loc>https://junginhwanphotography.github.io/collection.html?collection=okinawa</loc>
-    <lastmod>2026-11-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://junginhwanphotography.github.io/collection.html?collection=COMSEC</loc>
     <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
