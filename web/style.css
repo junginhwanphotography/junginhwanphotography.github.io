@@ -408,6 +408,51 @@ body.collection-comsec .gallery-item img,
   max-height: none !important;
 }
 
+/* 영월: 한 장씩 크게, 세로 스크롤 */
+body.collection-yeongwol {
+  scroll-snap-type: y proximity;
+}
+
+body.collection-yeongwol .gallery,
+body.collection-yeongwol .gallery.gallery-single-col {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4rem !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+body.collection-yeongwol .gallery-item,
+body.collection-yeongwol .gallery.gallery-single-col .gallery-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: calc(100dvh - 7.5rem) !important;
+  min-height: calc(100dvh - 7.5rem) !important;
+  flex: 0 0 auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  background: transparent;
+}
+
+body.collection-yeongwol .gallery-item img,
+body.collection-yeongwol .gallery.gallery-single-col .gallery-item img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100% !important;
+  object-fit: contain;
+}
+
+body.collection-yeongwol .gallery-item:hover img {
+  transform: none;
+  filter: none;
+}
+
 /* 바닥을 기어다니며: 한 장씩 넘기기 */
 html.collection-flip,
 body.collection-flip {
@@ -1129,6 +1174,28 @@ body.collection-fuji.is-fuji-end .collection-back-link {
     width: 100% !important;
     height: auto !important;
     max-height: none !important;
+  }
+
+  body.collection-yeongwol .gallery,
+  body.collection-yeongwol .gallery.gallery-single-col {
+    gap: 2.5rem !important;
+    max-width: 100%;
+  }
+
+  body.collection-yeongwol .gallery-item,
+  body.collection-yeongwol .gallery.gallery-single-col .gallery-item {
+    height: calc(100dvh - 6.5rem) !important;
+    min-height: calc(100dvh - 6.5rem) !important;
+    width: 100% !important;
+  }
+
+  body.collection-yeongwol .gallery-item img,
+  body.collection-yeongwol .gallery.gallery-single-col .gallery-item img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
   }
 
   body.collection-comsec main.main-full {

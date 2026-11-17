@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=all-wall-1" />
+    <link rel="stylesheet" href="style.css?v=yeongwol-1" />
   </head>
   <body class="collection-page">
     <div class="fuji-scene" aria-hidden="true">
@@ -139,12 +139,21 @@
         return collectionKey(id) === "바닥을 기어다니며";
       }
 
+      function isYeongwolCollection(id) {
+        return collectionKey(id) === "영월";
+      }
+
       if (collectionId === "all") {
         document.body.classList.add("collection-all");
       }
       if (isFlipCollection(collectionId)) {
         document.documentElement.classList.add("collection-flip");
         document.body.classList.add("collection-flip");
+      }
+      if (isYeongwolCollection(collectionId)) {
+        document.body.classList.add("collection-yeongwol");
+        const galleryEarly = document.getElementById("gallery");
+        if (galleryEarly) galleryEarly.classList.add("gallery-single-col");
       }
       if (
         collectionKey(collectionId) === "COMSEC" ||
