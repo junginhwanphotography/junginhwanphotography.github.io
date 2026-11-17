@@ -9,7 +9,12 @@ const { execSync } = require("child_process");
 const { generateSitemap } = require("./generate-sitemap.js");
 
 const { PROJECT: ROOT, WEB, COLLECTIONS_DIR, COLLECTIONS_URL } = require("./paths");
-const { optimizeCollectionPhotos, summarize } = require("./optimize-photos");
+const {
+  optimizeCollectionPhotos,
+  summarize,
+  loadOptCache,
+  saveOptCache,
+} = require("./optimize-photos");
 const { buildAllWall } = require("./build-all-wall");
 const IMAGE_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
 /** 맨 위에 간격을 두는 컬렉션: 폴더 이름이 이 문자로 시작 */
@@ -293,11 +298,15 @@ async function runSync() {
   await saveCollectionsJson(ordered);
 
   // 모든 컬렉션의 images.json을 매번 재생성 (사진 추가/삭제/변경 반영)
+  const optCache = await loadOptCache();
   for (const id of collectionDirs) {
     try {
       const entry = byId.get(id);
       const photoOrder = photoOrderForCollection(entry, newIds.has(id));
-      const compressed = await optimizeCollectionPhotos(path.join(COLLECTIONS_DIR, id));
+      const compressed = await optimizeCollectionPhotos(
+        path.join(COLLECTIONS_DIR, id),
+        optCache
+      );
       summarize(id, compressed);
       if (compressed.changed) changed = true;
       const { count, background } = await generateCollectionImagesJson(id, photoOrder);
@@ -308,6 +317,7 @@ async function runSync() {
       console.error(`❌ 컬렉션 "${id}" images.json 생성 실패:`, err.message);
     }
   }
+  await saveOptCache(optCache);
 
   try {
     const wall = await buildAllWall(ordered);

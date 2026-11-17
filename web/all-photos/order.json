@@ -1,10 +1,35 @@
 {
-  "cols": 10,
-  "rows": 9,
+  "cols": 12,
+  "rows": 8,
   "tile": 180,
   "gap": 1,
-  "hash": "e866f07beff09bc43b5548c5e7cc138bafa008da",
+  "hash": "f581b46439024d3dd3857b5c370a3ac631159502",
   "images": [
+    {
+      "collectionId": "영월",
+      "file": "0601-07.jpg",
+      "src": "collections/영월/0601-07.jpg"
+    },
+    {
+      "collectionId": "영월",
+      "file": "0601-12.jpg",
+      "src": "collections/영월/0601-12.jpg"
+    },
+    {
+      "collectionId": "영월",
+      "file": "0601-13.jpg",
+      "src": "collections/영월/0601-13.jpg"
+    },
+    {
+      "collectionId": "영월",
+      "file": "0601-15.jpg",
+      "src": "collections/영월/0601-15.jpg"
+    },
+    {
+      "collectionId": "영월",
+      "file": "0601-16.jpg",
+      "src": "collections/영월/0601-16.jpg"
+    },
     {
       "collectionId": "영월",
       "file": "0602-03.jpg",

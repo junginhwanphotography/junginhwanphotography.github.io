@@ -7,6 +7,9 @@
 const fs = require("fs").promises;
 const path = require("path");
 
+const { PROJECT } = require("./paths");
+const CACHE_FILE = path.join(PROJECT, "photo-opt-cache.json");
+
 const JPEG_QUALITY = 90;
 const MIN_SAVE_RATIO = 0.05;
 const MIN_SAVE_BYTES = 4096;
@@ -20,6 +23,36 @@ function loadSharp() {
   } catch {
     return null;
   }
+}
+
+function cacheKey(filePath) {
+  return path.relative(PROJECT, filePath).split(path.sep).join("/");
+}
+
+async function loadOptCache() {
+  try {
+    const data = JSON.parse(await fs.readFile(CACHE_FILE, "utf8"));
+    return data && typeof data === "object" ? data : {};
+  } catch {
+    return {};
+  }
+}
+
+async function saveOptCache(cache) {
+  await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2), "utf8");
+}
+
+function isCached(cache, filePath, stat) {
+  const hit = cache[cacheKey(filePath)];
+  return !!(hit && hit.size === stat.size && hit.mtimeMs === stat.mtimeMs);
+}
+
+function remember(cache, filePath, stat) {
+  cache[cacheKey(filePath)] = { size: stat.size, mtimeMs: stat.mtimeMs };
+}
+
+function forget(cache, filePath) {
+  delete cache[cacheKey(filePath)];
 }
 
 function keepOriginalFormat(name) {
@@ -135,7 +168,7 @@ async function optimizeOne(sharp, srcPath) {
   }
 }
 
-async function optimizeCollectionPhotos(dir) {
+async function optimizeCollectionPhotos(dir, cache) {
   const sharp = loadSharp();
   const summary = { changed: 0, saved: 0, from: 0, to: 0, skipped: 0 };
   if (!sharp) {
@@ -154,14 +187,25 @@ async function optimizeCollectionPhotos(dir) {
     if (!entry.isFile() || entry.name === "images.json" || entry.name.startsWith(".")) continue;
     const srcPath = path.join(dir, entry.name);
     try {
+      const orig = await fs.stat(srcPath);
+      if (cache && isCached(cache, srcPath, orig)) {
+        summary.skipped += 1;
+        continue;
+      }
       const result = await optimizeOne(sharp, srcPath);
       if (result && result.changed) {
         summary.changed += 1;
         summary.saved += result.saved;
         summary.from += result.from;
         summary.to += result.to;
+        const destPath = result.renamed
+          ? path.join(dir, result.renamed)
+          : srcPath;
+        if (result.renamed) forget(cache, srcPath);
+        remember(cache, destPath, await fs.stat(destPath));
       } else {
         summary.skipped += 1;
+        if (cache) remember(cache, srcPath, orig);
       }
     } catch (err) {
       summary.skipped += 1;
@@ -185,4 +229,6 @@ function summarize(label, summary) {
 module.exports = {
   optimizeCollectionPhotos,
   summarize,
+  loadOptCache,
+  saveOptCache,
 };
